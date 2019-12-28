@@ -14,13 +14,39 @@
    limitations under the License.
 */
 
+#include <stdio.h>
 #include <glitchedhttps.h>
 
 #define BUFFER_SIZE 1024
 
 int main()
 {
-    // TODO: write POST request example
+    char* url = "https://postman-echo.com/post";
+    char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
+
+    glitchedhttps_request request = {
+            .url = url,
+            .method = GLITCHEDHTTPS_POST,
+            .buffer_size = BUFFER_SIZE,
+            .ssl_verification_optional = false,
+            .content_type = "application/json",
+            .content_length = strlen(body),
+            .content = body
+    };
+
+    glitchedhttps_response* response = glitchedhttps_submit(&request);
+
+    const bool success = response != NULL && response->status_code >= 200 && response->status_code < 300;
+
+    if (success)
+    {
+        printf("\nConnection test SUCCESSFUL!\n");
+    }
+
+    printf("\nResponse from %s: \n\n%s\n", request.url, response->content);
+
+    glitchedhttps_response_free(response); // TODO: this segfaults because of the first call to free header also frees the entire remaining array... maybe use a pointerpointer?
+
     return 0;
 }
 
