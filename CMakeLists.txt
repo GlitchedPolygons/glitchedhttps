@@ -4,17 +4,12 @@ project(glitchedhttps C)
 set(CMAKE_C_STANDARD 11)
 add_subdirectory(lib/mbedtls)
 
-add_library(glitchedhttps
-        ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include/chillbuff.h
-        ${CMAKE_CURRENT_LIST_DIR}/include/cacerts.h
-        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps.h
-        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps.c)
+add_library(glitchedhttps INTERFACE)
 
-target_include_directories(glitchedhttps PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
-target_include_directories(glitchedhttps PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
+target_include_directories(glitchedhttps INTERFACE include lib/chillbuff/include)
 
 if (UNIX AND NOT APPLE)
-    target_link_libraries(glitchedhttps PRIVATE -luuid -lm)
+    target_link_libraries(glitchedhttps INTERFACE -luuid -lm)
 endif ()
 
-target_link_libraries(glitchedhttps PRIVATE mbedtls mbedx509)
+target_link_libraries(glitchedhttps INTERFACE mbedtls mbedx509)
