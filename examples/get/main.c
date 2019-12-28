@@ -34,6 +34,11 @@ int main()
 
     const bool success = response != NULL && response->status_code == 200 && strcmp(response->content, "polo") == 0;
 
+    if (success)
+    {
+        printf("\nConnection test SUCCESSFUL!\n");
+    }
+
     glitched_http_response_free(response);
 
     return 0;

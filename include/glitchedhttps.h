@@ -116,20 +116,20 @@ static glitched_http_header* glitched_http_header_init(const char* type, const s
 {
     if (type == NULL || value == NULL)
     {
-        // TODO: print error msg
+        _glitched_http_log_error("Header type or value string NULL!", __func__);
         return NULL;
     }
 
     if (type_length == 0)
     {
-        // TODO: print error msg "empty" here for type arg
+        _glitched_http_log_error("Header type string empty!", __func__);
         return NULL;
     }
 
     glitched_http_header* out = malloc(sizeof(glitched_http_header));
     if (out == NULL)
     {
-        // TODO: print error msg "out of mem"
+        _glitched_http_log_error("OUT OF MEMORY!", __func__);
         return NULL;
     }
 
@@ -138,7 +138,7 @@ static glitched_http_header* glitched_http_header_init(const char* type, const s
 
     if (out->type == NULL || out->value == NULL)
     {
-        // TODO: print error msg "out of mem"
+        _glitched_http_log_error("OUT OF MEMORY!", __func__);
         return NULL;
     }
 
@@ -276,12 +276,12 @@ static inline bool glitched_http_method_to_string(const glitched_http_method met
 {
     if (out == NULL)
     {
-        // TODO: print null arg error msg here.
+        _glitched_http_log_error("Pointer argument \"out\" is NULL! Please provide a valid output string to write (strncpy) into.", __func__);
         return false;
     }
     if (out_size < 8)
     {
-        // TODO: print error here "Buffer size insufficient: please allocate at least 8 bytes!"
+        _glitched_http_log_error("Insufficient output buffer size: please allocate at least 8 bytes for the out string!", __func__);
         return false;
     }
     switch (method)
@@ -314,7 +314,7 @@ static inline bool glitched_http_method_to_string(const glitched_http_method met
             strncpy(out, "TRACE", out_size);
             return true;
         default:
-            // TODO: print "Invalid HTTP Method!" here into error callback!
+            _glitched_http_log_error("Invalid HTTP Method!", __func__);
             return false;
     }
 }
@@ -651,14 +651,11 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             out->server = malloc((out_length + 1) * sizeof(char));
             if (out->server == NULL)
             {
-                _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                glitched_http_response_free(out);
-                chillbuff_free(&header_builder);
-                return NULL;
+                goto out_of_mem;
             }
             memcpy(out->server, current + 8, out_length);
             out->server[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 6, out->server, out_length), sizeof(glitched_http_header));
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 6, out->server, out_length), 1);
             parsed_server = true;
         }
         else if (!parsed_date && glitched_http_strncmpic(current, "Date: ", 6) == 0)
@@ -667,14 +664,11 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             out->date = malloc((out_length + 1) * sizeof(char));
             if (out->date == NULL)
             {
-                _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                glitched_http_response_free(out);
-                chillbuff_free(&header_builder);
-                return NULL;
+                goto out_of_mem;
             }
             memcpy(out->date, current + 6, out_length);
             out->date[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 4, out->date, out_length), sizeof(glitched_http_header));
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 4, out->date, out_length), 1);
             parsed_date = true;
         }
         else if (!parsed_content_type && glitched_http_strncmpic(current, "Content-Type: ", 14) == 0)
@@ -683,14 +677,11 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             out->content_type = malloc((out_length + 1) * sizeof(char));
             if (out->content_type == NULL)
             {
-                _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                glitched_http_response_free(out);
-                chillbuff_free(&header_builder);
-                return NULL;
+                goto out_of_mem;
             }
             memcpy(out->content_type, current + 14, out_length);
             out->content_type[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 12, out->content_type, out_length), sizeof(glitched_http_header));
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 12, out->content_type, out_length), 1);
             parsed_content_type = true;
         }
         else if (!parsed_content_encoding && glitched_http_strncmpic(current, "Content-Encoding: ", 18) == 0)
@@ -699,14 +690,11 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             out->content_encoding = malloc((out_length + 1) * sizeof(char));
             if (out->content_encoding == NULL)
             {
-                _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                glitched_http_response_free(out);
-                chillbuff_free(&header_builder);
-                return NULL;
+                goto out_of_mem;
             }
             memcpy(out->content_encoding, current + 18, out_length);
             out->content_encoding[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 16, out->content_encoding, out_length), sizeof(glitched_http_header));
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 16, out->content_encoding, out_length), 1);
             parsed_content_encoding = true;
         }
         else if (!parsed_content_length && glitched_http_strncmpic(current, "Content-Length: ", 16) == 0)
@@ -718,8 +706,8 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             {
                 memcpy(n, c + 1, current_length - 1);
                 out->content_length = atoi(n);
-                snprintf(n, sizeof(n), "%lld", out->content_length);
-                chillbuff_push_back(&header_builder, glitched_http_header_init(current, 14, n, strlen(n)), sizeof(glitched_http_header));
+                snprintf(n, sizeof(n), "%zu", out->content_length);
+                chillbuff_push_back(&header_builder, glitched_http_header_init(current, 14, n, strlen(n)), 1);
             }
             parsed_content_length = true;
         }
@@ -730,10 +718,7 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             out->content = malloc(content_length + 1);
             if (out->content == NULL)
             {
-                _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                glitched_http_response_free(out);
-                chillbuff_free(&header_builder);
-                return NULL;
+                goto out_of_mem;
             }
             memcpy(out->content, content, content_length);
             out->content[content_length] = '\0';
@@ -749,25 +734,36 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             {
                 const size_t header_type_length = header_value - current;
                 const size_t header_value_length = current_length - header_type_length - header_separator_length;
-                chillbuff_push_back(&header_builder, glitched_http_header_init(current, header_type_length, header_value + header_separator_length, header_value_length), sizeof(glitched_http_header));
+                chillbuff_push_back(&header_builder, glitched_http_header_init(current, header_type_length, header_value + header_separator_length, header_value_length), 1);
             }
         }
         current = next + delimiter_length;
         next = strstr(current, delimiter);
     }
 
-    out->headers = malloc(sizeof(glitched_http_header) * header_builder.length); // TODO: copy headers array kinda here?!?!
+    out->headers = malloc(sizeof(glitched_http_header) * header_builder.length);
     if (out->headers == NULL)
     {
-        _glitched_http_log_error("OUT OF MEMORY!", __func__);
-        glitched_http_response_free(out);
-        chillbuff_free(&header_builder);
-        return NULL;
+        goto out_of_mem;
+    }
+
+    /* Copy the response headers into the output instance. */
+    out->headers_count = header_builder.length;
+    for (size_t i = 0; i < header_builder.length; i++)
+    {
+        const glitched_http_header h = ((glitched_http_header*)header_builder.array)[i];
+        out->headers[i] = *glitched_http_header_init(h.type, strlen(h.type), h.value, strlen(h.value));
     }
 
     chillbuff_free(&header_builder);
 
     return out;
+
+out_of_mem:
+    _glitched_http_log_error("OUT OF MEMORY!", __func__);
+    glitched_http_response_free(out);
+    chillbuff_free(&header_builder);
+    return NULL;
 }
 
 /** @private */
