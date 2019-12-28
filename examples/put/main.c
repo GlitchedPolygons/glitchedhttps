@@ -24,6 +24,11 @@ int main()
     char* url = "https://postman-echo.com/put";
     char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
 
+    glitchedhttps_header additional_headers[] = {
+            *glitchedhttps_header_init("Another-Foo",strlen("Another-Foo"), "anotherBar", strlen("anotherBar")),
+            *glitchedhttps_header_init("Additional-Headers-Are-Cool",strlen("Additional-Headers-Are-Cool"), "SGVsbG8gV29ybGQh", strlen("SGVsbG8gV29ybGQh"))
+    };
+
     glitchedhttps_request request = {
             .url = url,
             .method = GLITCHEDHTTPS_PUT,
@@ -31,10 +36,12 @@ int main()
             .ssl_verification_optional = false,
             .content_type = "application/json",
             .content_length = strlen(body),
-            .content = body
+            .content = body,
+            .additional_headers = additional_headers,
+            .additional_headers_count = sizeof(additional_headers) / sizeof(glitchedhttps_header)
     };
 
-    // TODO: demonstrate additional headers setup here (send some test HTTP headers).
+    // TODO: free these headers!
 
     glitchedhttps_response* response = glitchedhttps_submit(&request);
 
