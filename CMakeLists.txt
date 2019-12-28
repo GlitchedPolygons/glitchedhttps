@@ -6,6 +6,7 @@ add_subdirectory(lib/mbedtls)
 
 add_library(glitchedhttps
         ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include/chillbuff.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/cacerts.h
         ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps.h
         ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps.c)
 
