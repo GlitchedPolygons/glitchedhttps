@@ -19,12 +19,10 @@
 
 #define BUFFER_SIZE 256
 
-int main()
+int main(int argc, char* argv[])
 {
-    const char* url = "https://epistle.glitchedpolygons.com/marco";
-
     glitched_http_request request = {
-        .url = (char*)url,
+        .url = argv[1],
         .method = HTTP_GET,
         .buffer_size = BUFFER_SIZE,
         .ssl_verification_optional = false,
@@ -32,12 +30,14 @@ int main()
 
     glitched_http_response* response = glitched_http_submit(&request);
 
-    const bool success = response != NULL && response->status_code == 200 && strcmp(response->content, "polo") == 0;
+    const bool success = response != NULL && response->status_code >= 200 && response->status_code < 300;
 
     if (success)
     {
         printf("\nConnection test SUCCESSFUL!\n");
     }
+
+    printf("\nResponse from %s: \n\n%s\n", request.url, response->content);
 
     glitched_http_response_free(response);
 

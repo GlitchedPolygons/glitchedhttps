@@ -390,7 +390,8 @@ static void glitched_http_response_free(glitched_http_response* response)
 
     for (size_t i = 0; i < response->headers_count; i++)
     {
-        glitched_http_header_free(&(response->headers[i]));
+        glitched_http_header* h = &(response->headers[i]);
+        glitched_http_header_free(h);
     }
 
     free(response);
