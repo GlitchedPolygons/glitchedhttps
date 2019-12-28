@@ -111,19 +111,18 @@ typedef struct glitched_http_header
  * Creates and initializes a glitched_http_header instance and returns its pointer. <p>
  * Allocation is done for you: once you're done using this MAKE SURE to call {@link #glitched_http_header_free()} to prevent memory leaks!
  * @param type The header type name (e.g. "Authorization", "Accept", etc...). Must be a NUL-terminated string!
+ * @param type_length The length of the header type string.
  * @param value The header value (NUL-terminated string).
+ * @param value_length The length of the header value string.
  * @return The freshly allocated and initialized glitched_http_header instance (a pointer to it). If init failed, <code>NULL</code> is returned!
  */
-static glitched_http_header* glitched_http_header_init(const char* type, const char* value)
+static glitched_http_header* glitched_http_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length)
 {
     if (type == NULL || value == NULL)
     {
         // TODO: print error msg
         return NULL;
     }
-
-    const size_t type_length = strlen(type);
-    const size_t value_length = strlen(value);
 
     if (type_length == 0)
     {
@@ -548,13 +547,14 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
     }
 
     /* Allocate the output http response struct and set pointers to default value "NULL".
-     * The consumer of this returned value should not forget to call free() on this! */
+     * The consumer of this returned value should not forget to call glitched_http_response_free() on this! */
     glitched_http_response* out = malloc(sizeof(glitched_http_response));
     if (out == NULL)
     {
         _glitched_http_log_error("OUT OF MEMORY!", __func__);
         return NULL;
     }
+
     out->raw = NULL;
     out->date = NULL;
     out->server = NULL;
@@ -617,12 +617,12 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
             {
                 _glitched_http_log_error("OUT OF MEMORY!", __func__);
                 glitched_http_response_free(out);
-                glitched_http_http_header_builder_free(&header_builder);
+                chillbuff_free(&header_builder);
                 return NULL;
             }
             memcpy(out->server, current + 8, out_length);
             out->server[out_length] = '\0';
-            http_header_builder_push_back(&header_builder, current, 6, out->server, out_length);
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 6, out->server, out_length), sizeof(glitched_http_header));
             parsed_server = true;
         }
         else if (!parsed_date && glitched_http_strncmpic(current, "Date: ", 6) == 0)
@@ -632,13 +632,13 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
             if (out->date == NULL)
             {
                 _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                http_response_free(out);
-                http_header_builder_free(&header_builder);
+                glitched_http_response_free(out);
+                chillbuff_free(&header_builder);
                 return NULL;
             }
             memcpy(out->date, current + 6, out_length);
             out->date[out_length] = '\0';
-            http_header_builder_push_back(&header_builder, current, 4, out->date, out_length);
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 4, out->date, out_length), sizeof(glitched_http_header));
             parsed_date = true;
         }
         else if (!parsed_content_type && glitched_http_strncmpic(current, "Content-Type: ", 14) == 0)
@@ -648,13 +648,13 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
             if (out->content_type == NULL)
             {
                 _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                http_response_free(out);
-                http_header_builder_free(&header_builder);
+                glitched_http_response_free(out);
+                chillbuff_free(&header_builder);
                 return NULL;
             }
             memcpy(out->content_type, current + 14, out_length);
             out->content_type[out_length] = '\0';
-            http_header_builder_push_back(&header_builder, current, 12, out->content_type, out_length);
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 12, out->content_type, out_length), sizeof(glitched_http_header));
             parsed_content_type = true;
         }
         else if (!parsed_content_encoding && glitched_http_strncmpic(current, "Content-Encoding: ", 18) == 0)
@@ -664,13 +664,13 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
             if (out->content_encoding == NULL)
             {
                 _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                http_response_free(out);
-                http_header_builder_free(&header_builder);
+                glitched_http_response_free(out);
+                chillbuff_free(&header_builder);
                 return NULL;
             }
             memcpy(out->content_encoding, current + 18, out_length);
             out->content_encoding[out_length] = '\0';
-            http_header_builder_push_back(&header_builder, current, 16, out->content_encoding, out_length);
+            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 16, out->content_encoding, out_length), sizeof(glitched_http_header));
             parsed_content_encoding = true;
         }
         else if (!parsed_content_length && glitched_http_strncmpic(current, "Content-Length: ", 16) == 0)
@@ -683,7 +683,7 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
                 memcpy(n, c + 1, current_length - 1);
                 out->content_length = atoi(n);
                 snprintf(n, sizeof(n), "%lld", out->content_length);
-                http_header_builder_push_back(&header_builder, current, 14, n, strlen(n));
+                chillbuff_push_back(&header_builder, glitched_http_header_init(current, 14, n, strlen(n)), sizeof(glitched_http_header));
             }
             parsed_content_length = true;
         }
@@ -695,8 +695,8 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
             if (out->content == NULL)
             {
                 _glitched_http_log_error("OUT OF MEMORY!", __func__);
-                http_response_free(out);
-                http_header_builder_free(&header_builder);
+                glitched_http_response_free(out);
+                chillbuff_free(&header_builder);
                 return NULL;
             }
             memcpy(out->content, content, content_length);
@@ -713,7 +713,7 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
             {
                 const size_t header_type_length = header_value - current;
                 const size_t header_value_length = current_length - header_type_length - header_separator_length;
-                http_header_builder_push_back(&header_builder, current, header_type_length, header_value + header_separator_length, header_value_length);
+                chillbuff_push_back(&header_builder, glitched_http_header_init(current, header_type_length, header_value + header_separator_length, header_value_length), sizeof(glitched_http_header));
             }
         }
         current = next + delimiter_length;
@@ -724,12 +724,12 @@ static glitched_http_response* glitched_http_parse_response_string(const chillbu
     if (out->headers == NULL)
     {
         _glitched_http_log_error("OUT OF MEMORY!", __func__);
-        http_response_free(out);
-        http_header_builder_free(&header_builder);
+        glitched_http_response_free(out);
+        chillbuff_free(&header_builder);
         return NULL;
     }
 
-    http_header_builder_free(&header_builder);
+    chillbuff_free(&header_builder);
 
     return out;
 }
@@ -962,86 +962,87 @@ static glitched_http_response* glitched_http_http_request(const char* server_nam
         return NULL;
     }
 
-    struct hostent* server_host;
-    struct sockaddr_in server_addr;
-    int ret = -1, length, server_fd;
-    unsigned char buffer[buffer_size];
-    chillbuff response_string;
-    chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
-
-    /* Start the connection. */
-
-    server_host = gethostbyname(server_name);
-    if (server_host == NULL)
-    {
-        _glitched_http_log_error("\"gethostbyname\" failed!", __func__);
-        goto exit;
-    }
-
-    server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-    if (server_fd < 0)
-    {
-        char msg[128];
-        sprintf(msg, "HTTP request failed: \"socket\" returned %d", server_fd);
-        _glitched_http_log_error(msg, __func__);
-        goto exit;
-    }
-
-    memcpy((void*)&server_addr.sin_addr, (void*)server_host->h_addr, server_host->h_length);
-
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(server_port);
-
-    ret = connect(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
-    if (ret < 0)
-    {
-        char msg[128];
-        sprintf(msg, "HTTP request failed: \"connect\" returned %d", ret);
-        _glitched_http_log_error(msg, __func__);
-        goto exit;
-    }
-
-    /* Write the GET request. */
-
-    length = sprintf((char*)buffer, "%s", request);
-
-    while ((ret = write(server_fd, buffer, length)) <= 0)
-    {
-        if (ret != 0)
-        {
-            char msg[128];
-            sprintf(msg, "HTTP request failed: \"write\" returned %d", ret);
-            _glitched_http_log_error(msg, __func__);
-            goto exit;
-        }
-    }
-
-    /* Read the HTTP response. */
-
-    for (;;)
-    {
-        length = (int)(sizeof(buffer) - 1);
-        memset(buffer, 0, sizeof(buffer));
-        ret = read(server_fd, buffer, length);
-
-        if (ret <= 0)
-        {
-            char msg[128];
-            sprintf(msg, "HTTP request failed: \"read\" returned %d", ret);
-            _glitched_http_log_error(msg, __func__);
-            break;
-        }
-
-        length = ret;
-        chillbuff_push_back(&response_string, buffer, length);
-    }
-
-    // TODO: return response accordingly (and correctly!)
-
+    // struct hostent* server_host;
+    // struct sockaddr_in server_addr;
+    // int ret = -1, length, server_fd;
+    // unsigned char buffer[buffer_size];
+    // chillbuff response_string;
+    // chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+//
+///* Start the connection. */
+//
+// server_host = gethostbyname(server_name);
+// if (server_host == NULL)
+//{
+//    _glitched_http_log_error("\"gethostbyname\" failed!", __func__);
+//    goto exit;
+//}
+//
+// server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+// if (server_fd < 0)
+//{
+//    char msg[128];
+//    sprintf(msg, "HTTP request failed: \"socket\" returned %d", server_fd);
+//    _glitched_http_log_error(msg, __func__);
+//    goto exit;
+//}
+//
+// memcpy((void*)&server_addr.sin_addr, (void*)server_host->h_addr, server_host->h_length);
+//
+// server_addr.sin_family = AF_INET;
+// server_addr.sin_port = htons(server_port);
+//
+// ret = connect(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+// if (ret < 0)
+//{
+//    char msg[128];
+//    sprintf(msg, "HTTP request failed: \"connect\" returned %d", ret);
+//    _glitched_http_log_error(msg, __func__);
+//    goto exit;
+//}
+//
+///* Write the GET request. */
+//
+// length = sprintf((char*)buffer, "%s", request);
+//
+// while ((ret = write(server_fd, buffer, length)) <= 0)
+//{
+//    if (ret != 0)
+//    {
+//        char msg[128];
+//        sprintf(msg, "HTTP request failed: \"write\" returned %d", ret);
+//        _glitched_http_log_error(msg, __func__);
+//        goto exit;
+//    }
+//}
+//
+///* Read the HTTP response. */
+//
+// for (;;)
+//{
+//    length = (int)(sizeof(buffer) - 1);
+//    memset(buffer, 0, sizeof(buffer));
+//    ret = read(server_fd, buffer, length);
+//
+//    if (ret <= 0)
+//    {
+//        char msg[128];
+//        sprintf(msg, "HTTP request failed: \"read\" returned %d", ret);
+//        _glitched_http_log_error(msg, __func__);
+//        break;
+//    }
+//
+//    length = ret;
+//    chillbuff_push_back(&response_string, buffer, length);
+//}
+//
+//// TODO: return response accordingly (and correctly!)
+//
 exit:
-
-    chillbuff_free(&response_string);
-    close(server_fd);
+    //
+    // chillbuff_free(&response_string);
+    // close(server_fd);
+    //
     return NULL;
 }
 

@@ -4,8 +4,8 @@ project(glitchedhttps_examples C)
 
 add_subdirectory(../ lib)
 
-add_executable(example_get get/main.c)
-add_executable(example_post post/main.c)
+add_executable(glitchedhttps_example_get get/main.c)
+add_executable(glitchedhttps_example_post post/main.c)
 
-target_link_libraries(example_get PRIVATE glitchedhttps)
-target_link_libraries(example_post PRIVATE glitchedhttps)
+target_link_libraries(glitchedhttps_example_get PRIVATE glitchedhttps)
+target_link_libraries(glitchedhttps_example_post PRIVATE glitchedhttps)
