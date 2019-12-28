@@ -21,18 +21,20 @@
 
 int main()
 {
-    char* url = "https://postman-echo.com/post";
+    char* url = "https://postman-echo.com/put";
     char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
 
     glitchedhttps_request request = {
             .url = url,
-            .method = GLITCHEDHTTPS_POST,
+            .method = GLITCHEDHTTPS_PUT,
             .buffer_size = BUFFER_SIZE,
             .ssl_verification_optional = false,
             .content_type = "application/json",
             .content_length = strlen(body),
             .content = body
     };
+
+    // TODO: demonstrate additional headers setup here (send some test HTTP headers).
 
     glitchedhttps_response* response = glitchedhttps_submit(&request);
 
