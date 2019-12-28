@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['glitched_5fhttp_5fcount_5fdigits_8',['glitched_http_count_digits',['../glitchedhttps_8h.html#a41fede6c6e8c1dafa02fdc666dd80985',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fguid_5fstring_9',['glitched_http_guid_string',['../structglitched__http__guid__string.html',1,'glitched_http_guid_string'],['../glitchedhttps_8h.html#a29768182e95dbeab901a84d34049511c',1,'glitched_http_guid_string():&#160;glitchedhttps.h']]],
+  ['glitched_5fhttp_5fheader_10',['glitched_http_header',['../structglitched__http__header.html',1,'glitched_http_header'],['../glitchedhttps_8h.html#a7631edd06d7c47cb23913413700e3cca',1,'glitched_http_header():&#160;glitchedhttps.h']]],
+  ['glitched_5fhttp_5fheader_5ffree_11',['glitched_http_header_free',['../glitchedhttps_8h.html#a82bfb70afd4021aeacd9055a7c908eba',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fheader_5finit_12',['glitched_http_header_init',['../glitchedhttps_8h.html#a1f0315813e5bdb3b938cfaee625439c6',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fis_5fhttp_13',['glitched_http_is_http',['../glitchedhttps_8h.html#afaee67a5a38db5b96361039236c0433a',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fis_5fhttps_14',['glitched_http_is_https',['../glitchedhttps_8h.html#a272278316c018429d4bb45747af78aa9',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fmethod_15',['glitched_http_method',['../glitchedhttps_8h.html#aae5aebdfb57bfdfd45add39c03dd3987',1,'glitched_http_method():&#160;glitchedhttps.h'],['../glitchedhttps_8h.html#af523b2968622e677274e0de58a6c8e0c',1,'glitched_http_method():&#160;glitchedhttps.h']]],
+  ['glitched_5fhttp_5fmethod_5fto_5fstring_16',['glitched_http_method_to_string',['../glitchedhttps_8h.html#a11b8aaf27cbd8f07eb32140db50b9f5b',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fnew_5fguid_17',['glitched_http_new_guid',['../glitchedhttps_8h.html#ac646d451273ab217c6bace52ca9335c8',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5frequest_18',['glitched_http_request',['../structglitched__http__request.html',1,'glitched_http_request'],['../glitchedhttps_8h.html#a2270973afb22fa29d71c67074d89eb05',1,'glitched_http_request():&#160;glitchedhttps.h']]],
+  ['glitched_5fhttp_5fresponse_19',['glitched_http_response',['../structglitched__http__response.html',1,'glitched_http_response'],['../glitchedhttps_8h.html#ae1e6da8fbe0d420d50faf35cf2ba58a9',1,'glitched_http_response():&#160;glitchedhttps.h']]],
+  ['glitched_5fhttp_5fresponse_5ffree_20',['glitched_http_response_free',['../glitchedhttps_8h.html#aaaff5d439598139d65e94e4b7f463e8f',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fset_5ferror_5fcallback_21',['glitched_http_set_error_callback',['../glitchedhttps_8h.html#a833a629af0388b63a2e59b19da87106c',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fstrncmpic_22',['glitched_http_strncmpic',['../glitchedhttps_8h.html#ab0a0ccffa2355300cee661b2470b6a22',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5fsubmit_23',['glitched_http_submit',['../glitchedhttps_8h.html#a1034bdb9db2e8b24fa4865545882ecce',1,'glitchedhttps.h']]],
+  ['glitched_5fhttp_5funset_5ferror_5fcallback_24',['glitched_http_unset_error_callback',['../glitchedhttps_8h.html#a9726a595165e9a3191a555bb993855da',1,'glitchedhttps.h']]],
+  ['glitchedhttps_2eh_25',['glitchedhttps.h',['../glitchedhttps_8h.html',1,'']]]
+];
