@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['type_34',['type',['../structglitched__http__header.html#a2df5b2a0991854c778897e7979c3da7f',1,'glitched_http_header']]]
+  ['type_48',['type',['../structglitchedhttps__header.html#aaf1b54bae55fad27922af9ad853a3dca',1,'glitchedhttps_header']]]
 ];

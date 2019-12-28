@@ -3,14 +3,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 /**
- *  @file cacerts.h
+ *  @file glitchedhttps_cacerts.h
  *  @author Raphael Beck
  *  @date 28. December 2019
  *  @brief Trusted CA certificates chain for SSL connections. <p>
  */
 
-#ifndef CACERTS_H
-#define CACERTS_H
+#ifndef GLITCHEDHTTPS_CACERTS_H
+#define GLITCHEDHTTPS_CACERTS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,7 +52,7 @@ extern "C" {
 /**
  * Concatenated string of trusted CA certificates.
  */
-static const char GLITCHED_HTTP_CA_CERTS[] =
+static const char GLITCHEDHTTPS_CA_CERTS[] =
 
         /*
              ##
@@ -5261,4 +5261,4 @@ static const char GLITCHED_HTTP_CA_CERTS[] =
 } // extern "C"
 #endif
 
-#endif // CACERTS_H
+#endif // GLITCHEDHTTPS_CACERTS_H

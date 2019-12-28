@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['glitched_5fhttp_5fmethod_78',['glitched_http_method',['../glitchedhttps_8h.html#aae5aebdfb57bfdfd45add39c03dd3987',1,'glitchedhttps.h']]]
+  ['glitchedhttps_5fmethod_101',['glitchedhttps_method',['../glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72',1,'glitchedhttps_method.h']]]
 ];

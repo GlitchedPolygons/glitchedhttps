@@ -18,7 +18,17 @@ project(glitchedhttps C)
 set(CMAKE_C_STANDARD 11)
 add_subdirectory(lib/mbedtls)
 
-add_library(glitchedhttps INTERFACE)
+add_library(glitchedhttps INTERFACE
+        #include/glitchedhttps_cacerts.h
+        #include/glitchedhttps_strutil.h
+        #include/glitchedhttps_debug.h
+        #include/glitchedhttps_guid.h
+        #include/glitchedhttps_method.h
+        #include/glitchedhttps_header.h
+        #include/glitchedhttps_request.h
+        #include/glitchedhttps_response.h
+        #include/glitchedhttps.h
+        )
 
 target_include_directories(glitchedhttps INTERFACE include lib/chillbuff/include)
 

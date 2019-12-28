@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['glitched_5fhttp_5fguid_5fstring_73',['glitched_http_guid_string',['../glitchedhttps_8h.html#a29768182e95dbeab901a84d34049511c',1,'glitchedhttps.h']]],
-  ['glitched_5fhttp_5fheader_74',['glitched_http_header',['../glitchedhttps_8h.html#a7631edd06d7c47cb23913413700e3cca',1,'glitchedhttps.h']]],
-  ['glitched_5fhttp_5fmethod_75',['glitched_http_method',['../glitchedhttps_8h.html#af523b2968622e677274e0de58a6c8e0c',1,'glitchedhttps.h']]],
-  ['glitched_5fhttp_5frequest_76',['glitched_http_request',['../glitchedhttps_8h.html#a2270973afb22fa29d71c67074d89eb05',1,'glitchedhttps.h']]],
-  ['glitched_5fhttp_5fresponse_77',['glitched_http_response',['../glitchedhttps_8h.html#ae1e6da8fbe0d420d50faf35cf2ba58a9',1,'glitchedhttps.h']]]
+  ['glitchedhttps_5fguid_96',['glitchedhttps_guid',['../glitchedhttps__guid_8h.html#ad385be6cc43c8949c9a9a30e23921682',1,'glitchedhttps_guid.h']]],
+  ['glitchedhttps_5fheader_97',['glitchedhttps_header',['../glitchedhttps__header_8h.html#a5779f37d41417348102879114116d79c',1,'glitchedhttps_header.h']]],
+  ['glitchedhttps_5fmethod_98',['glitchedhttps_method',['../glitchedhttps__method_8h.html#ac1f37161fa99eaf187a544ca38eb219b',1,'glitchedhttps_method.h']]],
+  ['glitchedhttps_5frequest_99',['glitchedhttps_request',['../glitchedhttps__request_8h.html#a80cd287a4b65ec219df1b7809cd6bba6',1,'glitchedhttps_request.h']]],
+  ['glitchedhttps_5fresponse_100',['glitchedhttps_response',['../glitchedhttps__response_8h.html#aa2b686ea8e52d45851ae793e231ed22e',1,'glitchedhttps_response.h']]]
 ];

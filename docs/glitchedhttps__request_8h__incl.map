@@ -1,0 +1,7 @@
+<map id="include/glitchedhttps_request.h" name="include/glitchedhttps_request.h">
+<area shape="rect" id="node1" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="87,5,228,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="11,169,75,196"/>
+<area shape="rect" id="node3" title=" " alt="" coords="235,169,310,196"/>
+<area shape="rect" id="node4" href="$glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="252,95,410,121"/>
+<area shape="rect" id="node5" href="$glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="24,95,177,121"/>
+</map>

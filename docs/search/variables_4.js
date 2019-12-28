@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['headers_62',['headers',['../structglitched__http__response.html#af0d540edc12990252f046cb3bf087163',1,'glitched_http_response']]],
-  ['headers_5fcount_63',['headers_count',['../structglitched__http__response.html#ad00ffbfc9ca73c053307406343a28c1f',1,'glitched_http_response']]]
+  ['glitchedhttps_5fca_5fcerts_84',['GLITCHEDHTTPS_CA_CERTS',['../glitchedhttps__cacerts_8h.html#ad06dfbe6e8c4f627f29053001efd740c',1,'glitchedhttps_cacerts.h']]]
 ];

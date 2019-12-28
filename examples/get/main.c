@@ -21,14 +21,14 @@
 
 int main(int argc, char* argv[])
 {
-    glitched_http_request request = {
+    glitchedhttps_request request = {
         .url = argv[1],
         .method = HTTP_GET,
         .buffer_size = BUFFER_SIZE,
         .ssl_verification_optional = false,
     };
 
-    glitched_http_response* response = glitched_http_submit(&request);
+    glitchedhttps_response* response = glitchedhttps_submit(&request);
 
     const bool success = response != NULL && response->status_code >= 200 && response->status_code < 300;
 
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 
     printf("\nResponse from %s: \n\n%s\n", request.url, response->content);
 
-    glitched_http_response_free(response);
+    glitchedhttps_response_free(response); // TODO: this segfaults because of the first call to free header also frees the entire remaining array... maybe use a pointerpointer?
 
     return 0;
 }

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['buffer_5fsize_2',['buffer_size',['../structglitched__http__request.html#a49251f8ae7fa42971a08735c9c85247c',1,'glitched_http_request']]]
+  ['buffer_5fsize_2',['buffer_size',['../structglitchedhttps__request.html#a6d0c15ce9965d36b911bcb276bff2db3',1,'glitchedhttps_request']]]
 ];

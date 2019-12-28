@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['date_61',['date',['../structglitched__http__response.html#adbae715b7b7ca3c32178942c3d9592cb',1,'glitched_http_response']]]
+  ['date_83',['date',['../structglitchedhttps__response.html#a249ed19d0f03bcab6945e9a8d3bd07ac',1,'glitchedhttps_response']]]
 ];

@@ -32,10 +32,6 @@ extern "C" {
 #include <time.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdbool.h>
 #include <chillbuff.h>
 #include <mbedtls/net.h>
 #include <mbedtls/ssl.h>
@@ -46,537 +42,21 @@ extern "C" {
 #include <mbedtls/platform.h>
 #include <mbedtls/error.h>
 
-#include <glitchedhttps_cacerts.h>
+#include "glitchedhttps_cacerts.h"
+#include "glitchedhttps_strutil.h"
+#include "glitchedhttps_debug.h"
+#include "glitchedhttps_guid.h"
+#include "glitchedhttps_method.h"
+#include "glitchedhttps_header.h"
+#include "glitchedhttps_request.h"
+#include "glitchedhttps_response.h"
 
 #ifdef WIN32
 #include <winsock.h>
 #endif
 
 /** @private */
-void (*_glitched_http_error_callback)(const char*) = NULL;
-
-/** @private */
-static inline void _glitched_http_log_error(const char* error, const char* origin)
-{
-    char error_msg[64 + strlen(error) + strlen(origin)];
-    snprintf(error_msg, sizeof(error_msg), "\nGLITCHEDHTTPS ERROR: (%s) %s\n", origin, error);
-    if (_glitched_http_error_callback != NULL)
-    {
-        _glitched_http_error_callback(error_msg);
-    }
-}
-
-/**
- * Sets the glitchedhttps error callback. <p>
- * If errors occur, they'll be passed as a string into the provided callback function.
- * @param error_callback The function to call when errors occur.
- * @return Whether the callback was set up correctly or not (<code>bool</code> as defined in <code>stdbool.h</code>).
- */
-static inline bool glitched_http_set_error_callback(void (*error_callback)(const char*))
-{
-    if (error_callback == NULL)
-    {
-        _glitched_http_log_error("The passed error callback is empty; Operation cancelled!", __func__);
-        return false;
-    }
-
-    _glitched_http_error_callback = error_callback;
-    return true;
-}
-
-/**
- * Clears the glitchedhttps error callback (errors won't be printed anymore).
- */
-static inline void glitched_http_unset_error_callback()
-{
-    _glitched_http_error_callback = NULL;
-}
-
-/**
- * @brief HTTP request (or response) header (for example: type="Authorization" ; value="Basic YWxhZGRpbjpvcGVuc2VzYW1l").
- */
-typedef struct glitched_http_header
-{
-    /** The type of HTTP request header (its name without the ':' colon). E.g. "Authorization", "Server", etc... */
-    char* type;
-    /** The header value (what comes after the ':' colon). */
-    char* value;
-} glitched_http_header;
-
-/**
- * Creates and initializes a glitched_http_header instance and returns its pointer. <p>
- * Allocation is done for you: once you're done using this MAKE SURE to call {@link #glitched_http_header_free()} to prevent memory leaks!
- * @param type The header type name (e.g. "Authorization", "Accept", etc...). Must be a NUL-terminated string!
- * @param type_length The length of the header type string.
- * @param value The header value (NUL-terminated string).
- * @param value_length The length of the header value string.
- * @return The freshly allocated and initialized glitched_http_header instance (a pointer to it). If init failed, <code>NULL</code> is returned!
- */
-static glitched_http_header* glitched_http_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length)
-{
-    if (type == NULL || value == NULL)
-    {
-        _glitched_http_log_error("Header type or value string NULL!", __func__);
-        return NULL;
-    }
-
-    if (type_length == 0)
-    {
-        _glitched_http_log_error("Header type string empty!", __func__);
-        return NULL;
-    }
-
-    glitched_http_header* out = malloc(sizeof(glitched_http_header));
-    if (out == NULL)
-    {
-        _glitched_http_log_error("OUT OF MEMORY!", __func__);
-        return NULL;
-    }
-
-    out->type = malloc(sizeof(char) * type_length + 1);
-    out->value = malloc(sizeof(char) * value_length + 1);
-
-    if (out->type == NULL || out->value == NULL)
-    {
-        _glitched_http_log_error("OUT OF MEMORY!", __func__);
-        return NULL;
-    }
-
-    memcpy(out->type, type, type_length);
-    out->type[type_length] = '\0';
-
-    if (value_length > 0)
-    {
-        memcpy(out->value, value, value_length);
-        out->value[value_length] = '\0';
-    }
-    else
-    {
-        out->value[0] = '\0';
-    }
-
-    return out;
-}
-
-/**
- * Frees the glitched_http_header instance as well as its two heap-allocated strings inside.
- * @param header The glitched_http_header to deallocate.
- */
-static inline void glitched_http_header_free(glitched_http_header* header)
-{
-    if (header != NULL)
-    {
-        free(header->type);
-        free(header->value);
-        free(header);
-    }
-}
-
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-
-/**
- * @brief HTTP Method to use for a glitched_http_request
- * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
- */
-typedef enum glitched_http_method
-{
-    HTTP_GET = 0,
-    HTTP_HEAD = 1,
-    HTTP_POST = 2,
-    HTTP_PATCH = 3,
-    HTTP_PUT = 4,
-    HTTP_DELETE = 5,
-    HTTP_CONNECT = 6,
-    HTTP_OPTIONS = 7,
-    HTTP_TRACE = 8
-} glitched_http_method;
-
-/**
- * @brief Struct containing an HTTP request's parameters and headers.
- */
-typedef struct glitched_http_request
-{
-    /**
-     * The full, uncensored URL for the HTTP POST request including
-     * protocol, host name, port (optional), resource URI and query parameters (if any).
-     * MUST BE NUL-TERMINATED!
-     */
-    char* url;
-
-    /**
-     * The request's HTTP method (E.g. GET, POST, ...).<p>
-     * Please remember that only POST, PUT and PATCH requests
-     * should send a request body (via <code>content</code> parameter here).
-     */
-    glitched_http_method method;
-
-    /**
-     * The HTTP request body.
-     * Set this to <code>NULL</code> if you don't want to send a request body.<p>
-     * Note that this is ignored for GET requests, as well as every other glitched_http_method
-     * that does not recommend the inclusion of a body... And if your server looks
-     * for it nonetheless you're infringing the RFC2616 recommendation!<p>
-     * @see https://tools.ietf.org/html/rfc2616#section-4.3
-     * @see https://stackoverflow.com/a/983458
-     */
-    char* content;
-
-    /**
-     * The mime-type of the request body content (e.g. text/plain; charset=utf-8).
-     */
-    char* content_type;
-
-    /**
-     * The request body's encoding (e.g. "gzip").
-     */
-    char* content_encoding;
-
-    /**
-     * Content-Length header that tells the server how many bytes to read from the message body.
-     */
-    size_t content_length;
-
-    /**
-     * [OPTIONAL] Additional headers for the HTTP request. <p>
-     * Set this to <code>NULL</code> if you don't want to add any additional HTTP request headers. <p>
-     * You can create headers using the {@link #glitched_http_header_init()} function.
-     */
-    glitched_http_header* additional_headers;
-
-    /**
-     * The amount of passed additional HTTP request headers (pass zero if there's none).
-     */
-    size_t additional_headers_count;
-
-    /**
-     * How big should the underlying text buffer be?
-     */
-    size_t buffer_size;
-
-    /**
-     * It's best to leave this set to <code>false</code>.<p>
-     * Only set this to <code>true</code> if you don't want to enforce verification of the server's SSL certificate (DEFINITIVELY NOT RECOMMENDED FOR PRODUCTION ENV!).<p>
-     * This value is only taken into consideration in case of an HTTPS request (determined by the scheme defined in the url).
-     */
-    bool ssl_verification_optional;
-
-} glitched_http_request;
-
-/**
- * Converts an glitched_http_method enum name to string. <p>
- * Make sure that you allocate at least a nice and sufficient <code>char[8]</code> for the out argument.
- * @param method The glitched_http_method to stringify.
- * @param out The out string into which to <code>strcpy()</code> the result (make sure to allocate at least 8 bytes).
- * @param out_size The size of the output <code>char*</code> buffer (must be greater than or equals 8).
- * @return Whether the passed glitched_http_method was converted to string successfully or not.
- */
-static inline bool glitched_http_method_to_string(const glitched_http_method method, char* out, const size_t out_size)
-{
-    if (out == NULL)
-    {
-        _glitched_http_log_error("Pointer argument \"out\" is NULL! Please provide a valid output string to write (strncpy) into.", __func__);
-        return false;
-    }
-    if (out_size < 8)
-    {
-        _glitched_http_log_error("Insufficient output buffer size: please allocate at least 8 bytes for the out string!", __func__);
-        return false;
-    }
-    switch (method)
-    {
-        case HTTP_GET:
-            strncpy(out, "GET", out_size);
-            return true;
-        case HTTP_HEAD:
-            strncpy(out, "HEAD", out_size);
-            return true;
-        case HTTP_POST:
-            strncpy(out, "POST", out_size);
-            return true;
-        case HTTP_PATCH:
-            strncpy(out, "PATCH", out_size);
-            return true;
-        case HTTP_PUT:
-            strncpy(out, "PUT", out_size);
-            return true;
-        case HTTP_DELETE:
-            strncpy(out, "DELETE", out_size);
-            return true;
-        case HTTP_CONNECT:
-            strncpy(out, "CONNECT", out_size);
-            return true;
-        case HTTP_OPTIONS:
-            strncpy(out, "OPTIONS", out_size);
-            return true;
-        case HTTP_TRACE:
-            strncpy(out, "TRACE", out_size);
-            return true;
-        default:
-            _glitched_http_log_error("Invalid HTTP Method!", __func__);
-            return false;
-    }
-}
-
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-
-/**
- * @brief Struct containing an HTTP response's data.
- */
-typedef struct glitched_http_response
-{
-    /** The result status code (e.g. 200 for "OK", 404 for "Not Found", etc...). */
-    int status_code;
-
-    /** The full, raw returned HTTP response in plain text, with carriage returns, line breaks, final NUL-terminator and everything... */
-    char* raw;
-
-    /** The (NUL-terminated) response's server header string. */
-    char* server;
-
-    /** Response timestamp in GMT (original string, with NUL-terminator at its end). */
-    char* date;
-
-    /** Response body content type (e.g. "text/plain; charset=utf-8"). NUL-terminated. If there's no response body, this remains <code>NULL</code>. */
-    char* content_type;
-
-    /** Response body encoding (e.g. "gzip"). NUL-terminated string. If there's no response body, this remains <code>NULL</code>. */
-    char* content_encoding;
-
-    /** The response's content body (could be a JSON string, could be plain text; make sure to check out and acknowledge the "content_type" field before doing anything with this). */
-    char* content;
-
-    /** The response's content length header value. */
-    size_t content_length;
-
-    /** All HTTP response headers. @see glitched_http_header */
-    glitched_http_header* headers;
-
-    /** The total amount of headers included in the HTTP response. */
-    size_t headers_count;
-} glitched_http_response;
-
-/**
- * Frees an glitched_http_response instance that was allocated by {@link #glitched_http_submit()}.
- * @param response The glitched_http_response instance ready for deallocation.
- */
-static void glitched_http_response_free(glitched_http_response* response)
-{
-    if (response == NULL)
-    {
-        return;
-    }
-
-    free(response->raw);
-    response->raw = NULL;
-
-    free(response->server);
-    response->server = NULL;
-
-    free(response->date);
-    response->date = NULL;
-
-    free(response->content);
-    response->content = NULL;
-
-    free(response->content_type);
-    response->content_type = NULL;
-
-    free(response->content_encoding);
-    response->content_encoding = NULL;
-
-    for (size_t i = 0; i < response->headers_count; i++)
-    {
-        glitched_http_header* h = &(response->headers[i]);
-        glitched_http_header_free(h);
-    }
-
-    free(response);
-}
-
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-
-/**
- * @brief Struct containing the output from a call to the {@link #glitched_http_new_guid()} function. <p>
- * 36 characters (only 32 if you chose to omit the hyphens) + 1 NUL terminator.
- */
-typedef struct glitched_http_guid_string
-{
-    /** NUL-terminated string containing the GUID. */
-    char string[36 + 1];
-} glitched_http_guid_string;
-
-#define GLITCHED_HTTP_GUID_LOWERCASE_HYPHENS "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x"
-#define GLITCHED_HTTP_GUID_LOWERCASE_NO_HYPHENS "%08x%04x%04x%02x%02x%02x%02x%02x%02x%02x%02x"
-#define GLITCHED_HTTP_GUID_UPPERCASE_HYPHENS "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X"
-#define GLITCHED_HTTP_GUID_UPPERCASE_NO_HYPHENS "%08X%04X%04X%02X%02X%02X%02X%02X%02X%02X%02X"
-
-#define GLITCHED_HTTP_GET_GUID_FORMAT(lowercase, hyphens) ((lowercase) ? (hyphens) ? (GLITCHED_HTTP_GUID_LOWERCASE_HYPHENS) : (GLITCHED_HTTP_GUID_LOWERCASE_NO_HYPHENS) : (hyphens) ? (GLITCHED_HTTP_GUID_UPPERCASE_HYPHENS) : (GLITCHED_HTTP_GUID_UPPERCASE_NO_HYPHENS))
-
-#ifdef _WIN32
-
-/**
- * Generates a new GUID (a.k.a. UUID).
- * @param lowercase Should the GUID be lowercase or UPPERCASE only?
- * @param hyphens Should the GUID contain hyphen separators?
- * @return The glitched_http_guid_string
- */
-glitched_http_guid_string glitched_http_new_guid(const bool lowercase, const bool hyphens)
-{
-    glitched_http_guid_string out;
-    memset(out.string, '\0', sizeof(out.string));
-
-    GUID guid = { 0 };
-    CoCreateGuid(&guid);
-    snprintf(out.string, sizeof(out.string), GLITCHED_HTTP_GET_GUID_FORMAT(lowercase, hyphens), guid.Data1, guid.Data2, guid.Data3, guid.Data4[0], guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
-    return out;
-}
-
-#else
-
-#include <uuid/uuid.h>
-#include <netinet/in.h>
-#include <netdb.h>
-
-/**
- * Generates a new GUID (a.k.a. UUID).
- * @param lowercase Should the GUID be lowercase or UPPERCASE only?
- * @param hyphens Should the GUID contain hyphen separators?
- * @return The glitched_http_guid_string
- */
-glitched_http_guid_string glitched_http_new_guid(const bool lowercase, const bool hyphens)
-{
-    glitched_http_guid_string out;
-    memset(out.string, '\0', sizeof(out.string));
-
-    uuid_t uuid;
-    uuid_generate(uuid);
-
-    char tmp[sizeof(out.string)];
-    if (lowercase)
-    {
-        uuid_unparse_lower(uuid, tmp);
-    }
-    else
-    {
-        uuid_unparse_upper(uuid, tmp);
-    }
-
-    if (hyphens)
-    {
-        memcpy(out.string, tmp, sizeof(tmp));
-    }
-    else
-    {
-        char* c = out.string;
-        for (int i = 0; i < sizeof(tmp); i++)
-        {
-            if (tmp[i] != '-')
-            {
-                *(c++) = tmp[i];
-            }
-        }
-    }
-
-    return out;
-}
-
-#endif
-
-#undef GLITCHED_HTTP_GUID_LOWERCASE_HYPHENS
-#undef GLITCHED_HTTP_GUID_LOWERCASE_NO_HYPHENS
-#undef GLITCHED_HTTP_GUID_UPPERCASE_HYPHENS
-#undef GLITCHED_HTTP_GUID_UPPERCASE_NO_HYPHENS
-#undef GLITCHED_HTTP_GET_GUID_FORMAT
-
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------- */
-
-/** @private */
-static void _glitched_http_debug(void* ctx, int level, const char* file, int line, const char* str)
-{
-    ((void)level);
-
-    mbedtls_fprintf((FILE*)ctx, "%s:%04d: %s", file, line, str);
-    fflush((FILE*)ctx);
-}
-
-/* Needed for string comparisons ignoring case. */
-/**
- * Compares two strings ignoring UPPER vs. lowercase.
- * @param str1 String to compare.
- * @param str2 String to compare to.
- * @param n How many characters of the string should be compared (starting from index 0)?
- * @return If the strings are equal, <code>0</code> is returned. Otherwise, something else.
- */
-static inline int glitched_http_strncmpic(const char* str1, const char* str2, size_t n)
-{
-    size_t cmp = 0;
-    int ret = INT_MIN;
-
-    if (str1 == NULL || str2 == NULL)
-    {
-        return ret;
-    }
-
-    while ((*str1 || *str2) && cmp < n)
-    {
-        if ((ret = tolower((int)(*str1)) - tolower((int)(*str2))) != 0)
-        {
-            break;
-        }
-        cmp++;
-        str1++;
-        str2++;
-    }
-
-    return ret;
-}
-
-/**
- * Checks whether a given string starts with <code>http://</code>.
- * @param url The URL string to check.
- * @return Whether the passed URL has the http scheme at its beginning or not.
- */
-static inline bool glitched_http_is_http(const char* url)
-{
-    return strlen(url) >= 7 && strncmp(url, "http://", 7) == 0;
-}
-
-/**
- * Checks whether a given string starts with <code>https://</code>.
- * @param url The URL string to check.
- * @return Whether the passed URL has the https scheme at its beginning or not.
- */
-static inline bool glitched_http_is_https(const char* url)
-{
-    return strlen(url) >= 8 && strncmp(url, "https://", 8) == 0;
-}
-
-/**
- * Counts how many digits a number has.
- * @param number The number whose digit count you want to know.
- * @return The total amount of digits found.
- */
-static inline size_t glitched_http_count_digits(const size_t number)
-{
-    size_t n = number, digits = 0;
-    while (n != 0)
-    {
-        n /= 10;
-        digits++;
-    }
-    return digits;
-}
-
-/** @private */
-static glitched_http_response* _glitched_http_parse_response_string(const chillbuff* response_string)
+static glitchedhttps_response* _glitchedhttps_parse_response_string(const chillbuff* response_string)
 {
     if (response_string == NULL)
     {
@@ -585,10 +65,10 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
 
     /* Allocate the output http response struct and set pointers to default value "NULL".
      * The consumer of this returned value should not forget to call  on this! */
-    glitched_http_response* out = malloc(sizeof(glitched_http_response));
+    glitchedhttps_response* out = malloc(sizeof(glitchedhttps_response));
     if (out == NULL)
     {
-        _glitched_http_log_error("OUT OF MEMORY!", __func__);
+        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
         return NULL;
     }
 
@@ -607,8 +87,8 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
     out->raw = malloc((response_string->length + 1) * response_string->element_size);
     if (out->raw == NULL)
     {
-        glitched_http_response_free(out);
-        _glitched_http_log_error("OUT OF MEMORY!", __func__);
+        glitchedhttps_response_free(out);
+        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
         return NULL;
     }
 
@@ -628,13 +108,13 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
     bool parsed_status = false, parsed_server = false, parsed_date = false, parsed_content_type = false, parsed_content_encoding = false, parsed_content_length = false;
 
     chillbuff header_builder;
-    chillbuff_init(&header_builder, 16, sizeof(glitched_http_header), CHILLBUFF_GROW_DUPLICATIVE);
+    chillbuff_init(&header_builder, 16, sizeof(glitchedhttps_header), CHILLBUFF_GROW_DUPLICATIVE);
 
     while (next != NULL)
     {
         const size_t current_length = next - current;
 
-        if (!parsed_status && glitched_http_strncmpic(current, "HTTP/", 5) == 0)
+        if (!parsed_status && glitchedhttps_strncmpic(current, "HTTP/", 5) == 0)
         {
             char n[4];
             const char* c = memchr(current, ' ', current_length);
@@ -646,7 +126,7 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             }
             parsed_status = true;
         }
-        else if (!parsed_server && glitched_http_strncmpic(current, "Server: ", 8) == 0)
+        else if (!parsed_server && glitchedhttps_strncmpic(current, "Server: ", 8) == 0)
         {
             const size_t out_length = current_length - 8;
             out->server = malloc((out_length + 1) * sizeof(char));
@@ -656,10 +136,10 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             }
             memcpy(out->server, current + 8, out_length);
             out->server[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 6, out->server, out_length), 1);
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 6, out->server, out_length), 1);
             parsed_server = true;
         }
-        else if (!parsed_date && glitched_http_strncmpic(current, "Date: ", 6) == 0)
+        else if (!parsed_date && glitchedhttps_strncmpic(current, "Date: ", 6) == 0)
         {
             const size_t out_length = current_length - 6;
             out->date = malloc((out_length + 1) * sizeof(char));
@@ -669,10 +149,10 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             }
             memcpy(out->date, current + 6, out_length);
             out->date[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 4, out->date, out_length), 1);
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 4, out->date, out_length), 1);
             parsed_date = true;
         }
-        else if (!parsed_content_type && glitched_http_strncmpic(current, "Content-Type: ", 14) == 0)
+        else if (!parsed_content_type && glitchedhttps_strncmpic(current, "Content-Type: ", 14) == 0)
         {
             const size_t out_length = current_length - 14;
             out->content_type = malloc((out_length + 1) * sizeof(char));
@@ -682,10 +162,10 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             }
             memcpy(out->content_type, current + 14, out_length);
             out->content_type[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 12, out->content_type, out_length), 1);
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 12, out->content_type, out_length), 1);
             parsed_content_type = true;
         }
-        else if (!parsed_content_encoding && glitched_http_strncmpic(current, "Content-Encoding: ", 18) == 0)
+        else if (!parsed_content_encoding && glitchedhttps_strncmpic(current, "Content-Encoding: ", 18) == 0)
         {
             const size_t out_length = current_length - 18;
             out->content_encoding = malloc((out_length + 1) * sizeof(char));
@@ -695,10 +175,10 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             }
             memcpy(out->content_encoding, current + 18, out_length);
             out->content_encoding[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitched_http_header_init(current, 16, out->content_encoding, out_length), 1);
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 16, out->content_encoding, out_length), 1);
             parsed_content_encoding = true;
         }
-        else if (!parsed_content_length && glitched_http_strncmpic(current, "Content-Length: ", 16) == 0)
+        else if (!parsed_content_length && glitchedhttps_strncmpic(current, "Content-Length: ", 16) == 0)
         {
             char n[64];
             memset(n, '\0', sizeof(n));
@@ -708,7 +188,7 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
                 memcpy(n, c + 1, current_length - 1);
                 out->content_length = atoi(n);
                 snprintf(n, sizeof(n), "%zu", out->content_length);
-                chillbuff_push_back(&header_builder, glitched_http_header_init(current, 14, n, strlen(n)), 1);
+                chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 14, n, strlen(n)), 1);
             }
             parsed_content_length = true;
         }
@@ -735,14 +215,14 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
             {
                 const size_t header_type_length = header_value - current;
                 const size_t header_value_length = current_length - header_type_length - header_separator_length;
-                chillbuff_push_back(&header_builder, glitched_http_header_init(current, header_type_length, header_value + header_separator_length, header_value_length), 1);
+                chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, header_type_length, header_value + header_separator_length, header_value_length), 1);
             }
         }
         current = next + delimiter_length;
         next = strstr(current, delimiter);
     }
 
-    out->headers = malloc(sizeof(glitched_http_header) * header_builder.length);
+    out->headers = malloc(sizeof(glitchedhttps_header) * header_builder.length);
     if (out->headers == NULL)
     {
         goto out_of_mem;
@@ -752,8 +232,8 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
     out->headers_count = header_builder.length;
     for (size_t i = 0; i < header_builder.length; i++)
     {
-        const glitched_http_header h = ((glitched_http_header*)header_builder.array)[i];
-        out->headers[i] = *glitched_http_header_init(h.type, strlen(h.type), h.value, strlen(h.value));
+        const glitchedhttps_header h = ((glitchedhttps_header*)header_builder.array)[i];
+        out->headers[i] = *glitchedhttps_header_init(h.type, strlen(h.type), h.value, strlen(h.value));
     }
 
     chillbuff_free(&header_builder);
@@ -761,22 +241,22 @@ static glitched_http_response* _glitched_http_parse_response_string(const chillb
     return out;
 
 out_of_mem:
-    _glitched_http_log_error("OUT OF MEMORY!", __func__);
-    glitched_http_response_free(out);
+    _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
+    glitchedhttps_response_free(out);
     chillbuff_free(&header_builder);
     return NULL;
 }
 
 /** @private */
-static glitched_http_response* _glitched_http_https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const bool ssl_verification_optional)
+static glitchedhttps_response* _glitchedhttps_https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const bool ssl_verification_optional)
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
-        _glitched_http_log_error("INVALID HTTPS parameters passed into \"_glitched_http_https_request\". Returning NULL...", __func__);
+        _glitchedhttps_log_error("INVALID HTTPS parameters passed into \"_glitchedhttps_https_request\". Returning NULL...", __func__);
         return NULL;
     }
 
-    glitched_http_response* out = NULL;
+    glitchedhttps_response* out = NULL;
 
     chillbuff response_string;
     chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
@@ -789,7 +269,7 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
     time_t t;
     srand((unsigned)time(&t));
 
-    glitched_http_guid_string guid = glitched_http_new_guid(rand() & 1, rand() & 1);
+    glitchedhttps_guid guid = glitchedhttps_new_guid(rand() & 1, rand() & 1);
 
     mbedtls_x509_crt cacert;
     mbedtls_ssl_config ssl_config;
@@ -812,18 +292,18 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
     {
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
-        _glitched_http_log_error(msg, __func__);
+        _glitchedhttps_log_error(msg, __func__);
         goto exit;
     }
 
     /* Load the CA root certificates. */
 
-    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHED_HTTP_CA_CERTS, sizeof(GLITCHED_HTTP_CA_CERTS));
+    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHEDHTTPS_CA_CERTS, sizeof(GLITCHEDHTTPS_CA_CERTS));
     if (ret < 0)
     {
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
-        _glitched_http_log_error(msg, __func__);
+        _glitchedhttps_log_error(msg, __func__);
         goto exit;
     }
 
@@ -838,7 +318,7 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
     {
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_net_connect\" returned %d", ret);
-        _glitched_http_log_error(msg, __func__);
+        _glitchedhttps_log_error(msg, __func__);
         goto exit;
     }
 
@@ -849,21 +329,21 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
     {
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
-        _glitched_http_log_error(msg, __func__);
+        _glitchedhttps_log_error(msg, __func__);
         goto exit;
     }
 
     mbedtls_ssl_conf_authmode(&ssl_config, ssl_verification_optional ? MBEDTLS_SSL_VERIFY_OPTIONAL : MBEDTLS_SSL_VERIFY_REQUIRED);
     mbedtls_ssl_conf_ca_chain(&ssl_config, &cacert, NULL);
     mbedtls_ssl_conf_rng(&ssl_config, mbedtls_ctr_drbg_random, &ctr_drbg);
-    mbedtls_ssl_conf_dbg(&ssl_config, &_glitched_http_debug, stdout);
+    mbedtls_ssl_conf_dbg(&ssl_config, &_glitchedhttps_debug, stdout);
 
     ret = mbedtls_ssl_setup(&ssl_context, &ssl_config);
     if (ret != 0)
     {
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_setup\" returned %d", ret);
-        _glitched_http_log_error(msg, __func__);
+        _glitchedhttps_log_error(msg, __func__);
         goto exit;
     }
 
@@ -872,7 +352,7 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
     {
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_set_hostname\" returned %d", ret);
-        _glitched_http_log_error(msg, __func__);
+        _glitchedhttps_log_error(msg, __func__);
         goto exit;
     }
 
@@ -886,7 +366,7 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
         {
             char msg[128];
             sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_handshake\" returned -0x%x", -ret);
-            _glitched_http_log_error(msg, __func__);
+            _glitchedhttps_log_error(msg, __func__);
             goto exit;
         }
     }
@@ -898,7 +378,7 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
     {
         char verification_buffer[1024];
         mbedtls_x509_crt_verify_info(verification_buffer, sizeof(verification_buffer), "  ! ", flags);
-        _glitched_http_log_error(verification_buffer, __func__);
+        _glitchedhttps_log_error(verification_buffer, __func__);
         goto exit;
     }
 
@@ -912,7 +392,7 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
         {
             char msg[128];
             sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_write\" returned %d", ret);
-            _glitched_http_log_error(msg, __func__);
+            _glitchedhttps_log_error(msg, __func__);
             goto exit;
         }
     }
@@ -939,7 +419,7 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
         {
             char msg[128];
             sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
-            _glitched_http_log_error(msg, __func__);
+            _glitchedhttps_log_error(msg, __func__);
             break;
         }
 
@@ -955,11 +435,11 @@ static glitched_http_response* _glitched_http_https_request(const char* server_n
 
     if (response_string.length == 0)
     {
-        _glitched_http_log_error("HTTP response string empty!", __func__);
+        _glitchedhttps_log_error("HTTP response string empty!", __func__);
         goto exit;
     }
 
-    out = _glitched_http_parse_response_string(&response_string);
+    out = _glitchedhttps_parse_response_string(&response_string);
 
     mbedtls_ssl_close_notify(&ssl_context);
     exit_code = MBEDTLS_EXIT_SUCCESS;
@@ -973,7 +453,7 @@ exit:
         mbedtls_strerror(ret, error_buf, sizeof(error_buf));
         char msg[1024];
         sprintf(msg, "HTTPS request unsuccessful! Last error was: %d - %s", ret, error_buf);
-        _glitched_http_log_error(msg, __func__);
+        _glitchedhttps_log_error(msg, __func__);
     }
 #endif
 
@@ -989,11 +469,11 @@ exit:
 }
 
 /** @private */
-static glitched_http_response* _glitched_http_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size)
+static glitchedhttps_response* _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size)
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
-        _glitched_http_log_error("INVALID HTTP parameters passed into \"_glitched_http_http_request\". Returning NULL...", __func__);
+        _glitchedhttps_log_error("INVALID HTTP parameters passed into \"_glitchedhttps_http_request\". Returning NULL...", __func__);
         return NULL;
     }
 
@@ -1009,7 +489,7 @@ static glitched_http_response* _glitched_http_http_request(const char* server_na
 // server_host = gethostbyname(server_name);
 // if (server_host == NULL)
 //{
-//    _glitched_http_log_error("\"gethostbyname\" failed!", __func__);
+//    _glitchedhttps_log_error("\"gethostbyname\" failed!", __func__);
 //    goto exit;
 //}
 //
@@ -1018,7 +498,7 @@ static glitched_http_response* _glitched_http_http_request(const char* server_na
 //{
 //    char msg[128];
 //    sprintf(msg, "HTTP request failed: \"socket\" returned %d", server_fd);
-//    _glitched_http_log_error(msg, __func__);
+//    _glitchedhttps_log_error(msg, __func__);
 //    goto exit;
 //}
 //
@@ -1032,7 +512,7 @@ static glitched_http_response* _glitched_http_http_request(const char* server_na
 //{
 //    char msg[128];
 //    sprintf(msg, "HTTP request failed: \"connect\" returned %d", ret);
-//    _glitched_http_log_error(msg, __func__);
+//    _glitchedhttps_log_error(msg, __func__);
 //    goto exit;
 //}
 //
@@ -1046,7 +526,7 @@ static glitched_http_response* _glitched_http_http_request(const char* server_na
 //    {
 //        char msg[128];
 //        sprintf(msg, "HTTP request failed: \"write\" returned %d", ret);
-//        _glitched_http_log_error(msg, __func__);
+//        _glitchedhttps_log_error(msg, __func__);
 //        goto exit;
 //    }
 //}
@@ -1063,7 +543,7 @@ static glitched_http_response* _glitched_http_http_request(const char* server_na
 //    {
 //        char msg[128];
 //        sprintf(msg, "HTTP request failed: \"read\" returned %d", ret);
-//        _glitched_http_log_error(msg, __func__);
+//        _glitchedhttps_log_error(msg, __func__);
 //        break;
 //    }
 //
@@ -1083,24 +563,24 @@ exit:
 
 /**
  * Submits a given HTTP request and returns the server response. <p>
- * This allocates memory, so don't forget to {@link #glitched_http_response_free()} the returned glitched_http_response instance after usage!!
- * @param request The glitched_http_request instance containing the request parameters and data (e.g. url, body, etc...).
- * @return The (freshly allocated) glitched_http_response instance containing the response headers, status code, etc... if the request was submitted successfully; <code>NULL</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..).
+ * This allocates memory, so don't forget to {@link #glitchedhttps_response_free()} the returned glitchedhttps_response instance after usage!!
+ * @param request The glitchedhttps_request instance containing the request parameters and data (e.g. url, body, etc...).
+ * @return The (freshly allocated) glitchedhttps_response instance containing the response headers, status code, etc... if the request was submitted successfully; <code>NULL</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..).
  */
-glitched_http_response* glitched_http_submit(const glitched_http_request* request)
+glitchedhttps_response* glitchedhttps_submit(const glitchedhttps_request* request)
 {
     if (request->url == NULL)
     {
-        _glitched_http_log_error("URL parameter NULL!", __func__);
+        _glitchedhttps_log_error("URL parameter NULL!", __func__);
         return NULL;
     }
 
-    const bool https = glitched_http_is_https(request->url);
-    const char* server_host_ptr = https ? request->url + 8 : glitched_http_is_http(request->url) ? request->url + 7 : NULL;
+    const bool https = glitchedhttps_is_https(request->url);
+    const char* server_host_ptr = https ? request->url + 8 : glitchedhttps_is_http(request->url) ? request->url + 7 : NULL;
 
     if (server_host_ptr == NULL)
     {
-        _glitched_http_log_error("Missing or invalid protocol in passed URL: needs \"http://\" or \"https://\"", __func__);
+        _glitchedhttps_log_error("Missing or invalid protocol in passed URL: needs \"http://\" or \"https://\"", __func__);
         return NULL;
     }
 
@@ -1123,7 +603,7 @@ glitched_http_response* glitched_http_submit(const glitched_http_request* reques
             {
                 char msg[128];
                 sprintf(msg, "Invalid port number \"%d\"", server_port);
-                _glitched_http_log_error(msg, __func__);
+                _glitchedhttps_log_error(msg, __func__);
                 return NULL;
             }
             memset(custom_port, '\0', strlen(custom_port));
@@ -1138,9 +618,9 @@ glitched_http_response* glitched_http_submit(const glitched_http_request* reques
         path = "/";
 
     char method[8];
-    if (!glitched_http_method_to_string(request->method, method, sizeof(method)))
+    if (!glitchedhttps_method_to_string(request->method, method, sizeof(method)))
     {
-        _glitched_http_log_error("HTTP request submission rejected due to invalid HTTP method name.", __func__);
+        _glitchedhttps_log_error("HTTP request submission rejected due to invalid HTTP method name.", __func__);
         return NULL;
     }
     method[sizeof(method) - 1] = '\0';
@@ -1155,7 +635,7 @@ glitched_http_response* glitched_http_submit(const glitched_http_request* reques
 
     for (size_t i = 0; i < request->additional_headers_count; i++)
     {
-        glitched_http_header header = request->additional_headers[i];
+        glitchedhttps_header header = request->additional_headers[i];
         char header_string[16 + strlen(header.type) + strlen(header.value)];
         snprintf(header_string, sizeof(header_string), "%s: %s\r\n", header.type, header.value);
         chillbuff_push_back(&request_string, header_string, strlen(header_string));
@@ -1167,7 +647,7 @@ glitched_http_response* glitched_http_submit(const glitched_http_request* reques
         const size_t content_length = strlen(request->content);
         if (content_length > 0)
         {
-            char content_headers[64 + strlen(request->content_type) + glitched_http_count_digits(request->content_length) + content_length];
+            char content_headers[64 + strlen(request->content_type) + glitchedhttps_count_digits(request->content_length) + content_length];
             snprintf(content_headers, sizeof(content_headers), "Content-Type: %s\r\nContent-Length: %zu\r\n\r\n%s\r\n", request->content_type, request->content_length, request->content);
             chillbuff_push_back(&request_string, content_headers, strlen(content_headers));
             memset(content_headers, '\0', sizeof(content_headers));
@@ -1188,7 +668,7 @@ glitched_http_response* glitched_http_submit(const glitched_http_request* reques
 
     chillbuff_push_back(&request_string, "\r\n", strlen("\r\n"));
 
-    glitched_http_response* out = https ? _glitched_http_https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional) : _glitched_http_http_request(server_host, server_port, request_string.array, request->buffer_size);
+    glitchedhttps_response* out = https ? _glitchedhttps_https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional) : _glitchedhttps_http_request(server_host, server_port, request_string.array, request->buffer_size);
     chillbuff_free(&request_string);
     return out;
 }

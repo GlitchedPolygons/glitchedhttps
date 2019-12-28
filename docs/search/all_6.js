@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['method_28',['method',['../structglitched__http__request.html#a8a3c62a6b6baf5613015d16eb380dd1c',1,'glitched_http_request']]]
+  ['method_42',['method',['../structglitchedhttps__request.html#a9beace3cfd0adcb9629c2dea5d119d29',1,'glitchedhttps_request']]]
 ];
