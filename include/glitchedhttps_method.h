@@ -29,6 +29,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include "glitchedhttps_debug.h"
 
 /**
  * @brief HTTP Method to use for a glitchedhttps_request
@@ -36,15 +37,15 @@ extern "C" {
  */
 typedef enum glitchedhttps_method
 {
-    HTTP_GET = 0,
-    HTTP_HEAD = 1,
-    HTTP_POST = 2,
-    HTTP_PATCH = 3,
-    HTTP_PUT = 4,
-    HTTP_DELETE = 5,
-    HTTP_CONNECT = 6,
-    HTTP_OPTIONS = 7,
-    HTTP_TRACE = 8
+    GLITCHEDHTTPS_GET = 0,
+    GLITCHEDHTTPS_HEAD = 1,
+    GLITCHEDHTTPS_POST = 2,
+    GLITCHEDHTTPS_PATCH = 3,
+    GLITCHEDHTTPS_PUT = 4,
+    GLITCHEDHTTPS_DELETE = 5,
+    GLITCHEDHTTPS_CONNECT = 6,
+    GLITCHEDHTTPS_OPTIONS = 7,
+    GLITCHEDHTTPS_TRACE = 8
 } glitchedhttps_method;
 
 /**
@@ -69,31 +70,31 @@ static inline bool glitchedhttps_method_to_string(const glitchedhttps_method met
     }
     switch (method)
     {
-        case HTTP_GET:
+        case GLITCHEDHTTPS_GET:
             strncpy(out, "GET", out_size);
             return true;
-        case HTTP_HEAD:
+        case GLITCHEDHTTPS_HEAD:
             strncpy(out, "HEAD", out_size);
             return true;
-        case HTTP_POST:
+        case GLITCHEDHTTPS_POST:
             strncpy(out, "POST", out_size);
             return true;
-        case HTTP_PATCH:
+        case GLITCHEDHTTPS_PATCH:
             strncpy(out, "PATCH", out_size);
             return true;
-        case HTTP_PUT:
+        case GLITCHEDHTTPS_PUT:
             strncpy(out, "PUT", out_size);
             return true;
-        case HTTP_DELETE:
+        case GLITCHEDHTTPS_DELETE:
             strncpy(out, "DELETE", out_size);
             return true;
-        case HTTP_CONNECT:
+        case GLITCHEDHTTPS_CONNECT:
             strncpy(out, "CONNECT", out_size);
             return true;
-        case HTTP_OPTIONS:
+        case GLITCHEDHTTPS_OPTIONS:
             strncpy(out, "OPTIONS", out_size);
             return true;
-        case HTTP_TRACE:
+        case GLITCHEDHTTPS_TRACE:
             strncpy(out, "TRACE", out_size);
             return true;
         default:

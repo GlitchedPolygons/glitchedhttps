@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 {
     glitchedhttps_request request = {
         .url = argv[1],
-        .method = HTTP_GET,
+        .method = GLITCHEDHTTPS_GET,
         .buffer_size = BUFFER_SIZE,
         .ssl_verification_optional = false,
     };

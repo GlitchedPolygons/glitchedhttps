@@ -1,7 +1,7 @@
 <map id="include/glitchedhttps.h" name="include/glitchedhttps.h">
 <area shape="rect" id="node1" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests with the help of ARM&#39;s open&#45;so..." alt="" coords="1075,5,1227,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,80,64,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="746,155,811,181"/>
+<area shape="rect" id="node3" title=" " alt="" coords="821,155,886,181"/>
 <area shape="rect" id="node4" title=" " alt="" coords="139,80,200,107"/>
 <area shape="rect" id="node5" title=" " alt="" coords="225,80,301,107"/>
 <area shape="rect" id="node6" title=" " alt="" coords="325,80,427,107"/>
@@ -14,14 +14,14 @@
 <area shape="rect" id="node13" title=" " alt="" coords="1315,80,1424,107"/>
 <area shape="rect" id="node14" href="$glitchedhttps__cacerts_8h.html" title="Trusted CA certificates chain for SSL connections." alt="" coords="1448,80,1605,107"/>
 <area shape="rect" id="node15" href="$glitchedhttps__strutil_8h.html" title="Useful string&#45;related utility functions." alt="" coords="1629,80,1776,107"/>
-<area shape="rect" id="node18" href="$glitchedhttps__debug_8h.html" title="glitchedhttps debugging/error handling code. Mostly for internal use!" alt="" coords="1653,155,1803,181"/>
-<area shape="rect" id="node19" href="$glitchedhttps__guid_8h.html" title="GUID/UUID generator." alt="" coords="1851,80,1989,107"/>
-<area shape="rect" id="node21" href="$glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="1987,155,2144,181"/>
-<area shape="rect" id="node22" href="$glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="2270,155,2423,181"/>
-<area shape="rect" id="node24" href="$glitchedhttps__request_8h.html" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="2093,80,2251,107"/>
-<area shape="rect" id="node25" href="$glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="2326,80,2493,107"/>
-<area shape="rect" id="node16" title=" " alt="" coords="1803,229,1877,256"/>
-<area shape="rect" id="node17" title=" " alt="" coords="1563,155,1629,181"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1877,155,1963,181"/>
-<area shape="rect" id="node23" title=" " alt="" coords="2315,229,2379,256"/>
+<area shape="rect" id="node18" href="$glitchedhttps__debug_8h.html" title="glitchedhttps debugging/error handling code. Mostly for internal use!" alt="" coords="1889,229,2039,256"/>
+<area shape="rect" id="node19" href="$glitchedhttps__guid_8h.html" title="GUID/UUID generator." alt="" coords="1800,80,1939,107"/>
+<area shape="rect" id="node21" href="$glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="2000,155,2157,181"/>
+<area shape="rect" id="node22" href="$glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="2283,155,2437,181"/>
+<area shape="rect" id="node24" href="$glitchedhttps__request_8h.html" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="2100,80,2257,107"/>
+<area shape="rect" id="node25" href="$glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="2333,80,2499,107"/>
+<area shape="rect" id="node16" title=" " alt="" coords="1927,304,2001,331"/>
+<area shape="rect" id="node17" title=" " alt="" coords="1649,155,1714,181"/>
+<area shape="rect" id="node20" title=" " alt="" coords="1840,155,1925,181"/>
+<area shape="rect" id="node23" title=" " alt="" coords="2328,229,2392,256"/>
 </map>
