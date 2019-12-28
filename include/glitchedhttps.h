@@ -29,8 +29,8 @@
 extern "C" {
 #endif
 
-#include <ctype.h>
 #include <time.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -394,7 +394,7 @@ static void glitched_http_response_free(glitched_http_response* response)
 
     for (size_t i = 0; i < response->headers_count; i++)
     {
-        free(&response->headers[i]);
+        glitched_http_header_free(&(response->headers[i]));
     }
 
     free(response);

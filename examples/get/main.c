@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+#include <stdbool.h>
 #include <glitchedhttps.h>
 
 #define BUFFER_SIZE 256
