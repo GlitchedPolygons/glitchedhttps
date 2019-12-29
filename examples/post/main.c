@@ -34,11 +34,15 @@ int main()
             .content = body
     };
 
-    glitchedhttps_response tmp;
+    glitchedhttps_response* response = NULL;
 
-    glitchedhttps_response* response = glitchedhttps_submit(&request, &tmp); // TODO: returned value is now an int exit code: refactor accordingly here!
+    int result = glitchedhttps_submit(&request, &response);
 
-    const bool success = response != NULL && response->status_code >= 200 && response->status_code < 300;
+    const bool success =
+            result == GLITCHEDHTTPS_SUCCESS
+            && response != NULL
+            && response->status_code >= 200
+            && response->status_code < 300;
 
     if (success)
     {

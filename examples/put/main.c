@@ -42,10 +42,14 @@ int main()
             .additional_headers_count = sizeof(additional_headers) / sizeof(glitchedhttps_header)
     };
 
-    glitchedhttps_response tmp;
-    glitchedhttps_response* response = glitchedhttps_submit(&request,&tmp);
+    glitchedhttps_response* response = NULL;
+    int result = glitchedhttps_submit(&request, &response);
 
-    const bool success = response != NULL && response->status_code >= 200 && response->status_code < 300;
+    const bool success =
+            result == GLITCHEDHTTPS_SUCCESS
+            && response != NULL
+            && response->status_code >= 200
+            && response->status_code < 300;
 
     if (success)
     {

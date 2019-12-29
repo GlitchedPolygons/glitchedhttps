@@ -90,45 +90,56 @@ extern "C" {
  */
 #define GLITCHEDHTTPS_EXTERNAL_ERROR 600
 
+/**
+ * Returned if the HTTP response string couldn't be parsed.
+ */
+#define GLITCHEDHTTPS_RESPONSE_PARSE_ERROR 700
+
+/**
+ * Not good...
+ */
+#define GLITCHEDHTTPS_OVERFLOW 800
+
 /** @private */
-static glitchedhttps_response* _glitchedhttps_parse_response_string(const chillbuff* response_string)
+static int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitchedhttps_response** out)
 {
     if (response_string == NULL)
     {
-        return NULL;
+        _glitchedhttps_log_error("HTTP response parse error: \"response_string\" argument NULL; nothing to parse!", __func__);
+        return GLITCHEDHTTPS_RESPONSE_PARSE_ERROR;
     }
 
     /* Allocate the output http response struct and set pointers to default value "NULL".
      * The consumer of this returned value should not forget to call  on this! */
-    glitchedhttps_response* out = malloc(sizeof(glitchedhttps_response));
-    if (out == NULL)
+    glitchedhttps_response* response = malloc(sizeof(glitchedhttps_response));
+    if (response == NULL)
     {
         _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
-        return NULL;
+        return GLITCHEDHTTPS_OUT_OF_MEM;
     }
 
-    out->raw = NULL;
-    out->date = NULL;
-    out->server = NULL;
-    out->headers = NULL;
-    out->content = NULL;
-    out->content_type = NULL;
-    out->content_encoding = NULL;
-    out->content_length = 0;
-    out->headers_count = 0;
-    out->status_code = -1;
+    response->raw = NULL;
+    response->date = NULL;
+    response->server = NULL;
+    response->headers = NULL;
+    response->content = NULL;
+    response->content_type = NULL;
+    response->content_encoding = NULL;
+    response->content_length = 0;
+    response->headers_count = 0;
+    response->status_code = -1;
+
+    response->raw = malloc((response_string->length + 1) * response_string->element_size);
+    if (response->raw == NULL)
+    {
+        glitchedhttps_response_free(response);
+        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
+        return GLITCHEDHTTPS_OUT_OF_MEM;
+    }
 
     /* First of all, copy the whole, raw response string into the output. */
-    out->raw = malloc((response_string->length + 1) * response_string->element_size);
-    if (out->raw == NULL)
-    {
-        glitchedhttps_response_free(out);
-        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
-        return NULL;
-    }
-
-    memcpy(out->raw, response_string->array, response_string->length);
-    out->raw[response_string->length] = '\0';
+    memcpy(response->raw, response_string->array, response_string->length);
+    response->raw[response_string->length] = '\0';
 
     /* Next comes the tedious parsing. */
     const char delimiter[] = "\r\n";
@@ -157,60 +168,60 @@ static glitchedhttps_response* _glitchedhttps_parse_response_string(const chillb
             {
                 n[3] = '\0';
                 memcpy(n, c + 1, 3);
-                out->status_code = atoi(n);
+                response->status_code = atoi(n);
             }
             parsed_status = true;
         }
         else if (!parsed_server && glitchedhttps_strncmpic(current, "Server: ", 8) == 0)
         {
             const size_t out_length = current_length - 8;
-            out->server = malloc((out_length + 1) * sizeof(char));
-            if (out->server == NULL)
+            response->server = malloc((out_length + 1) * sizeof(char));
+            if (response->server == NULL)
             {
                 goto out_of_mem;
             }
-            memcpy(out->server, current + 8, out_length);
-            out->server[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 6, out->server, out_length), 1);
+            memcpy(response->server, current + 8, out_length);
+            response->server[out_length] = '\0';
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 6, response->server, out_length), 1);
             parsed_server = true;
         }
         else if (!parsed_date && glitchedhttps_strncmpic(current, "Date: ", 6) == 0)
         {
             const size_t out_length = current_length - 6;
-            out->date = malloc((out_length + 1) * sizeof(char));
-            if (out->date == NULL)
+            response->date = malloc((out_length + 1) * sizeof(char));
+            if (response->date == NULL)
             {
                 goto out_of_mem;
             }
-            memcpy(out->date, current + 6, out_length);
-            out->date[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 4, out->date, out_length), 1);
+            memcpy(response->date, current + 6, out_length);
+            response->date[out_length] = '\0';
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 4, response->date, out_length), 1);
             parsed_date = true;
         }
         else if (!parsed_content_type && glitchedhttps_strncmpic(current, "Content-Type: ", 14) == 0)
         {
             const size_t out_length = current_length - 14;
-            out->content_type = malloc((out_length + 1) * sizeof(char));
-            if (out->content_type == NULL)
+            response->content_type = malloc((out_length + 1) * sizeof(char));
+            if (response->content_type == NULL)
             {
                 goto out_of_mem;
             }
-            memcpy(out->content_type, current + 14, out_length);
-            out->content_type[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 12, out->content_type, out_length), 1);
+            memcpy(response->content_type, current + 14, out_length);
+            response->content_type[out_length] = '\0';
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 12, response->content_type, out_length), 1);
             parsed_content_type = true;
         }
         else if (!parsed_content_encoding && glitchedhttps_strncmpic(current, "Content-Encoding: ", 18) == 0)
         {
             const size_t out_length = current_length - 18;
-            out->content_encoding = malloc((out_length + 1) * sizeof(char));
-            if (out->content_encoding == NULL)
+            response->content_encoding = malloc((out_length + 1) * sizeof(char));
+            if (response->content_encoding == NULL)
             {
                 goto out_of_mem;
             }
-            memcpy(out->content_encoding, current + 18, out_length);
-            out->content_encoding[out_length] = '\0';
-            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 16, out->content_encoding, out_length), 1);
+            memcpy(response->content_encoding, current + 18, out_length);
+            response->content_encoding[out_length] = '\0';
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 16, response->content_encoding, out_length), 1);
             parsed_content_encoding = true;
         }
         else if (!parsed_content_length && glitchedhttps_strncmpic(current, "Content-Length: ", 16) == 0)
@@ -221,8 +232,8 @@ static glitchedhttps_response* _glitchedhttps_parse_response_string(const chillb
             if (c != NULL)
             {
                 memcpy(n, c + 1, current_length - 1);
-                out->content_length = atoi(n);
-                snprintf(n, sizeof(n), "%zu", out->content_length);
+                response->content_length = atoi(n);
+                snprintf(n, sizeof(n), "%zu", response->content_length);
                 chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 14, n, strlen(n)), 1);
             }
             parsed_content_length = true;
@@ -231,13 +242,13 @@ static glitchedhttps_response* _glitchedhttps_parse_response_string(const chillb
         {
             const char* content = (current - delimiter_length) + content_delimiter_length;
             const size_t content_length = strlen(content);
-            out->content = malloc(content_length + 1);
-            if (out->content == NULL)
+            response->content = malloc(content_length + 1);
+            if (response->content == NULL)
             {
                 goto out_of_mem;
             }
-            memcpy(out->content, content, content_length);
-            out->content[content_length] = '\0';
+            memcpy(response->content, content, content_length);
+            response->content[content_length] = '\0';
             break; // If the content (request body) was found, it's time to stop. Because there won't be anything else to come.
         }
         else
@@ -257,44 +268,46 @@ static glitchedhttps_response* _glitchedhttps_parse_response_string(const chillb
         next = strstr(current, delimiter);
     }
 
-    out->headers = malloc(sizeof(glitchedhttps_header) * header_builder.length);
-    if (out->headers == NULL)
+    response->headers = malloc(sizeof(glitchedhttps_header) * header_builder.length);
+    if (response->headers == NULL)
     {
         goto out_of_mem;
     }
 
     /* Copy the response headers into the output instance. */
-    out->headers_count = header_builder.length;
+    response->headers_count = header_builder.length;
     for (size_t i = 0; i < header_builder.length; i++)
     {
         const glitchedhttps_header h = ((glitchedhttps_header*)header_builder.array)[i];
-        out->headers[i] = *glitchedhttps_header_init(h.type, strlen(h.type), h.value, strlen(h.value));
+        response->headers[i] = *glitchedhttps_header_init(h.type, strlen(h.type), h.value, strlen(h.value));
     }
 
+    *out = response;
     chillbuff_free(&header_builder);
-
-    return out;
+    return GLITCHEDHTTPS_SUCCESS;
 
 out_of_mem:
     _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
-    glitchedhttps_response_free(out);
+    glitchedhttps_response_free(response);
     chillbuff_free(&header_builder);
-    return NULL;
+    return GLITCHEDHTTPS_OUT_OF_MEM;
 }
 
 /** @private */
-static glitchedhttps_response* _glitchedhttps_https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const bool ssl_verification_optional)
+static int _glitchedhttps_https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const bool ssl_verification_optional, glitchedhttps_response** out)
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
         _glitchedhttps_log_error("INVALID HTTPS parameters passed into \"_glitchedhttps_https_request\". Returning NULL...", __func__);
-        return NULL;
+        return GLITCHEDHTTPS_INVALID_ARG;
     }
 
-    glitchedhttps_response* out = NULL;
-
     chillbuff response_string;
-    chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
+    {
+        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+    }
 
     uint32_t flags;
     int ret = 1, length;
@@ -474,8 +487,7 @@ static glitchedhttps_response* _glitchedhttps_https_request(const char* server_n
         goto exit;
     }
 
-    out = _glitchedhttps_parse_response_string(&response_string);
-
+    int result = _glitchedhttps_parse_response_string(&response_string, out);
     mbedtls_ssl_close_notify(&ssl_context);
     exit_code = MBEDTLS_EXIT_SUCCESS;
 
@@ -487,7 +499,7 @@ exit:
         char error_buf[256];
         mbedtls_strerror(ret, error_buf, sizeof(error_buf));
         char msg[1024];
-        sprintf(msg, "HTTPS request unsuccessful! Last error was: %d - %s", ret, error_buf);
+        snprintf(msg, sizeof(msg), "HTTPS request unsuccessful! Last error was: %d - %s", ret, error_buf);
         _glitchedhttps_log_error(msg, __func__);
     }
 #endif
@@ -500,11 +512,11 @@ exit:
     mbedtls_entropy_free(&entropy);
     chillbuff_free(&response_string);
 
-    return (out);
+    return result;
 }
 
 /** @private */
-static glitchedhttps_response* _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size)
+static int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
@@ -593,22 +605,17 @@ exit:
     // chillbuff_free(&response_string);
     // close(server_fd);
     //
-    return NULL;
+    return 0;
 }
 
 /**
- * Not good...
- */
-#define GLITCHEDHTTPS_OVERFLOW 600
-
-/**
  * Submits a given HTTP request and returns the server response. <p>
- * This allocates memory, so don't forget to {@link #glitchedhttps_response_free()} the returned glitchedhttps_response instance after usage!!
+ * This allocates memory, so don't forget to {@link #glitchedhttps_response_free()} the output glitchedhttps_response instance after usage!!
  * @param request The glitchedhttps_request instance containing the request parameters and data (e.g. url, body, etc...).
- * @param out The output glitchedhttps_response into which to write the response's data and headers. Must be fresh, allocated and ready!
+ * @param out The output glitchedhttps_response into which to write the response's data and headers. Must be a pointer to a glitchedhttps_response pointer: will be malloc'ed! Make sure it's fresh!!
  * @return The (freshly allocated) glitchedhttps_response instance containing the response headers, status code, etc... if the request was submitted successfully; <code>NULL</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..).
  */
-int glitchedhttps_submit(const glitchedhttps_request* request, glitchedhttps_response* out)
+int glitchedhttps_submit(const glitchedhttps_request* request, glitchedhttps_response** out)
 {
     if (request == NULL)
     {
@@ -770,10 +777,9 @@ int glitchedhttps_submit(const glitchedhttps_request* request, glitchedhttps_res
 
     chillbuff_push_back(&request_string, crlf, crlf_length);
 
-    glitchedhttps_response* _out = https ? _glitchedhttps_https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional) : _glitchedhttps_http_request(server_host, server_port, request_string.array, request->buffer_size);
+    int result = https ? _glitchedhttps_https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional, out) : _glitchedhttps_http_request(server_host, server_port, request_string.array, request->buffer_size, out);
     chillbuff_free(&request_string);
-    // return GLITCHEDHTTPS_SUCCESS;
-    return _out; // TODO: return success code instead once refactoring is done!
+    return result;
 }
 
 #ifdef __cplusplus
