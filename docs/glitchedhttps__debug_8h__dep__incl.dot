@@ -1,0 +1,14 @@
+digraph "include/glitchedhttps_debug.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node2 [label="include/glitchedhttps\l_debug.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="include/glitchedhttps.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$glitchedhttps_8h.html",tooltip="Simple, lightweight and straight-forward way of doing HTTP(S) requests with the help of ARM&#39;s open-so..."];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="include/glitchedhttps\l_method.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$glitchedhttps__method_8h.html",tooltip="HTTP Method to use for a glitchedhttps_request. "];
+  Node4 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="include/glitchedhttps\l_request.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$glitchedhttps__request_8h.html",tooltip="Struct containing an HTTP request&#39;s parameters and headers. "];
+  Node5 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}
