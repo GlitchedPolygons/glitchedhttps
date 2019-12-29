@@ -56,7 +56,7 @@ typedef enum glitchedhttps_method
  * @param out_size The size of the output <code>char*</code> buffer (must be greater than or equals 8).
  * @return Whether the passed glitchedhttps_method was converted to string successfully or not.
  */
-static inline bool glitchedhttps_method_to_string(const glitchedhttps_method method, char* out, const size_t out_size)
+bool glitchedhttps_method_to_string(const glitchedhttps_method method, char* out, const size_t out_size)
 {
     if (out == NULL)
     {

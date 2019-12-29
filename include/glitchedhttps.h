@@ -101,7 +101,7 @@ extern "C" {
 #define GLITCHEDHTTPS_OVERFLOW 800
 
 /** @private */
-static int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitchedhttps_response** out)
+int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitchedhttps_response** out)
 {
     if (response_string == NULL)
     {
@@ -294,7 +294,7 @@ out_of_mem:
 }
 
 /** @private */
-static int _glitchedhttps_https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const bool ssl_verification_optional, glitchedhttps_response** out)
+int _glitchedhttps_https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const bool ssl_verification_optional, glitchedhttps_response** out)
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
@@ -516,7 +516,7 @@ exit:
 }
 
 /** @private */
-static int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
+int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {

@@ -321,7 +321,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Submits a given HTTP request and returns the server response. </p>
-<p>This allocates memory, so don't forget to <a class="el" href="glitchedhttps__response_8h.html#a20250357d19b2773dc3183ac82f4b664">glitchedhttps_response_free()</a> the output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data. ">glitchedhttps_response</a> instance after usage!! </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This allocates memory, so don't forget to <a class="el" href="glitchedhttps__response_8h.html#a0a7abede23c8ee32e9766f51504c98f9">glitchedhttps_response_free()</a> the output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data. ">glitchedhttps_response</a> instance after usage!! </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">request</td><td>The <a class="el" href="structglitchedhttps__request.html" title="Struct containing an HTTP request&#39;s parameters and headers. ">glitchedhttps_request</a> instance containing the request parameters and data (e.g. url, body, etc...). </td></tr>
     <tr><td class="paramname">out</td><td>The output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data. ">glitchedhttps_response</a> into which to write the response's data and headers. Must be a pointer to a <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data. ">glitchedhttps_response</a> pointer: will be malloc'ed! Make sure it's fresh!! </td></tr>

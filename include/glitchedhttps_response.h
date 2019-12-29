@@ -71,7 +71,7 @@ typedef struct glitchedhttps_response
  * Frees an glitchedhttps_response instance that was allocated by {@link #glitchedhttps_submit()}.
  * @param response The glitchedhttps_response instance ready for deallocation.
  */
-static void glitchedhttps_response_free(glitchedhttps_response* response)
+void glitchedhttps_response_free(glitchedhttps_response* response)
 {
     if (response == NULL)
     {
