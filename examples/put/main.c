@@ -25,8 +25,9 @@ int main()
     char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
 
     glitchedhttps_header additional_headers[] = {
-            *glitchedhttps_header_init("Another-Foo",strlen("Another-Foo"), "anotherBar", strlen("anotherBar")),
-            *glitchedhttps_header_init("Additional-Headers-Are-Cool",strlen("Additional-Headers-Are-Cool"), "SGVsbG8gV29ybGQh", strlen("SGVsbG8gV29ybGQh"))
+            { "Another-Foo", "anotherBar" },
+            { "Additional-Headers-Are-Cool", "SGVsbG8gV29ybGQh" },
+            { "Yet-Another-Header", "You can add as many of these as you want" }
     };
 
     glitchedhttps_request request = {
@@ -40,8 +41,6 @@ int main()
             .additional_headers = additional_headers,
             .additional_headers_count = sizeof(additional_headers) / sizeof(glitchedhttps_header)
     };
-
-    // TODO: free these headers!
 
     glitchedhttps_response* response = glitchedhttps_submit(&request);
 
