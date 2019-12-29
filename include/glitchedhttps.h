@@ -55,6 +55,41 @@ extern "C" {
 #include <winsock.h>
 #endif
 
+/**
+ * Returned from a glitchedhttps function when everything went as expected.
+ */
+#define GLITCHEDHTTPS_SUCCESS 0
+
+/**
+ * If you get this, it means you're out of memory!
+ */
+#define GLITCHEDHTTPS_OUT_OF_MEM 100
+
+/**
+ * Error code returned by a glitchedhttps function if you passed a NULL argument that shouldn't have been NULL.
+ */
+#define GLITCHEDHTTPS_NULL_ARG 200
+
+/**
+ * This error code is returned by a glitchedhttps function if you passed an invalid parameter into it.
+ */
+#define GLITCHEDHTTPS_INVALID_ARG 300
+
+/**
+ * Returned when the request URL has an invalid port number.
+ */
+#define GLITCHEDHTTPS_INVALID_PORT_NUMBER 400
+
+/**
+ * Returned if the given HTTP method is not one of the allowed ones (e.g. <code>GET</code>, <code>POST</code>, etc...).
+ */
+#define GLITCHEDHTTPS_INVALID_HTTP_METHOD_NAME 500
+
+/**
+ * When something fails that has nothing to do with glitchedhttps (e.g. if the chillbuff init function fails for some reason and the http request function can't proceed without a stringbuilder).
+ */
+#define GLITCHEDHTTPS_EXTERNAL_ERROR 600
+
 /** @private */
 static glitchedhttps_response* _glitchedhttps_parse_response_string(const chillbuff* response_string)
 {
@@ -562,17 +597,35 @@ exit:
 }
 
 /**
+ * Not good...
+ */
+#define GLITCHEDHTTPS_OVERFLOW 600
+
+/**
  * Submits a given HTTP request and returns the server response. <p>
  * This allocates memory, so don't forget to {@link #glitchedhttps_response_free()} the returned glitchedhttps_response instance after usage!!
  * @param request The glitchedhttps_request instance containing the request parameters and data (e.g. url, body, etc...).
+ * @param out The output glitchedhttps_response into which to write the response's data and headers. Must be fresh, allocated and ready!
  * @return The (freshly allocated) glitchedhttps_response instance containing the response headers, status code, etc... if the request was submitted successfully; <code>NULL</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..).
  */
-glitchedhttps_response* glitchedhttps_submit(const glitchedhttps_request* request)
+int glitchedhttps_submit(const glitchedhttps_request* request, glitchedhttps_response* out)
 {
+    if (request == NULL)
+    {
+        _glitchedhttps_log_error("Request parameter NULL!", __func__);
+        return GLITCHEDHTTPS_NULL_ARG;
+    }
+
+    if (out == NULL)
+    {
+        _glitchedhttps_log_error("Out parameter NULL; nothing to write the HTTP request's response into!", __func__);
+        return GLITCHEDHTTPS_NULL_ARG;
+    }
+
     if (request->url == NULL)
     {
         _glitchedhttps_log_error("URL parameter NULL!", __func__);
-        return NULL;
+        return GLITCHEDHTTPS_NULL_ARG;
     }
 
     const bool https = glitchedhttps_is_https(request->url);
@@ -581,7 +634,7 @@ glitchedhttps_response* glitchedhttps_submit(const glitchedhttps_request* reques
     if (server_host_ptr == NULL)
     {
         _glitchedhttps_log_error("Missing or invalid protocol in passed URL: needs \"http://\" or \"https://\"", __func__);
-        return NULL;
+        return GLITCHEDHTTPS_INVALID_ARG;
     }
 
     char server_host[256];
@@ -602,9 +655,9 @@ glitchedhttps_response* glitchedhttps_submit(const glitchedhttps_request* reques
             if (server_port <= 0 || server_port >= 65536)
             {
                 char msg[128];
-                sprintf(msg, "Invalid port number \"%d\"", server_port);
+                snprintf(msg, sizeof(msg), "Invalid port number \"%d\"", server_port);
                 _glitchedhttps_log_error(msg, __func__);
-                return NULL;
+                return GLITCHEDHTTPS_INVALID_PORT_NUMBER;
             }
             memset(custom_port, '\0', strlen(custom_port));
         }
@@ -618,59 +671,109 @@ glitchedhttps_response* glitchedhttps_submit(const glitchedhttps_request* reques
         path = "/";
 
     char method[8];
+    method[sizeof(method) - 1] = '\0';
+
     if (!glitchedhttps_method_to_string(request->method, method, sizeof(method)))
     {
         _glitchedhttps_log_error("HTTP request submission rejected due to invalid HTTP method name.", __func__);
-        return NULL;
+        return GLITCHEDHTTPS_INVALID_HTTP_METHOD_NAME;
     }
-    method[sizeof(method) - 1] = '\0';
 
     chillbuff request_string;
-    chillbuff_init(&request_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
 
-    char tmp[64 + strlen(method) + strlen(path) + strlen(server_host)];
-    snprintf(tmp, sizeof(tmp), "%s %s HTTP/1.1\r\nHost: %s\r\nConnection: Close\r\n", method, path, server_host);
-    chillbuff_push_back(&request_string, tmp, strlen(tmp));
-    memset(tmp, '\0', sizeof(tmp));
+    if (chillbuff_init(&request_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
+    {
+        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+    }
+
+    const char crlf[] = "\r\n";
+    const size_t crlf_length = strlen(crlf);
+
+    const char whitespace[] = " ";
+    const size_t whitespace_length = strlen(whitespace);
+
+    const char header_separator[] = ": ";
+    const size_t header_separator_length = strlen(header_separator);
+
+    const char http_version[] = "HTTP/1.1";
+    const size_t http_version_length = strlen(http_version);
+
+    const char host[] = "Host: ";
+    const size_t host_length = strlen(host);
+
+    const char content_type[] = "Content-Type: ";
+    const size_t content_type_length = strlen(content_type);
+
+    const char content_length[] = "Content-Length: ";
+    const size_t content_length_strlen = strlen(content_length);
+
+    const char content_encoding[] = "Content-Encoding: ";
+    const size_t content_encoding_length = strlen(content_encoding);
+
+    const char connection[] = "Connection: Close";
+    const size_t connection_length = strlen(connection);
+
+    chillbuff_push_back(&request_string, method, strlen(method));
+    chillbuff_push_back(&request_string, whitespace, whitespace_length);
+    chillbuff_push_back(&request_string, path, strlen(path));
+    chillbuff_push_back(&request_string, whitespace, whitespace_length);
+    chillbuff_push_back(&request_string, http_version, http_version_length);
+    chillbuff_push_back(&request_string, crlf, crlf_length);
+    chillbuff_push_back(&request_string, host, host_length);
+    chillbuff_push_back(&request_string, server_host, strlen(server_host));
+    chillbuff_push_back(&request_string, crlf, crlf_length);
+    chillbuff_push_back(&request_string, connection, connection_length);
+    chillbuff_push_back(&request_string, crlf, crlf_length);
 
     for (size_t i = 0; i < request->additional_headers_count; i++)
     {
         glitchedhttps_header header = request->additional_headers[i];
-        char header_string[16 + strlen(header.type) + strlen(header.value)];
-        snprintf(header_string, sizeof(header_string), "%s: %s\r\n", header.type, header.value);
-        chillbuff_push_back(&request_string, header_string, strlen(header_string));
-        memset(header_string, '\0', sizeof(header_string));
+
+        chillbuff_push_back(&request_string, header.type, strlen(header.type));
+        chillbuff_push_back(&request_string, header_separator, header_separator_length);
+        chillbuff_push_back(&request_string, header.value, strlen(header.value));
+        chillbuff_push_back(&request_string, crlf, crlf_length);
     }
 
     if (request->content != NULL && request->content_type != NULL && request->content_length > 0)
     {
-        const size_t content_length = strlen(request->content);
-        if (content_length > 0)
+        const size_t content_strlen = strlen(request->content);
+        if (content_strlen > 0)
         {
-            char content_headers[64 + strlen(request->content_type) + glitchedhttps_count_digits(request->content_length) + content_length];
-            snprintf(content_headers, sizeof(content_headers), "Content-Type: %s\r\nContent-Length: %zu\r\n\r\n%s\r\n", request->content_type, request->content_length, request->content);
-            chillbuff_push_back(&request_string, content_headers, strlen(content_headers));
-            memset(content_headers, '\0', sizeof(content_headers));
+            chillbuff_push_back(&request_string, content_type, content_type_length);
+            chillbuff_push_back(&request_string, request->content_type, strlen(request->content_type));
+            chillbuff_push_back(&request_string, crlf, crlf_length);
 
             if (request->content_encoding != NULL)
             {
-                const size_t content_encoding_length = strlen(request->content_encoding);
-                if (content_encoding_length > 0)
+                const size_t content_encoding_value_length = strlen(request->content_encoding);
+                if (content_encoding_value_length > 0)
                 {
-                    char encoding[64 + content_encoding_length];
-                    snprintf(encoding, sizeof(encoding), "Content-Encoding: %s\r\n", request->content_encoding);
-                    chillbuff_push_back(&request_string, encoding, strlen(encoding));
-                    memset(encoding, '\0', sizeof(encoding));
+                    chillbuff_push_back(&request_string, content_encoding, content_encoding_length);
+                    chillbuff_push_back(&request_string, request->content_encoding, content_encoding_value_length);
+                    chillbuff_push_back(&request_string, crlf, crlf_length);
                 }
             }
+
+            chillbuff_push_back(&request_string, content_length, content_length_strlen);
+            char content_length_value[64];
+            const int content_length_value_digits = snprintf(content_length_value, sizeof(content_length_value), "%zu", request->content_length);
+            chillbuff_push_back(&request_string, content_length_value, content_length_value_digits);
+
+            chillbuff_push_back(&request_string, crlf, crlf_length);
+            chillbuff_push_back(&request_string, crlf, crlf_length);
+            chillbuff_push_back(&request_string, request->content, strlen(request->content));
+            chillbuff_push_back(&request_string, crlf, crlf_length);
         }
     }
 
-    chillbuff_push_back(&request_string, "\r\n", strlen("\r\n"));
+    chillbuff_push_back(&request_string, crlf, crlf_length);
 
-    glitchedhttps_response* out = https ? _glitchedhttps_https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional) : _glitchedhttps_http_request(server_host, server_port, request_string.array, request->buffer_size);
+    glitchedhttps_response* _out = https ? _glitchedhttps_https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional) : _glitchedhttps_http_request(server_host, server_port, request_string.array, request->buffer_size);
     chillbuff_free(&request_string);
-    return out;
+    // return GLITCHEDHTTPS_SUCCESS;
+    return _out; // TODO: return success code instead once refactoring is done!
 }
 
 #ifdef __cplusplus
