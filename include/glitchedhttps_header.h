@@ -97,7 +97,7 @@ static glitchedhttps_header* glitchedhttps_header_init(const char* type, const s
 }
 
 /**
- * Frees the glitchedhttps_header instance as well as its two heap-allocated strings inside.
+ * Frees a glitchedhttps_header instance as well as its two heap-allocated strings inside.
  * @param header The glitchedhttps_header to deallocate.
  */
 static inline void glitchedhttps_header_free(glitchedhttps_header* header)

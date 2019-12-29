@@ -521,7 +521,7 @@ static int _glitchedhttps_http_request(const char* server_name, const int server
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
         _glitchedhttps_log_error("INVALID HTTP parameters passed into \"_glitchedhttps_http_request\". Returning NULL...", __func__);
-        return NULL;
+        return -1;
     }
 
     // struct hostent* server_host;

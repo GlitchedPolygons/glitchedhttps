@@ -98,12 +98,13 @@ static void glitchedhttps_response_free(glitchedhttps_response* response)
 
     if (response->headers_count > 0)
     {
-        for (size_t i = 1; i < response->headers_count; i++)
+        for (size_t i = 0; i < response->headers_count; i++)
         {
-            glitchedhttps_header* h = &(response->headers[i]);
-            glitchedhttps_header_free(h);
+            glitchedhttps_header h = response->headers[i];
+            free(h.type);
+            free(h.value);
         }
-        glitchedhttps_header_free(response->headers);
+        free(response->headers);
     }
 
     free(response);

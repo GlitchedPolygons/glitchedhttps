@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
         printf("\nConnection test SUCCESSFUL!\n");
     }
 
-    printf("\nResponse from %s: \n\n%s\n", request.url, response->content);
+    printf("\nResponse from %s: \n\n%s\n", request.url, response != NULL ? response->content : "(NULL)");
 
     glitchedhttps_response_free(response);
 
