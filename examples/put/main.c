@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <glitchedhttps.h>
 
-#define BUFFER_SIZE 1024
+static const size_t BUFFER_SIZE = 1024;
 
 int main()
 {
@@ -62,5 +62,3 @@ int main()
 
     return 0;
 }
-
-#undef BUFFER_SIZE

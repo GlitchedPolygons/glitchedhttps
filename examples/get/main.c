@@ -17,7 +17,7 @@
 #include <stdbool.h>
 #include <glitchedhttps.h>
 
-#define BUFFER_SIZE 256
+static const size_t BUFFER_SIZE = 256;
 
 int main(int argc, char* argv[])
 {
@@ -49,5 +49,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-
-#undef BUFFER_SIZE
