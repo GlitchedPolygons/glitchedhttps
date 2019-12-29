@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 
     if (success)
     {
-        printf("\nConnection test SUCCESSFUL!\n");
+        printf("\nConnection test SUCCESSFUL! Status Code: %d\n", response->status_code);
     }
 
     printf("\nResponse from %s: \n\n%s\n", request.url, response != NULL ? response->content : "(NULL)");

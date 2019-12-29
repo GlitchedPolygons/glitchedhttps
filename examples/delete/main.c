@@ -14,24 +14,20 @@
    limitations under the License.
 */
 
-#include <stdio.h>
+#include <stdbool.h>
 #include <glitchedhttps.h>
 
-static const size_t BUFFER_SIZE = 1024;
+static const size_t BUFFER_SIZE = 256;
 
 int main()
 {
-    char* url = "https://postman-echo.com/post";
-    char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
+    char* url = "https://postman-echo.com/delete?some-resource-to-delete=foo-bar";
 
     glitchedhttps_request request = {
             .url = url,
-            .method = GLITCHEDHTTPS_POST,
+            .method = GLITCHEDHTTPS_DELETE,
             .buffer_size = BUFFER_SIZE,
             .ssl_verification_optional = false,
-            .content_type = "application/json",
-            .content_length = strlen(body),
-            .content = body
     };
 
     glitchedhttps_response* response = NULL;
