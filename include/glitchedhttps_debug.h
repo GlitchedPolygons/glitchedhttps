@@ -45,8 +45,9 @@ static void _glitchedhttps_debug(void* ctx, int level, const char* file, int lin
 /** @private */
 static inline void _glitchedhttps_log_error(const char* error, const char* origin)
 {
-    char error_msg[64 + strlen(error) + strlen(origin)];
-    snprintf(error_msg, sizeof(error_msg), "\nGLITCHEDHTTPS ERROR: (%s) %s\n", origin, error);
+    const size_t error_msg_length = 64 + strlen(error) + strlen(origin);
+    char* error_msg = malloc(error_msg_length);
+    snprintf(error_msg, error_msg_length, "\nGLITCHEDHTTPS ERROR: (%s) %s\n", origin, error);
     if (_glitchedhttps_error_callback != NULL)
     {
         _glitchedhttps_error_callback(error_msg);

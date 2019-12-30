@@ -96,9 +96,10 @@ typedef struct glitchedhttps_request
     size_t buffer_size;
 
     /**
+     * @brief SET THIS TO FALSE! <p>
      * It's best to leave this set to <code>false</code>.<p>
      * Only set this to <code>true</code> if you don't want to enforce verification of the server's SSL certificate (DEFINITIVELY NOT RECOMMENDED FOR PRODUCTION ENV!).<p>
-     * This value is only taken into consideration in case of an HTTPS request (determined by the scheme defined in the url).
+     * This value is only taken into consideration in case of an HTTPS request (determined by the scheme defined in the url). Plain HTTP requests ignore this setting.
      */
     bool ssl_verification_optional;
 

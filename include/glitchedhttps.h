@@ -32,7 +32,9 @@ extern "C" {
 #include <time.h>
 #include <ctype.h>
 #include <stdio.h>
+
 #include <chillbuff.h>
+
 #include <mbedtls/net.h>
 #include <mbedtls/ssl.h>
 #include <mbedtls/entropy.h>
@@ -53,6 +55,15 @@ extern "C" {
 
 #ifdef WIN32
 #include <winsock.h>
+#else
+#define closesocket close
+#include <unistd.h>
+#include <errno.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #endif
 
 /**
@@ -86,9 +97,10 @@ extern "C" {
 #define GLITCHEDHTTPS_INVALID_HTTP_METHOD_NAME 500
 
 /**
- * When something fails that has nothing to do with glitchedhttps (e.g. if the chillbuff init function fails for some reason and the http request function can't proceed without a stringbuilder).
+ * When the error is not due to glitchedhttps but the underlying chillbuff instance
+ * (e.g. if the chillbuff init function fails for some reason (e.g. out of memory/failure to reallocate) and the http request function can't proceed without a stringbuilder).
  */
-#define GLITCHEDHTTPS_EXTERNAL_ERROR 600
+#define GLITCHEDHTTPS_CHILLBUFF_ERROR 600
 
 /**
  * Returned if the HTTP response string couldn't be parsed.
@@ -96,9 +108,24 @@ extern "C" {
 #define GLITCHEDHTTPS_RESPONSE_PARSE_ERROR 700
 
 /**
+ * When something fails that has nothing to do with glitchedhttps, like
+ * for example if something failed inside an MbedTLS function; in that case,
+ * check the logs (if you provided an error callback via the {@link #glitchedhttps_set_error_callback()} function).
+ */
+#define GLITCHEDHTTPS_EXTERNAL_ERROR 800
+
+/**
  * Not good...
  */
-#define GLITCHEDHTTPS_OVERFLOW 800
+#define GLITCHEDHTTPS_OVERFLOW 900
+
+#pragma comment(lib, "ws2_32.lib")
+void clear_win_sock()
+{
+#if defined WIN32
+    WSACleanup();
+#endif
+}
 
 /** @private */
 int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitchedhttps_response** out)
@@ -142,19 +169,23 @@ int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitc
     response->raw[response_string->length] = '\0';
 
     /* Next comes the tedious parsing. */
-    const char delimiter[] = "\r\n";
-    const size_t delimiter_length = strlen(delimiter);
+    const char header_delimiter[] = "\r\n";
+    const size_t header_delimiter_length = strlen(header_delimiter);
 
     const char content_delimiter[] = "\r\n\r\n";
     const size_t content_delimiter_length = strlen(content_delimiter);
 
     char* current = response_string->array;
-    char* next = strstr(current, delimiter);
+    char* next = strstr(current, header_delimiter);
 
     bool parsed_status = false, parsed_server = false, parsed_date = false, parsed_content_type = false, parsed_content_encoding = false, parsed_content_length = false;
 
     chillbuff header_builder;
-    chillbuff_init(&header_builder, 16, sizeof(glitchedhttps_header), CHILLBUFF_GROW_DUPLICATIVE);
+    if (chillbuff_init(&header_builder, 16, sizeof(glitchedhttps_header), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
+    {
+        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        return GLITCHEDHTTPS_CHILLBUFF_ERROR;
+    }
 
     while (next != NULL)
     {
@@ -238,9 +269,9 @@ int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitc
             }
             parsed_content_length = true;
         }
-        else if (current != response_string->array && strncmp(current - delimiter_length, content_delimiter, content_delimiter_length) == 0)
+        else if (current != response_string->array && strncmp(current - header_delimiter_length, content_delimiter, content_delimiter_length) == 0)
         {
-            const char* content = (current - delimiter_length) + content_delimiter_length;
+            const char* content = (current - header_delimiter_length) + content_delimiter_length;
             const size_t content_length = strlen(content);
             response->content = malloc(content_length + 1);
             if (response->content == NULL)
@@ -264,8 +295,8 @@ int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitc
                 chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, header_type_length, header_value + header_separator_length, header_value_length), 1);
             }
         }
-        current = next + delimiter_length;
-        next = strstr(current, delimiter);
+        current = next + header_delimiter_length;
+        next = strstr(current, header_delimiter);
     }
 
     response->headers = malloc(sizeof(glitchedhttps_header) * header_builder.length);
@@ -306,12 +337,12 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
         _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
-        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+        return GLITCHEDHTTPS_CHILLBUFF_ERROR;
     }
 
     uint32_t flags;
-    int ret = 1, length;
-    int exit_code = MBEDTLS_EXIT_FAILURE;
+    int ret = 1, length, exit_code = -1;
+    int mbedtls_exit_code = MBEDTLS_EXIT_FAILURE;
     unsigned char buffer[buffer_size];
 
     time_t t;
@@ -341,6 +372,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
@@ -352,6 +384,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
         _glitchedhttps_log_error(msg, __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
@@ -367,6 +400,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_net_connect\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
@@ -378,6 +412,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
@@ -392,6 +427,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_setup\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
@@ -401,6 +437,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         char msg[128];
         sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_set_hostname\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
@@ -415,6 +452,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
             char msg[128];
             sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_handshake\" returned -0x%x", -ret);
             _glitchedhttps_log_error(msg, __func__);
+            exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
     }
@@ -427,6 +465,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         char verification_buffer[1024];
         mbedtls_x509_crt_verify_info(verification_buffer, sizeof(verification_buffer), "  ! ", flags);
         _glitchedhttps_log_error(verification_buffer, __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
@@ -441,6 +480,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
             char msg[128];
             sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_write\" returned %d", ret);
             _glitchedhttps_log_error(msg, __func__);
+            exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
     }
@@ -468,6 +508,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
             char msg[128];
             sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
             _glitchedhttps_log_error(msg, __func__);
+            exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             break;
         }
 
@@ -484,21 +525,22 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (response_string.length == 0)
     {
         _glitchedhttps_log_error("HTTP response string empty!", __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
 
-    int result = _glitchedhttps_parse_response_string(&response_string, out);
+    exit_code = _glitchedhttps_parse_response_string(&response_string, out);
     mbedtls_ssl_close_notify(&ssl_context);
-    exit_code = MBEDTLS_EXIT_SUCCESS;
+    mbedtls_exit_code = MBEDTLS_EXIT_SUCCESS;
 
 exit:
 
 #ifdef MBEDTLS_ERROR_C
-    if (exit_code != MBEDTLS_EXIT_SUCCESS)
+    if (mbedtls_exit_code != MBEDTLS_EXIT_SUCCESS)
     {
-        char error_buf[256];
+        char error_buf[4096];
         mbedtls_strerror(ret, error_buf, sizeof(error_buf));
-        char msg[1024];
+        char msg[8192];
         snprintf(msg, sizeof(msg), "HTTPS request unsuccessful! Last error was: %d - %s", ret, error_buf);
         _glitchedhttps_log_error(msg, __func__);
     }
@@ -512,108 +554,113 @@ exit:
     mbedtls_entropy_free(&entropy);
     chillbuff_free(&response_string);
 
-    return result;
+    return exit_code;
 }
 
 /** @private */
 int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
 {
+    int exit_code;
+
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
-        _glitchedhttps_log_error("INVALID HTTP parameters passed into \"_glitchedhttps_http_request\". Returning NULL...", __func__);
-        return -1;
+        _glitchedhttps_log_error("INVALID HTTP parameters passed into \"_glitchedhttps_http_request\".", __func__);
+        return GLITCHEDHTTPS_INVALID_ARG;
     }
 
-    // struct hostent* server_host;
-    // struct sockaddr_in server_addr;
-    // int ret = -1, length, server_fd;
-    // unsigned char buffer[buffer_size];
-    // chillbuff response_string;
-    // chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
-//
-///* Start the connection. */
-//
-// server_host = gethostbyname(server_name);
-// if (server_host == NULL)
-//{
-//    _glitchedhttps_log_error("\"gethostbyname\" failed!", __func__);
-//    goto exit;
-//}
-//
-// server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-// if (server_fd < 0)
-//{
-//    char msg[128];
-//    sprintf(msg, "HTTP request failed: \"socket\" returned %d", server_fd);
-//    _glitchedhttps_log_error(msg, __func__);
-//    goto exit;
-//}
-//
-// memcpy((void*)&server_addr.sin_addr, (void*)server_host->h_addr, server_host->h_length);
-//
-// server_addr.sin_family = AF_INET;
-// server_addr.sin_port = htons(server_port);
-//
-// ret = connect(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
-// if (ret < 0)
-//{
-//    char msg[128];
-//    sprintf(msg, "HTTP request failed: \"connect\" returned %d", ret);
-//    _glitchedhttps_log_error(msg, __func__);
-//    goto exit;
-//}
-//
-///* Write the GET request. */
-//
-// length = sprintf((char*)buffer, "%s", request);
-//
-// while ((ret = write(server_fd, buffer, length)) <= 0)
-//{
-//    if (ret != 0)
-//    {
-//        char msg[128];
-//        sprintf(msg, "HTTP request failed: \"write\" returned %d", ret);
-//        _glitchedhttps_log_error(msg, __func__);
-//        goto exit;
-//    }
-//}
-//
-///* Read the HTTP response. */
-//
-// for (;;)
-//{
-//    length = (int)(sizeof(buffer) - 1);
-//    memset(buffer, 0, sizeof(buffer));
-//    ret = read(server_fd, buffer, length);
-//
-//    if (ret <= 0)
-//    {
-//        char msg[128];
-//        sprintf(msg, "HTTP request failed: \"read\" returned %d", ret);
-//        _glitchedhttps_log_error(msg, __func__);
-//        break;
-//    }
-//
-//    length = ret;
-//    chillbuff_push_back(&response_string, buffer, length);
-//}
-//
-//// TODO: return response accordingly (and correctly!)
-//
+    chillbuff response_string;
+    if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
+    {
+        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        return GLITCHEDHTTPS_CHILLBUFF_ERROR;
+    }
+
+    if (response_string.length == 0)
+    {
+        _glitchedhttps_log_error("HTTP response string empty!", __func__);
+        exit_code = GLITCHEDHTTPS_INVALID_ARG;
+        goto exit;
+    }
+
+#if defined WIN32
+    WSADATA wsaData;
+    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (iResult != 0)
+    {
+        _glitchedhttps_log_error("Erros at \"WSAStartup\".", __func__);
+        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+    }
+#endif
+
+    int csocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (csocket < 0)
+    {
+        _glitchedhttps_log_error("Socket creation failed.", __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
+        goto exit;
+    }
+
+    // Construct server address
+    struct sockaddr_in socket_address;
+    memset(&socket_address, 0, sizeof(socket_address));
+
+    struct hostent* he = gethostbyname(server_name);
+    socket_address.sin_family = AF_INET;
+
+    socket_address.sin_addr.s_addr = inet_addr("192.168.0.100"); // IP del server
+    socket_address.sin_port = htons(server_port);
+    // Connect to server.
+    if (connect(csocket, (struct sockaddr*)&socket_address, sizeof(socket_address)) < 0)
+    {
+        _glitchedhttps_log_error("Failed to connect to server.", __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
+        goto exit;
+    }
+
+    char* inputString = "REPLACE ME ASAP";
+    size_t stringLen = strlen(inputString);
+
+    if (send(csocket, inputString, stringLen, 0) != stringLen)
+    {
+        _glitchedhttps_log_error("send() sent a different number of bytes than expected", __func__);
+        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
+        goto exit;
+    }
+
+    int bytesRcvd;
+    int totalBytesRcvd = 0;
+    char buf[512]; // buffer for data from the server
+    printf("Received: "); // Setup to print the echoed string
+
+    while (totalBytesRcvd < stringLen)
+    {
+        if ((bytesRcvd = recv(csocket, buf, BUFFERSIZE - 1, 0)) <= 0)
+        {
+            _glitchedhttps_log_error("recv() failed or connection closed prematurely",__func__);
+            exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
+            goto exit;
+        }
+        totalBytesRcvd += bytesRcvd; // Keep tally of total bytes
+        buf[bytesRcvd] = '\0'; // Add \0 so printf knows where to stop
+        printf("%s", buf); // Print the echo buffer
+    }
+
+    //TODO: fix above code
+    exit_code = _glitchedhttps_parse_response_string(&response_string, out);
+
 exit:
-    //
-    // chillbuff_free(&response_string);
-    // close(server_fd);
-    //
-    return 0;
+    chillbuff_free(&response_string);
+    closesocket(csocket);
+    clear_win_sock();
+    return exit_code;
 }
 
 /**
- * Submits a given HTTP request and returns the server response. <p>
+ * Submits a given HTTP request and writes the server response into the provided output glitchedhttps_response instance. <p>
  * This allocates memory, so don't forget to {@link #glitchedhttps_response_free()} the output glitchedhttps_response instance after usage!!
  * @param request The glitchedhttps_request instance containing the request parameters and data (e.g. url, body, etc...).
  * @param out The output glitchedhttps_response into which to write the response's data and headers. Must be a pointer to a glitchedhttps_response pointer: will be malloc'ed! Make sure it's fresh!!
- * @return The (freshly allocated) glitchedhttps_response instance containing the response headers, status code, etc... if the request was submitted successfully; <code>NULL</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..).
+ * @return <code>GLITCHEDHTTPS_SUCCESS</code> (zero) if the request was submitted successfully; <code>GLITCHEDHTTPS_{ERROR_ID}</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..). Check out the top of the glitchedhttps.h file to find out more about the glitchedhttps error codes!
  */
 int glitchedhttps_submit(const glitchedhttps_request* request, glitchedhttps_response** out)
 {
@@ -691,7 +738,7 @@ int glitchedhttps_submit(const glitchedhttps_request* request, glitchedhttps_res
     if (chillbuff_init(&request_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
         _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
-        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+        return GLITCHEDHTTPS_CHILLBUFF_ERROR;
     }
 
     const char crlf[] = "\r\n";
@@ -781,6 +828,8 @@ int glitchedhttps_submit(const glitchedhttps_request* request, glitchedhttps_res
     chillbuff_free(&request_string);
     return result;
 }
+
+#undef closesocket
 
 #ifdef __cplusplus
 } // extern "C"

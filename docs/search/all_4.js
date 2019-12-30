@@ -3,6 +3,7 @@ var searchData=
   ['glitchedhttps_2eh',['glitchedhttps.h',['../glitchedhttps_8h.html',1,'']]],
   ['glitchedhttps_5fca_5fcerts',['GLITCHEDHTTPS_CA_CERTS',['../glitchedhttps__cacerts_8h.html#ad06dfbe6e8c4f627f29053001efd740c',1,'glitchedhttps_cacerts.h']]],
   ['glitchedhttps_5fcacerts_2eh',['glitchedhttps_cacerts.h',['../glitchedhttps__cacerts_8h.html',1,'']]],
+  ['glitchedhttps_5fchillbuff_5ferror',['GLITCHEDHTTPS_CHILLBUFF_ERROR',['../glitchedhttps_8h.html#a2c42653ea8cc94b2e66e799d38f663b3',1,'glitchedhttps.h']]],
   ['glitchedhttps_5fcount_5fdigits',['glitchedhttps_count_digits',['../glitchedhttps__strutil_8h.html#a51c981a6e7ef5020af12084fa30f06d9',1,'glitchedhttps_strutil.h']]],
   ['glitchedhttps_5fdebug_2eh',['glitchedhttps_debug.h',['../glitchedhttps__debug_8h.html',1,'']]],
   ['glitchedhttps_5fexternal_5ferror',['GLITCHEDHTTPS_EXTERNAL_ERROR',['../glitchedhttps_8h.html#a41f7faaac8675581174a5c5f3cc6860c',1,'glitchedhttps.h']]],

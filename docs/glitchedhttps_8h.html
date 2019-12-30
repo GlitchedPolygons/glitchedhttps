@@ -92,6 +92,13 @@ $(function() {
 <code>#include &quot;<a class="el" href="glitchedhttps__header_8h_source.html">glitchedhttps_header.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="glitchedhttps__request_8h_source.html">glitchedhttps_request.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="glitchedhttps__response_8h_source.html">glitchedhttps_response.h</a>&quot;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;netdb.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/socket.h&gt;</code><br />
+<code>#include &lt;netinet/in.h&gt;</code><br />
+<code>#include &lt;arpa/inet.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for glitchedhttps.h:</div>
 <div class="dyncontent">
@@ -129,6 +136,9 @@ Include dependency graph for glitchedhttps.h:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:afdbb9d84bd17efd2ae7290e664992c48"><td class="memItemLeft" align="right" valign="top"><a id="afdbb9d84bd17efd2ae7290e664992c48"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>closesocket</b>&#160;&#160;&#160;close</td></tr>
+<tr class="separator:afdbb9d84bd17efd2ae7290e664992c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a086f1112e6e4ab0de6c038358668c20a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a086f1112e6e4ab0de6c038358668c20a">GLITCHEDHTTPS_SUCCESS</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a086f1112e6e4ab0de6c038358668c20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4644ac4160a2fd53c605c594cef36dc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#ac4644ac4160a2fd53c605c594cef36dc">GLITCHEDHTTPS_OUT_OF_MEM</a>&#160;&#160;&#160;100</td></tr>
@@ -141,15 +151,20 @@ Macros</h2></td></tr>
 <tr class="separator:ae7bed53d933fc067d253f86965f05895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae0aef65f6b7b65309af1f56e26b8e49"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#aae0aef65f6b7b65309af1f56e26b8e49">GLITCHEDHTTPS_INVALID_HTTP_METHOD_NAME</a>&#160;&#160;&#160;500</td></tr>
 <tr class="separator:aae0aef65f6b7b65309af1f56e26b8e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41f7faaac8675581174a5c5f3cc6860c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a41f7faaac8675581174a5c5f3cc6860c">GLITCHEDHTTPS_EXTERNAL_ERROR</a>&#160;&#160;&#160;600</td></tr>
-<tr class="separator:a41f7faaac8675581174a5c5f3cc6860c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c42653ea8cc94b2e66e799d38f663b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a2c42653ea8cc94b2e66e799d38f663b3">GLITCHEDHTTPS_CHILLBUFF_ERROR</a>&#160;&#160;&#160;600</td></tr>
+<tr class="separator:a2c42653ea8cc94b2e66e799d38f663b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe43db7bc6763c2a90924202aa6f99dd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#abe43db7bc6763c2a90924202aa6f99dd">GLITCHEDHTTPS_RESPONSE_PARSE_ERROR</a>&#160;&#160;&#160;700</td></tr>
 <tr class="separator:abe43db7bc6763c2a90924202aa6f99dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a26cc6d6b2394999ce9b70a877b3e45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a1a26cc6d6b2394999ce9b70a877b3e45">GLITCHEDHTTPS_OVERFLOW</a>&#160;&#160;&#160;800</td></tr>
+<tr class="memitem:a41f7faaac8675581174a5c5f3cc6860c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a41f7faaac8675581174a5c5f3cc6860c">GLITCHEDHTTPS_EXTERNAL_ERROR</a>&#160;&#160;&#160;800</td></tr>
+<tr class="separator:a41f7faaac8675581174a5c5f3cc6860c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a26cc6d6b2394999ce9b70a877b3e45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a1a26cc6d6b2394999ce9b70a877b3e45">GLITCHEDHTTPS_OVERFLOW</a>&#160;&#160;&#160;900</td></tr>
 <tr class="separator:a1a26cc6d6b2394999ce9b70a877b3e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a992605744bfa64d1219b28c851e219f4"><td class="memItemLeft" align="right" valign="top"><a id="a992605744bfa64d1219b28c851e219f4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear_win_sock</b> ()</td></tr>
+<tr class="separator:a992605744bfa64d1219b28c851e219f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdc25a03bd6164066b5b0ca53eca0448"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#abdc25a03bd6164066b5b0ca53eca0448">glitchedhttps_submit</a> (const <a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> *request, <a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> **out)</td></tr>
 <tr class="separator:abdc25a03bd6164066b5b0ca53eca0448"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -159,6 +174,21 @@ Functions</h2></td></tr>
 <dl class="section date"><dt>Date</dt><dd>28. December 2019 </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a href="https://github.com/GlitchedPolygons/glitchedhttps">https://github.com/GlitchedPolygons/glitchedhttps</a> </dd></dl>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a2c42653ea8cc94b2e66e799d38f663b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c42653ea8cc94b2e66e799d38f663b3">&#9670;&nbsp;</a></span>GLITCHEDHTTPS_CHILLBUFF_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GLITCHEDHTTPS_CHILLBUFF_ERROR&#160;&#160;&#160;600</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>When the error is not due to glitchedhttps but the underlying chillbuff instance (e.g. if the chillbuff init function fails for some reason (e.g. out of memory/failure to reallocate) and the http request function can't proceed without a stringbuilder). </p>
+
+</div>
+</div>
 <a id="a41f7faaac8675581174a5c5f3cc6860c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a41f7faaac8675581174a5c5f3cc6860c">&#9670;&nbsp;</a></span>GLITCHEDHTTPS_EXTERNAL_ERROR</h2>
 
@@ -166,11 +196,11 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GLITCHEDHTTPS_EXTERNAL_ERROR&#160;&#160;&#160;600</td>
+          <td class="memname">#define GLITCHEDHTTPS_EXTERNAL_ERROR&#160;&#160;&#160;800</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>When something fails that has nothing to do with glitchedhttps (e.g. if the chillbuff init function fails for some reason and the http request function can't proceed without a stringbuilder). </p>
+<p>When something fails that has nothing to do with glitchedhttps, like for example if something failed inside an MbedTLS function; in that case, check the logs (if you provided an error callback via the <a class="el" href="glitchedhttps__debug_8h.html#afa140282ad0c3e4626dbcc0e40898182">glitchedhttps_set_error_callback()</a> function). </p>
 
 </div>
 </div>
@@ -256,7 +286,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GLITCHEDHTTPS_OVERFLOW&#160;&#160;&#160;800</td>
+          <td class="memname">#define GLITCHEDHTTPS_OVERFLOW&#160;&#160;&#160;900</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -320,7 +350,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Submits a given HTTP request and returns the server response. </p>
+<p>Submits a given HTTP request and writes the server response into the provided output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data. ">glitchedhttps_response</a> instance. </p>
 <p>This allocates memory, so don't forget to <a class="el" href="glitchedhttps__response_8h.html#a0a7abede23c8ee32e9766f51504c98f9">glitchedhttps_response_free()</a> the output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data. ">glitchedhttps_response</a> instance after usage!! </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">request</td><td>The <a class="el" href="structglitchedhttps__request.html" title="Struct containing an HTTP request&#39;s parameters and headers. ">glitchedhttps_request</a> instance containing the request parameters and data (e.g. url, body, etc...). </td></tr>
@@ -328,7 +358,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The (freshly allocated) <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data. ">glitchedhttps_response</a> instance containing the response headers, status code, etc... if the request was submitted successfully; <code>NULL</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>GLITCHEDHTTPS_SUCCESS</code> (zero) if the request was submitted successfully; <code>GLITCHEDHTTPS_{ERROR_ID}</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..). Check out the top of the <a class="el" href="glitchedhttps_8h.html" title="Simple, lightweight and straight-forward way of doing HTTP(S) requests with the help of ARM&#39;s open-so...">glitchedhttps.h</a> file to find out more about the glitchedhttps error codes! </dd></dl>
 
 </div>
 </div>

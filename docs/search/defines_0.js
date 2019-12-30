@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['glitchedhttps_5fchillbuff_5ferror',['GLITCHEDHTTPS_CHILLBUFF_ERROR',['../glitchedhttps_8h.html#a2c42653ea8cc94b2e66e799d38f663b3',1,'glitchedhttps.h']]],
   ['glitchedhttps_5fexternal_5ferror',['GLITCHEDHTTPS_EXTERNAL_ERROR',['../glitchedhttps_8h.html#a41f7faaac8675581174a5c5f3cc6860c',1,'glitchedhttps.h']]],
   ['glitchedhttps_5fget_5fguid_5fformat',['GLITCHEDHTTPS_GET_GUID_FORMAT',['../glitchedhttps__guid_8h.html#a84a5587a8329237a23a7e36c8f6a705f',1,'glitchedhttps_guid.h']]],
   ['glitchedhttps_5fguid_5flowercase_5fhyphens',['GLITCHEDHTTPS_GUID_LOWERCASE_HYPHENS',['../glitchedhttps__guid_8h.html#a921c840be8ecf7d2ed283b87fb74175b',1,'glitchedhttps_guid.h']]],

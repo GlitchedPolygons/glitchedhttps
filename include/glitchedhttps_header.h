@@ -37,13 +37,13 @@ typedef struct glitchedhttps_header
 {
     /** The type of HTTP request header (its name without the ':' colon). E.g. "Authorization", "Server", etc... */
     char* type;
-    /** The header value (what comes after the ':' colon). */
+    /** The header value (what comes after the ':' colon separator). */
     char* value;
 } glitchedhttps_header;
 
 /**
  * Creates and initializes a glitchedhttps_header instance and returns its pointer. <p>
- * Allocation is done for you: once you're done using this MAKE SURE to call {@link #glitchedhttps_header_free()} to prevent memory leaks!
+ * @note Allocation is done for you: once you're done using this MAKE SURE to call {@link #glitchedhttps_header_free()} to prevent memory leaks!
  * @param type The header type name (e.g. "Authorization", "Accept", etc...). Must be a NUL-terminated string!
  * @param type_length The length of the header type string.
  * @param value The header value (NUL-terminated string).

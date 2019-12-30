@@ -192,7 +192,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Creates and initializes a <a class="el" href="structglitchedhttps__header.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc...">glitchedhttps_header</a> instance and returns its pointer. </p>
-<p>Allocation is done for you: once you're done using this MAKE SURE to call <a class="el" href="glitchedhttps__header_8h.html#a33eeb9c6213583e0c0543911f3e4e952">glitchedhttps_header_free()</a> to prevent memory leaks! </p><dl class="params"><dt>Parameters</dt><dd>
+<dl class="section note"><dt>Note</dt><dd>Allocation is done for you: once you're done using this MAKE SURE to call <a class="el" href="glitchedhttps__header_8h.html#a33eeb9c6213583e0c0543911f3e4e952">glitchedhttps_header_free()</a> to prevent memory leaks! </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">type</td><td>The header type name (e.g. "Authorization", "Accept", etc...). Must be a NUL-terminated string! </td></tr>
     <tr><td class="paramname">type_length</td><td>The length of the header type string. </td></tr>
