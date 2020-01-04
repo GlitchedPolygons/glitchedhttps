@@ -464,7 +464,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
             sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
             _glitchedhttps_log_error(msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
-            break;
+            goto exit;
         }
 
         if (ret == 0)
@@ -516,6 +516,7 @@ exit:
 int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
 {
     int exit_code, ret;
+    char buffer[buffer_size];
 
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
@@ -556,9 +557,6 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
     memset(port, '\0', sizeof(port));
     snprintf(port, sizeof(port), "%d", server_port);
 
-    int byte_count = -1;
-    char buffer[buffer_size];
-
     struct addrinfo* res = NULL;
     ret = getaddrinfo(server_name, port, &hints, &res);
     if (ret != 0)
@@ -588,10 +586,28 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
         goto exit;
     }
 
-    // TODO: make a for(;;) loop that checks until there are no bytes left to read via recv
-    byte_count = recv(sockfd, buffer, sizeof buffer, 0);
-    printf("%s", buffer);
-    chillbuff_push_back(&response_string, buffer, strlen(buffer));
+    for (;;)
+    {
+        memset(buffer, '\0', sizeof(buffer));
+        ret = recv(sockfd, buffer, sizeof(buffer) - 1, 0);
+
+        if (ret < 0)
+        {
+            char msg[128];
+            sprintf(msg, "HTTP request failed: \"recv()\" returned %d", ret);
+            _glitchedhttps_log_error(msg, __func__);
+            exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
+            goto exit;
+        }
+
+        if (ret == 0)
+        {
+            /* EOF; ready to close the connection. */
+            break;
+        }
+
+        chillbuff_push_back(&response_string, buffer, ret);
+    }
 
     if (response_string.length == 0)
     {
