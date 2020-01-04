@@ -55,6 +55,7 @@ extern "C" {
 #include "glitchedhttps_exitcodes.h"
 
 #ifdef WIN32
+#include <ws2def.h>
 #include <winsock.h>
 #else
 #define closesocket close
