@@ -634,7 +634,7 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
 
     while (totalBytesRcvd < stringLen)
     {
-        if ((bytesRcvd = recv(csocket, buf, BUFFERSIZE - 1, 0)) <= 0)
+        if ((bytesRcvd = recv(csocket, buf, buffer_size - 1, 0)) <= 0)
         {
             _glitchedhttps_log_error("recv() failed or connection closed prematurely",__func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
