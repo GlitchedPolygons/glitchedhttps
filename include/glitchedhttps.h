@@ -564,7 +564,7 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
 
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
-        _glitchedhttps_log_error("INVALID HTTP parameters passed into \"_glitchedhttps_http_request\".", __func__);
+        _glitchedhttps_log_error("INVALID HTTP parameters passed into \"_glitchedhttps_http_request()\".", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -573,13 +573,6 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
     {
         _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
         return GLITCHEDHTTPS_CHILLBUFF_ERROR;
-    }
-
-    if (response_string.length == 0)
-    {
-        _glitchedhttps_log_error("HTTP response string empty!", __func__);
-        exit_code = GLITCHEDHTTPS_INVALID_ARG;
-        goto exit;
     }
 
 #if defined WIN32
@@ -592,65 +585,39 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
     }
 #endif
 
-    int csocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (csocket < 0)
+    struct addrinfo* res;
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+    char buffer[buffer_size];
+    int byte_count;
+
+    char port[8];
+    snprintf(port, sizeof(port), "%d", server_port);
+    getaddrinfo(server_name, port, &hints, &res);
+
+    int sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    connect(sockfd, res->ai_addr, res->ai_addrlen);
+    send(sockfd, request, strlen(request), 0);
+    byte_count = recv(sockfd, buffer, sizeof buffer, 0);
+    printf("%s", buffer);
+    chillbuff_push_back(&response_string, buffer, strlen(buffer));
+
+    if (response_string.length == 0)
     {
-        _glitchedhttps_log_error("Socket creation failed.", __func__);
-        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
+        _glitchedhttps_log_error("HTTP response string empty!", __func__);
+        exit_code = GLITCHEDHTTPS_INVALID_ARG;
         goto exit;
     }
 
-    // Construct server address
-    struct sockaddr_in socket_address;
-    memset(&socket_address, 0, sizeof(socket_address));
-
-    struct hostent* he = gethostbyname(server_name);
-    socket_address.sin_family = AF_INET;
-
-    socket_address.sin_addr.s_addr = inet_addr("192.168.0.100"); // IP del server
-    socket_address.sin_port = htons(server_port);
-    // Connect to server.
-    if (connect(csocket, (struct sockaddr*)&socket_address, sizeof(socket_address)) < 0)
-    {
-        _glitchedhttps_log_error("Failed to connect to server.", __func__);
-        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
-        goto exit;
-    }
-
-    char* inputString = "REPLACE ME ASAP";
-    size_t stringLen = strlen(inputString);
-
-    if (send(csocket, inputString, stringLen, 0) != stringLen)
-    {
-        _glitchedhttps_log_error("send() sent a different number of bytes than expected", __func__);
-        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
-        goto exit;
-    }
-
-    int bytesRcvd;
-    int totalBytesRcvd = 0;
-    char buf[512]; // buffer for data from the server
-    printf("Received: "); // Setup to print the echoed string
-
-    while (totalBytesRcvd < stringLen)
-    {
-        if ((bytesRcvd = recv(csocket, buf, buffer_size - 1, 0)) <= 0)
-        {
-            _glitchedhttps_log_error("recv() failed or connection closed prematurely",__func__);
-            exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
-            goto exit;
-        }
-        totalBytesRcvd += bytesRcvd; // Keep tally of total bytes
-        buf[bytesRcvd] = '\0'; // Add \0 so printf knows where to stop
-        printf("%s", buf); // Print the echo buffer
-    }
-
-    //TODO: fix above code
     exit_code = _glitchedhttps_parse_response_string(&response_string, out);
 
 exit:
     chillbuff_free(&response_string);
-    closesocket(csocket);
+    freeaddrinfo(res);
+    closesocket(sockfd);
     clear_win_sock();
     return exit_code;
 }
