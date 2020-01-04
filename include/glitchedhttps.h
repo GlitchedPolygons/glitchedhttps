@@ -119,6 +119,17 @@ extern "C" {
  */
 #define GLITCHEDHTTPS_OVERFLOW 900
 
+/**
+ * Returned by a plain HTTP request if connection to the specified server couldn't be established.
+ */
+#define GLITCHEDHTTPS_CONNECTION_TO_SERVER_FAILED 1000
+
+/**
+ * Returned by a plain HTTP request if connection to the specified server was successful
+ * but the request couldn't be transmitted to the server.
+ */
+#define GLITCHEDHTTPS_HTTP_REQUEST_TRANSMISSION_FAILED 1100
+
 #pragma comment(lib, "ws2_32.lib")
 void clear_win_sock()
 {
@@ -334,6 +345,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     }
 
     chillbuff response_string;
+
     if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
         _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
@@ -560,7 +572,7 @@ exit:
 /** @private */
 int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
 {
-    int exit_code;
+    int exit_code, ret;
 
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
@@ -568,39 +580,66 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
+#if defined WIN32
+    WSADATA wsaData;
+    ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (ret != 0)
+    {
+        _glitchedhttps_log_error("Error at \"WSAStartup\".", __func__);
+        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+    }
+#endif
+
     chillbuff response_string;
+
     if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
         _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
         return GLITCHEDHTTPS_CHILLBUFF_ERROR;
     }
 
-#if defined WIN32
-    WSADATA wsaData;
-    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0)
-    {
-        _glitchedhttps_log_error("Erros at \"WSAStartup\".", __func__);
-        return GLITCHEDHTTPS_EXTERNAL_ERROR;
-    }
-#endif
-
-    struct addrinfo* res;
     struct addrinfo hints;
-    memset(&hints, 0, sizeof hints);
+    memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
-    char buffer[buffer_size];
-    int byte_count;
-
     char port[8];
+    memset(port, '\0', sizeof(port));
     snprintf(port, sizeof(port), "%d", server_port);
-    getaddrinfo(server_name, port, &hints, &res);
+
+    int byte_count = -1;
+    char buffer[buffer_size];
+
+    struct addrinfo* res = NULL;
+    ret = getaddrinfo(server_name, port, &hints, &res);
+    if (ret != 0)
+    {
+        char msg[128];
+        snprintf(msg, sizeof(msg), "\"getaddrinfo\" failed with error code: %d", ret);
+        _glitchedhttps_log_error(msg, __func__);
+        chillbuff_free(&response_string);
+        if (res != NULL)
+            freeaddrinfo(res);
+        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+    }
 
     int sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-    connect(sockfd, res->ai_addr, res->ai_addrlen);
-    send(sockfd, request, strlen(request), 0);
+
+    if (connect(sockfd, res->ai_addr, res->ai_addrlen) != 0)
+    {
+        _glitchedhttps_log_error("Connection to server failed!", __func__);
+        exit_code = GLITCHEDHTTPS_CONNECTION_TO_SERVER_FAILED;
+        goto exit;
+    }
+
+    if (send(sockfd, request, strlen(request), 0) < 0)
+    {
+        _glitchedhttps_log_error("Connection to server successful but HTTP Request could not be transmitted!", __func__);
+        exit_code = GLITCHEDHTTPS_HTTP_REQUEST_TRANSMISSION_FAILED;
+        goto exit;
+    }
+
+    // TODO: make a for(;;) loop that checks until there are no bytes left to read via recv
     byte_count = recv(sockfd, buffer, sizeof buffer, 0);
     printf("%s", buffer);
     chillbuff_push_back(&response_string, buffer, strlen(buffer));
@@ -615,8 +654,11 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
     exit_code = _glitchedhttps_parse_response_string(&response_string, out);
 
 exit:
+    if (res != NULL)
+    {
+        freeaddrinfo(res);
+    }
     chillbuff_free(&response_string);
-    freeaddrinfo(res);
     closesocket(sockfd);
     clear_win_sock();
     return exit_code;
