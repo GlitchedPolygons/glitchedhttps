@@ -130,6 +130,16 @@ extern "C" {
  */
 #define GLITCHEDHTTPS_HTTP_REQUEST_TRANSMISSION_FAILED 1100
 
+/**
+ * Returned if the plain http:// request failed due to a <code>getaddrinfo()</code> failure.
+ */
+#define GLITCHEDHTTPS_HTTP_GETADDRINFO_FAILED 1200
+
+/**
+ * If the returned HTTP response string is empty.
+ */
+#define GLITCHEDHTTPS_EMPTY_RESPONSE 1300
+
 #pragma comment(lib, "ws2_32.lib")
 void clear_win_sock()
 {
@@ -341,6 +351,12 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
         _glitchedhttps_log_error("INVALID HTTPS parameters passed into \"_glitchedhttps_https_request\". Returning NULL...", __func__);
+        return GLITCHEDHTTPS_INVALID_ARG;
+    }
+
+    if (buffer_size < 64)
+    {
+        _glitchedhttps_log_error("Buffer size too small, give it at least 64.", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -580,6 +596,12 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
+    if (buffer_size < 64)
+    {
+        _glitchedhttps_log_error("Buffer size too small, give it at least 64.", __func__);
+        return GLITCHEDHTTPS_INVALID_ARG;
+    }
+
 #if defined WIN32
     WSADATA wsaData;
     ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -620,7 +642,7 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
         chillbuff_free(&response_string);
         if (res != NULL)
             freeaddrinfo(res);
-        return GLITCHEDHTTPS_EXTERNAL_ERROR;
+        return GLITCHEDHTTPS_HTTP_GETADDRINFO_FAILED;
     }
 
     int sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
@@ -634,7 +656,7 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
 
     if (send(sockfd, request, strlen(request), 0) < 0)
     {
-        _glitchedhttps_log_error("Connection to server successful but HTTP Request could not be transmitted!", __func__);
+        _glitchedhttps_log_error("Connection to server was successful but HTTP Request could not be transmitted!", __func__);
         exit_code = GLITCHEDHTTPS_HTTP_REQUEST_TRANSMISSION_FAILED;
         goto exit;
     }
@@ -647,7 +669,7 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
     if (response_string.length == 0)
     {
         _glitchedhttps_log_error("HTTP response string empty!", __func__);
-        exit_code = GLITCHEDHTTPS_INVALID_ARG;
+        exit_code = GLITCHEDHTTPS_EMPTY_RESPONSE;
         goto exit;
     }
 
