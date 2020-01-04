@@ -20,6 +20,7 @@ add_subdirectory(lib/mbedtls)
 add_subdirectory(lib/chillbuff)
 
 add_library(glitchedhttps INTERFACE
+        #include/glitchedhttps_exitcodes.h
         #include/glitchedhttps_cacerts.h
         #include/glitchedhttps_strutil.h
         #include/glitchedhttps_debug.h
