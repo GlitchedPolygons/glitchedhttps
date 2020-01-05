@@ -29,6 +29,28 @@
 extern "C" {
 #endif
 
+	
+#ifdef WIN32
+#include <winsock2.h>
+#else
+#define closesocket close
+#include <unistd.h>
+#include <errno.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif
+
+#pragma comment(lib, "ws2_32.lib")
+void clear_win_sock()
+{
+#if defined WIN32
+    WSACleanup();
+#endif
+}
+
 #include <time.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -53,27 +75,6 @@ extern "C" {
 #include "glitchedhttps_request.h"
 #include "glitchedhttps_response.h"
 #include "glitchedhttps_exitcodes.h"
-
-#ifdef WIN32
-#include <ws2def.h>
-#else
-#define closesocket close
-#include <unistd.h>
-#include <errno.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#endif
-
-#pragma comment(lib, "ws2_32.lib")
-void clear_win_sock()
-{
-#if defined WIN32
-    WSACleanup();
-#endif
-}
 
 /** @private */
 int _glitchedhttps_parse_response_string(const chillbuff* response_string, glitchedhttps_response** out)
@@ -298,7 +299,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     uint32_t flags;
     int ret = 1, length, exit_code = -1;
     int mbedtls_exit_code = MBEDTLS_EXIT_FAILURE;
-    unsigned char buffer[buffer_size];
+    unsigned char buffer[4096];
 
     time_t t;
     srand((unsigned)time(&t));
@@ -516,7 +517,7 @@ exit:
 int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
 {
     int exit_code, ret;
-    char buffer[buffer_size];
+    char buffer[4096];
 
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
