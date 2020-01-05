@@ -85,8 +85,10 @@ glitchedhttps_guid glitchedhttps_new_guid(const bool lowercase, const bool hyphe
     memset(out.string, '\0', sizeof(out.string));
 
     GUID guid = { 0 };
-    CoCreateGuid(&guid);
-    snprintf(out.string, sizeof(out.string), GLITCHEDHTTPS_GET_GUID_FORMAT(lowercase, hyphens), guid.Data1, guid.Data2, guid.Data3, guid.Data4[0], guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
+    if (CoCreateGuid(&guid) == S_OK)
+    {
+        snprintf(out.string, sizeof(out.string), GLITCHEDHTTPS_GET_GUID_FORMAT(lowercase, hyphens), guid.Data1, guid.Data2, guid.Data3, guid.Data4[0], guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
+    }
     return out;
 }
 

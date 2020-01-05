@@ -29,9 +29,12 @@
 extern "C" {
 #endif
 
-	
 #ifdef WIN32
 #include <winsock2.h>
+#include <ws2tcpip.h>
+#ifdef __MINGW32__
+#include <wspiapi.h>
+#endif
 #else
 #define closesocket close
 #include <unistd.h>
@@ -326,7 +329,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (ret != 0)
     {
         char msg[128];
-        sprintf(msg, "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
+        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
@@ -334,11 +337,11 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
 
     /* Load the CA root certificates. */
 
-    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHEDHTTPS_CA_CERTS, sizeof(GLITCHEDHTTPS_CA_CERTS));
+    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHEDHTTPS_CA_CERTS, strlen(GLITCHEDHTTPS_CA_CERTS));
     if (ret < 0)
     {
         char msg[128];
-        sprintf(msg, "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
+        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
         _glitchedhttps_log_error(msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
@@ -354,7 +357,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (ret != 0)
     {
         char msg[128];
-        sprintf(msg, "HTTPS request failed: \"mbedtls_net_connect\" returned %d", ret);
+        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_net_connect\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
@@ -366,7 +369,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (ret != 0)
     {
         char msg[128];
-        sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
+        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
@@ -381,7 +384,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (ret != 0)
     {
         char msg[128];
-        sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_setup\" returned %d", ret);
+        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_setup\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
@@ -391,7 +394,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     if (ret != 0)
     {
         char msg[128];
-        sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_set_hostname\" returned %d", ret);
+        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_set_hostname\" returned %d", ret);
         _glitchedhttps_log_error(msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
@@ -406,7 +409,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
         {
             char msg[128];
-            sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_handshake\" returned -0x%x", -ret);
+            snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_handshake\" returned -0x%x", -ret);
             _glitchedhttps_log_error(msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
@@ -434,7 +437,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
         {
             char msg[128];
-            sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_write\" returned %d", ret);
+            snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_write\" returned %d", ret);
             _glitchedhttps_log_error(msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
@@ -462,7 +465,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         if (ret < 0)
         {
             char msg[128];
-            sprintf(msg, "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
+            snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
             _glitchedhttps_log_error(msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
@@ -560,7 +563,7 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
 
     struct addrinfo* res = NULL;
     ret = getaddrinfo(server_name, port, &hints, &res);
-    if (ret != 0)
+    if (ret != 0 || res == NULL)
     {
         char msg[128];
         snprintf(msg, sizeof(msg), "\"getaddrinfo\" failed with error code: %d", ret);
@@ -571,16 +574,16 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
         return GLITCHEDHTTPS_HTTP_GETADDRINFO_FAILED;
     }
 
-    int sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    int sockfd = (int)socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-    if (connect(sockfd, res->ai_addr, res->ai_addrlen) != 0)
+    if (connect(sockfd, res->ai_addr, (int)res->ai_addrlen) != 0)
     {
         _glitchedhttps_log_error("Connection to server failed!", __func__);
         exit_code = GLITCHEDHTTPS_CONNECTION_TO_SERVER_FAILED;
         goto exit;
     }
 
-    if (send(sockfd, request, strlen(request), 0) < 0)
+    if (send(sockfd, request, (int)strlen(request), 0) < 0)
     {
         _glitchedhttps_log_error("Connection to server was successful but HTTP Request could not be transmitted!", __func__);
         exit_code = GLITCHEDHTTPS_HTTP_REQUEST_TRANSMISSION_FAILED;
@@ -595,7 +598,7 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
         if (ret < 0)
         {
             char msg[128];
-            sprintf(msg, "HTTP request failed: \"recv()\" returned %d", ret);
+            snprintf(msg, sizeof(msg), "HTTP request failed: \"recv()\" returned %d", ret);
             _glitchedhttps_log_error(msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
