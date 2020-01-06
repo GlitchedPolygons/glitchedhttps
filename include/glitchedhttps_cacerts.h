@@ -88,16 +88,16 @@ static char* _glitchedhttps_get_ca_certs()
         if (strncmp(buffer, "-----BEGIN CERTIFICATES LIST-----", 33) == 0)
         {
             reading = true;
-            continue;
-        }
-        else if (strncmp(buffer, "-----END CERTIFICATES LIST-----", 31) == 0)
-        {
-            break;
         }
 
         if (reading)
         {
             chillbuff_push_back(&stringbuilder, buffer, strlen(buffer));
+        }
+
+        if (strncmp(buffer, "-----END CERTIFICATES LIST-----", 31) == 0)
+        {
+            reading = false;
         }
     }
 
@@ -158,6 +158,7 @@ static char* _glitchedhttps_get_ca_certs()
 /*
 
 -----BEGIN CERTIFICATES LIST-----
+
 GlobalSign Root CA
 ==================
 -----BEGIN CERTIFICATE-----
@@ -5160,6 +5161,7 @@ iEDPfUYd/x7H4c7/I9vG+o1VTqkC50cRRj70/b17KSa7qWFiNyi2LSr2EIZkyXCn
 0q23KXB56jzaYyWf/Wi3MOxw+3WKt21gZ7IeyLnp2KhvAotnDU0mV3HaIPzBSlCN
 sSi6
 -----END CERTIFICATE-----
+
 -----END CERTIFICATES LIST-----
 
 */
