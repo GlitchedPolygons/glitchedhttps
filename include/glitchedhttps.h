@@ -337,7 +337,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
 
     /* Load the CA root certificates. */
 
-    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHEDHTTPS_CA_CERTS, strlen(GLITCHEDHTTPS_CA_CERTS));
+    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHEDHTTPS_CA_CERTS, strlen(GLITCHEDHTTPS_CA_CERTS) + 1);
     if (ret < 0)
     {
         char msg[128];
