@@ -17,7 +17,8 @@
 #include <stdio.h>
 #include <glitchedhttps.h>
 
-static const size_t BUFFER_SIZE = 1024;
+/* You can set a custom buffer size that will be used for recv() - anything above 8192 will be allocated on the heap! */
+static const size_t BUFFER_SIZE = 16384;
 
 int main()
 {

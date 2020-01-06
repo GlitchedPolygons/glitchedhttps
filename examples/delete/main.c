@@ -17,8 +17,6 @@
 #include <stdbool.h>
 #include <glitchedhttps.h>
 
-static const size_t BUFFER_SIZE = 256;
-
 int main()
 {
     char* url = "https://postman-echo.com/delete?some-resource-to-delete=foo-bar";
@@ -26,7 +24,6 @@ int main()
     glitchedhttps_request request = {
             .url = url,
             .method = GLITCHEDHTTPS_DELETE,
-            .buffer_size = BUFFER_SIZE,
             .ssl_verification_optional = false,
     };
 

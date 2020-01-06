@@ -17,8 +17,6 @@
 #include <stdio.h>
 #include <glitchedhttps.h>
 
-static const size_t BUFFER_SIZE = 1024;
-
 int main()
 {
     char* url = "https://postman-echo.com/put";
@@ -33,7 +31,6 @@ int main()
     glitchedhttps_request request = {
             .url = url,
             .method = GLITCHEDHTTPS_PUT,
-            .buffer_size = BUFFER_SIZE,
             .ssl_verification_optional = false,
             .content_type = "application/json",
             .content_length = strlen(body),

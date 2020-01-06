@@ -285,12 +285,6 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
-    if (buffer_size < 64)
-    {
-        _glitchedhttps_log_error("Buffer size too small, give it at least 64.", __func__);
-        return GLITCHEDHTTPS_INVALID_ARG;
-    }
-
     chillbuff response_string;
 
     if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
@@ -300,10 +294,24 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     }
 
     uint32_t flags;
-    int ret = 1, length, exit_code = -1;
+    int ret = 1, exit_code = -1;
     int mbedtls_exit_code = MBEDTLS_EXIT_FAILURE;
 
-    unsigned char buffer[4096];
+    char error_msg[256];
+    memset(error_msg, '\0', sizeof error_msg);
+
+    unsigned char buffer_stack[8192];
+    unsigned char* buffer_heap = NULL;
+    if (buffer_size > sizeof(buffer_stack))
+    {
+        buffer_heap = malloc(buffer_size * sizeof(unsigned char));
+        if (buffer_heap == NULL)
+        {
+            _glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
+        }
+    }
+
+    unsigned char* buffer = buffer_heap != NULL ? buffer_heap : buffer_stack;
 
     time_t t;
     srand((unsigned)time(&t));
@@ -329,9 +337,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char*)guid.string, strlen(guid.string));
     if (ret != 0)
     {
-        char msg[128];
-        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
-        _glitchedhttps_log_error(msg, __func__);
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
+        _glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -341,9 +348,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHEDHTTPS_CA_CERTS, strlen(GLITCHEDHTTPS_CA_CERTS) + 1);
     if (ret < 0)
     {
-        char msg[128];
-        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
-        _glitchedhttps_log_error(msg, __func__);
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
+        _glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -357,9 +363,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     ret = mbedtls_net_connect(&net_context, server_name, port, MBEDTLS_NET_PROTO_TCP);
     if (ret != 0)
     {
-        char msg[128];
-        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_net_connect\" returned %d", ret);
-        _glitchedhttps_log_error(msg, __func__);
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_net_connect\" returned %d", ret);
+        _glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -369,9 +374,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     ret = mbedtls_ssl_config_defaults(&ssl_config, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT);
     if (ret != 0)
     {
-        char msg[128];
-        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
-        _glitchedhttps_log_error(msg, __func__);
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
+        _glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -384,9 +388,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     ret = mbedtls_ssl_setup(&ssl_context, &ssl_config);
     if (ret != 0)
     {
-        char msg[128];
-        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_setup\" returned %d", ret);
-        _glitchedhttps_log_error(msg, __func__);
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_setup\" returned %d", ret);
+        _glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -394,9 +397,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     ret = mbedtls_ssl_set_hostname(&ssl_context, server_name);
     if (ret != 0)
     {
-        char msg[128];
-        snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_set_hostname\" returned %d", ret);
-        _glitchedhttps_log_error(msg, __func__);
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_set_hostname\" returned %d", ret);
+        _glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -409,9 +411,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     {
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
         {
-            char msg[128];
-            snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_handshake\" returned -0x%x", -ret);
-            _glitchedhttps_log_error(msg, __func__);
+            snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_handshake\" returned -0x%x", -ret);
+            _glitchedhttps_log_error(error_msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
@@ -431,15 +432,12 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
 
     /* Write the request string.*/
 
-    length = snprintf((char*)buffer, sizeof(buffer), "%s", request);
-
-    while ((ret = mbedtls_ssl_write(&ssl_context, buffer, length)) <= 0)
+    while ((ret = mbedtls_ssl_write(&ssl_context, request, strlen(request))) <= 0)
     {
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
         {
-            char msg[128];
-            snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_write\" returned %d", ret);
-            _glitchedhttps_log_error(msg, __func__);
+            snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_write\" returned %d", ret);
+            _glitchedhttps_log_error(error_msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
@@ -449,9 +447,9 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
 
     for (;;)
     {
-        length = (int)(sizeof(buffer) - 1);
-        memset(buffer, '\0', sizeof(buffer));
-        ret = mbedtls_ssl_read(&ssl_context, buffer, length);
+        const size_t length = (buffer_heap != NULL ? (buffer_size * sizeof(unsigned char)) : sizeof(buffer_stack));
+        memset(buffer, '\0', length);
+        ret = mbedtls_ssl_read(&ssl_context, buffer, length - 1);
 
         if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE)
         {
@@ -465,9 +463,8 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
 
         if (ret < 0)
         {
-            char msg[128];
-            snprintf(msg, sizeof(msg), "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
-            _glitchedhttps_log_error(msg, __func__);
+            snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
+            _glitchedhttps_log_error(error_msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
@@ -478,8 +475,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
             break;
         }
 
-        length = ret;
-        chillbuff_push_back(&response_string, buffer, length);
+        chillbuff_push_back(&response_string, buffer, ret);
     }
 
     if (response_string.length == 0)
@@ -498,14 +494,15 @@ exit:
 #ifdef MBEDTLS_ERROR_C
     if (mbedtls_exit_code != MBEDTLS_EXIT_SUCCESS)
     {
-        char error_buf[4096];
-        mbedtls_strerror(ret, error_buf, sizeof(error_buf));
-        char msg[8192];
-        snprintf(msg, sizeof(msg), "HTTPS request unsuccessful! Last error was: %d - %s", ret, error_buf);
-        _glitchedhttps_log_error(msg, __func__);
+        char error_buf[2048];
+        memset(error_buf, '\0', sizeof(error_buf));
+        int f = snprintf(error_buf, sizeof(error_buf), "HTTPS request unsuccessful! Last error was: %d - ", ret);
+        mbedtls_strerror(ret, error_buf + f, sizeof(error_buf) - f - 1);
+        _glitchedhttps_log_error(error_buf, __func__);
     }
 #endif
 
+    free(buffer_heap);
     mbedtls_net_free(&net_context);
     mbedtls_x509_crt_free(&cacert);
     mbedtls_ssl_free(&ssl_context);
@@ -521,17 +518,10 @@ exit:
 int _glitchedhttps_http_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, glitchedhttps_response** out)
 {
     int exit_code, ret;
-    char buffer[4096];
 
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
         _glitchedhttps_log_error("INVALID HTTP parameters passed into \"_glitchedhttps_http_request()\".", __func__);
-        return GLITCHEDHTTPS_INVALID_ARG;
-    }
-
-    if (buffer_size < 64)
-    {
-        _glitchedhttps_log_error("Buffer size too small, give it at least 64.", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -575,6 +565,19 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
         return GLITCHEDHTTPS_HTTP_GETADDRINFO_FAILED;
     }
 
+    char buffer_stack[8192];
+    char* buffer_heap = NULL;
+    if (buffer_size > sizeof(buffer_stack))
+    {
+        buffer_heap = malloc(buffer_size * sizeof(char));
+        if (buffer_heap == NULL)
+        {
+            _glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
+        }
+    }
+
+    char* buffer = buffer_heap != NULL ? buffer_heap : buffer_stack;
+
     int sockfd = (int)socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
     if (connect(sockfd, res->ai_addr, (int)res->ai_addrlen) != 0)
@@ -593,8 +596,9 @@ int _glitchedhttps_http_request(const char* server_name, const int server_port, 
 
     for (;;)
     {
-        memset(buffer, '\0', sizeof(buffer));
-        ret = recv(sockfd, buffer, sizeof(buffer) - 1, 0);
+        const int length = (int)(buffer_heap != NULL ? (buffer_size * sizeof(char)) : sizeof(buffer_stack));
+        memset(buffer, '\0', length);
+        ret = recv(sockfd, buffer, length - 1, 0);
 
         if (ret < 0)
         {
@@ -628,6 +632,7 @@ exit:
     {
         freeaddrinfo(res);
     }
+    free(buffer_heap);
     chillbuff_free(&response_string);
     closesocket(sockfd);
     clear_win_sock();

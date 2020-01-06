@@ -17,14 +17,11 @@
 #include <stdbool.h>
 #include <glitchedhttps.h>
 
-static const size_t BUFFER_SIZE = 256;
-
 int main(int argc, char* argv[])
 {
     glitchedhttps_request request = {
         .url = argv[1],
         .method = GLITCHEDHTTPS_GET,
-        .buffer_size = BUFFER_SIZE,
         .ssl_verification_optional = false,
     };
 
