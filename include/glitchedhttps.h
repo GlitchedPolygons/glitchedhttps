@@ -302,6 +302,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
     uint32_t flags;
     int ret = 1, length, exit_code = -1;
     int mbedtls_exit_code = MBEDTLS_EXIT_FAILURE;
+
     unsigned char buffer[4096];
 
     time_t t;
