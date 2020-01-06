@@ -33,7 +33,6 @@ int main()
     {
         .url = "https://example.com/",
         .method = GLITCHEDHTTPS_GET,
-        .buffer_size = 4096,
         .ssl_verification_optional = false,
     };
 
@@ -81,7 +80,6 @@ int main()
     {
         .url = url,
         .method = GLITCHEDHTTPS_POST,
-        .buffer_size = 1024,
         .ssl_verification_optional = false,
         .content_type = "application/json",
         .content_length = strlen(body),
