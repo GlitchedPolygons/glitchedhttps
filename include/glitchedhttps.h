@@ -432,7 +432,7 @@ int _glitchedhttps_https_request(const char* server_name, const int server_port,
 
     /* Write the request string.*/
 
-    while ((ret = mbedtls_ssl_write(&ssl_context, request, strlen(request))) <= 0)
+    while ((ret = mbedtls_ssl_write(&ssl_context, (const unsigned char*)request, strlen(request))) <= 0)
     {
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
         {
