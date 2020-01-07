@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 #include <glitchedhttps.h>
 
 int main()
@@ -22,13 +23,13 @@ int main()
     char* url = "https://postman-echo.com/put";
     char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
 
-    glitchedhttps_header additional_headers[] = {
+    struct glitchedhttps_header additional_headers[] = {
             { "Another-Foo", "anotherBar" },
             { "Additional-Headers-Are-Cool", "SGVsbG8gV29ybGQh" },
             { "Yet-Another-Header", "You can add as many of these as you want" }
     };
 
-    glitchedhttps_request request = {
+    struct glitchedhttps_request request = {
             .url = url,
             .method = GLITCHEDHTTPS_PUT,
             .ssl_verification_optional = false,
@@ -36,10 +37,10 @@ int main()
             .content_length = strlen(body),
             .content = body,
             .additional_headers = additional_headers,
-            .additional_headers_count = sizeof(additional_headers) / sizeof(glitchedhttps_header)
+            .additional_headers_count = sizeof(additional_headers) / sizeof(struct glitchedhttps_header)
     };
 
-    glitchedhttps_response* response = NULL;
+    struct glitchedhttps_response* response = NULL;
     int result = glitchedhttps_submit(&request, &response);
 
     const bool success =

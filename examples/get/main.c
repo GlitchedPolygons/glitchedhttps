@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
    limitations under the License.
 */
 
-#include <stdbool.h>
+#include <stdio.h>
 #include <glitchedhttps.h>
 
 int main(int argc, char* argv[])
 {
-    glitchedhttps_request request = {
+    struct glitchedhttps_request request = {
         .url = argv[1],
         .method = GLITCHEDHTTPS_GET,
         .ssl_verification_optional = false,
     };
 
-    glitchedhttps_response* response = NULL;
+    struct glitchedhttps_response* response = NULL;
 
     int result = glitchedhttps_submit(&request, &response);
 

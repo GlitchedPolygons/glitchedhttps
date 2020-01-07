@@ -17,7 +17,6 @@
 /**
  *  @file glitchedhttps_exitcodes.h
  *  @author Raphael Beck
- *  @date 04. January 2020
  *  @brief Exit codes returned by the various glitchedhttps functions.
  */
 

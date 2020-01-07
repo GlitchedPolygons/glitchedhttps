@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 /**
  *  @file glitchedhttps_header.h
  *  @author Raphael Beck
- *  @date 28. December 2019
  *  @brief HTTP request (or response) header (for example: type="Authorization" ; value="Basic YWxhZGRpbjpvcGVuc2VzYW1l").
  */
 
@@ -28,18 +27,16 @@
 extern "C" {
 #endif
 
-#include <stdlib.h>
-
 /**
  * @brief HTTP request (or response) header (for example: type="Authorization" ; value="Basic YWxhZGRpbjpvcGVuc2VzYW1l").
  */
-typedef struct glitchedhttps_header
+struct glitchedhttps_header
 {
     /** The type of HTTP request header (its name without the ':' colon). E.g. "Authorization", "Server", etc... */
     char* type;
     /** The header value (what comes after the ':' colon separator). */
     char* value;
-} glitchedhttps_header;
+};
 
 /**
  * Creates and initializes a glitchedhttps_header instance and returns its pointer. <p>
@@ -50,65 +47,13 @@ typedef struct glitchedhttps_header
  * @param value_length The length of the header value string.
  * @return The freshly allocated and initialized glitchedhttps_header instance (a pointer to it). If init failed, <code>NULL</code> is returned!
  */
-glitchedhttps_header* glitchedhttps_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length)
-{
-    if (type == NULL || value == NULL)
-    {
-        _glitchedhttps_log_error("Header type or value string NULL!", __func__);
-        return NULL;
-    }
-
-    if (type_length == 0)
-    {
-        _glitchedhttps_log_error("Header type string empty!", __func__);
-        return NULL;
-    }
-
-    glitchedhttps_header* out = malloc(sizeof(glitchedhttps_header));
-    if (out == NULL)
-    {
-        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
-        return NULL;
-    }
-
-    out->type = malloc(sizeof(char) * type_length + 1);
-    out->value = malloc(sizeof(char) * value_length + 1);
-
-    if (out->type == NULL || out->value == NULL)
-    {
-        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
-        return NULL;
-    }
-
-    memcpy(out->type, type, type_length);
-    out->type[type_length] = '\0';
-
-    if (value_length > 0)
-    {
-        memcpy(out->value, value, value_length);
-        out->value[value_length] = '\0';
-    }
-    else
-    {
-        out->value[0] = '\0';
-    }
-
-    return out;
-}
+struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length);
 
 /**
  * Frees a glitchedhttps_header instance as well as its two heap-allocated strings inside.
  * @param header The glitchedhttps_header to deallocate.
  */
-static inline void glitchedhttps_header_free(glitchedhttps_header* header)
-{
-    if (header != NULL)
-    {
-        free(header->type);
-        free(header->value);
-        free(header);
-    }
-}
+static inline void glitchedhttps_header_free(struct glitchedhttps_header* header);
 
 #ifdef __cplusplus
 } // extern "C"

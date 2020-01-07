@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 /**
  *  @file glitchedhttps_strutil.h
  *  @author Raphael Beck
- *  @date 28. December 2019
  *  @brief Useful string-related utility functions.
  */
 

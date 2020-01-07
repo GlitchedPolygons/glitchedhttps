@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 /**
  *  @file glitchedhttps_request.h
  *  @author Raphael Beck
- *  @date 28. December 2019
  *  @brief Struct containing an HTTP request's parameters and headers.
  */
 
@@ -28,7 +27,7 @@
 extern "C" {
 #endif
 
-#include <stdlib.h>
+#include <stddef.h>
 #include <stdbool.h>
 #include "glitchedhttps_method.h"
 #include "glitchedhttps_header.h"
@@ -36,7 +35,7 @@ extern "C" {
 /**
  * @brief Struct containing an HTTP request's parameters and headers.
  */
-typedef struct glitchedhttps_request
+struct glitchedhttps_request
 {
     /**
      * The full, uncensored URL for the HTTP POST request including
@@ -50,7 +49,7 @@ typedef struct glitchedhttps_request
      * Please remember that only POST, PUT and PATCH requests
      * should send a request body (via <code>content</code> parameter here).
      */
-    glitchedhttps_method method;
+    enum glitchedhttps_method method;
 
     /**
      * The HTTP request body.
@@ -83,7 +82,7 @@ typedef struct glitchedhttps_request
      * Set this to <code>NULL</code> if you don't want to add any additional HTTP request headers. <p>
      * You can create headers using the {@link #glitchedhttps_header_init()} function.
      */
-    glitchedhttps_header* additional_headers;
+    struct glitchedhttps_header* additional_headers;
 
     /**
      * The amount of passed additional HTTP request headers (pass zero if there's none).
@@ -103,7 +102,7 @@ typedef struct glitchedhttps_request
      */
     bool ssl_verification_optional;
 
-} glitchedhttps_request;
+};
 
 #ifdef __cplusplus
 } // extern "C"

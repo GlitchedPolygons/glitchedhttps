@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 /**
  *  @file glitchedhttps_response.h
  *  @author Raphael Beck
- *  @date 28. December 2019
  *  @brief Struct containing an HTTP response's data.
  */
 
@@ -34,7 +33,7 @@ extern "C" {
 /**
  * @brief Struct containing an HTTP response's data.
  */
-typedef struct glitchedhttps_response
+struct glitchedhttps_response
 {
     /** The result status code (e.g. 200 for "OK", 404 for "Not Found", etc...). */
     int status_code;
@@ -61,58 +60,17 @@ typedef struct glitchedhttps_response
     size_t content_length;
 
     /** All HTTP response headers. @see glitchedhttps_header */
-    glitchedhttps_header* headers;
+    struct glitchedhttps_header* headers;
 
     /** The total amount of headers included in the HTTP response. */
     size_t headers_count;
-} glitchedhttps_response;
+};
 
 /**
  * Frees an glitchedhttps_response instance that was allocated by {@link #glitchedhttps_submit()}.
  * @param response The glitchedhttps_response instance ready for deallocation.
  */
-void glitchedhttps_response_free(glitchedhttps_response* response)
-{
-    if (response == NULL)
-    {
-        return;
-    }
-
-    free(response->raw);
-    response->raw = NULL;
-
-    free(response->server);
-    response->server = NULL;
-
-    free(response->date);
-    response->date = NULL;
-
-    free(response->content);
-    response->content = NULL;
-
-    free(response->content_type);
-    response->content_type = NULL;
-
-    free(response->content_encoding);
-    response->content_encoding = NULL;
-
-    if (response->headers_count > 0)
-    {
-        for (size_t i = 0; i < response->headers_count; i++)
-        {
-            glitchedhttps_header* h = &(response->headers[i]);
-
-            if (h == NULL)
-                continue;
-
-            free(h->type);
-            free(h->value);
-        }
-        free(response->headers);
-    }
-
-    free(response);
-}
+void glitchedhttps_response_free(struct glitchedhttps_response* response);
 
 #ifdef __cplusplus
 } // extern "C"

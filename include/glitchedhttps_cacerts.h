@@ -5,7 +5,6 @@
 /**
  *  @file glitchedhttps_cacerts.h
  *  @author Raphael Beck
- *  @date 28. December 2019
  *  @brief Trusted CA certificates chain for SSL connections. <p>
  */
 
@@ -59,7 +58,7 @@ extern "C" {
 static char* _glitchedhttps_ca_certs = NULL;
 
 /* NOTE:
- * If this internal _glitchedhttps_get_ca_certs() function fails it returns an EMPTY string,
+ * If this internal _glitchedhttps_get_ca_certs() function fails it returns a NULL or EMPTY string,
  * which will most likely result in HTTPS requests failing due to untrusted SSL certificates!
  */
 

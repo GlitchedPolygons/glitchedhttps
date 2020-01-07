@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+#include <stdio.h>
 #include <stdbool.h>
 #include <glitchedhttps.h>
 
@@ -21,13 +22,13 @@ int main()
 {
     char* url = "https://postman-echo.com/delete?some-resource-to-delete=foo-bar";
 
-    glitchedhttps_request request = {
+    struct glitchedhttps_request request = {
             .url = url,
             .method = GLITCHEDHTTPS_DELETE,
             .ssl_verification_optional = false,
     };
 
-    glitchedhttps_response* response = NULL;
+    struct glitchedhttps_response* response = NULL;
 
     int result = glitchedhttps_submit(&request, &response);
 

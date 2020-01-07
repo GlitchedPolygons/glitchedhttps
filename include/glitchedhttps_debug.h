@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 /**
  *  @file glitchedhttps_debug.h
  *  @author Raphael Beck
- *  @date 28. December 2019
  *  @brief glitchedhttps debugging/error handling code. Mostly for internal use!
  */
 
@@ -31,50 +30,10 @@ extern "C" {
 #include <stdbool.h>
 
 /** @private */
-void (*_glitchedhttps_error_callback)(const char*) = NULL;
+void _glitchedhttps_log_error(const char* error, const char* origin);
 
 /** @private */
-static void _glitchedhttps_debug(void* ctx, int level, const char* file, int line, const char* str)
-{
-    ((void)level);
-
-    mbedtls_fprintf((FILE*)ctx, "%s:%04d: %s", file, line, str);
-    fflush((FILE*)ctx);
-}
-
-/** @private */
-static void _glitchedhttps_log_error(const char* error, const char* origin)
-{
-    size_t error_msg_length = 64 + strlen(error) + strlen(origin);
-
-    char error_msg_stack[8192];
-    memset(error_msg_stack, '\0', sizeof(error_msg_stack));
-
-    char* error_msg_heap = NULL;
-    if (error_msg_length > 8192)
-    {
-        error_msg_heap = calloc(error_msg_length, sizeof(char));
-        if (error_msg_heap == NULL)
-        {
-            error_msg_length = sizeof error_msg_stack;
-        }
-    }
-
-    char* error_msg = error_msg_heap != NULL ? error_msg_heap : error_msg_stack;
-
-    snprintf(error_msg, error_msg_length, "\nGLITCHEDHTTPS ERROR: (%s) %s\n", origin, error);
-
-#ifdef GLITCHEDHTTPS_PRINTF_ERRORS
-    printf(error_msg);
-#endif
-
-    if (_glitchedhttps_error_callback != NULL)
-    {
-        _glitchedhttps_error_callback(error_msg);
-    }
-
-    free(error_msg_heap);
-}
+void _glitchedhttps_debug(void* ctx, int level, const char* file, int line, const char* str);
 
 /**
  * Sets the glitchedhttps error callback. <p>
@@ -82,25 +41,12 @@ static void _glitchedhttps_log_error(const char* error, const char* origin)
  * @param error_callback The function to call when errors occur.
  * @return Whether the callback was set up correctly or not (<code>bool</code> as defined in <code>stdbool.h</code>).
  */
-static inline bool glitchedhttps_set_error_callback(void (*error_callback)(const char*))
-{
-    if (error_callback == NULL)
-    {
-        _glitchedhttps_log_error("The passed error callback is empty; Operation cancelled!", __func__);
-        return false;
-    }
-
-    _glitchedhttps_error_callback = error_callback;
-    return true;
-}
+static inline bool glitchedhttps_set_error_callback(void (*error_callback)(const char*));
 
 /**
  * Clears the glitchedhttps error callback (errors won't be printed anymore).
  */
-static inline void glitchedhttps_unset_error_callback()
-{
-    _glitchedhttps_error_callback = NULL;
-}
+static inline void glitchedhttps_unset_error_callback();
 
 #ifdef __cplusplus
 } // extern "C"

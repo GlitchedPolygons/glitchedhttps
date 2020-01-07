@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Raphael Beck
+   Copyright 2020 Raphael Beck
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 #include <glitchedhttps.h>
 
 /* You can set a custom buffer size that will be used for recv() - anything above 8192 will be allocated on the heap! */
@@ -25,7 +26,7 @@ int main()
     char* url = "https://postman-echo.com/post";
     char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
 
-    glitchedhttps_request request = {
+    struct glitchedhttps_request request = {
             .url = url,
             .method = GLITCHEDHTTPS_POST,
             .buffer_size = BUFFER_SIZE,
@@ -35,7 +36,7 @@ int main()
             .content = body
     };
 
-    glitchedhttps_response* response = NULL;
+    struct glitchedhttps_response* response = NULL;
 
     int result = glitchedhttps_submit(&request, &response);
 
