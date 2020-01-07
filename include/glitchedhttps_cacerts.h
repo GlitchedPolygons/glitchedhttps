@@ -104,12 +104,13 @@ static char* _glitchedhttps_get_ca_certs()
     _glitchedhttps_ca_certs = malloc(stringbuilder.length + 1);
     if (_glitchedhttps_ca_certs == NULL)
     {
-        return "";
+        goto exit;
     }
 
     memcpy((char*)_glitchedhttps_ca_certs, (char*)stringbuilder.array, stringbuilder.length);
     _glitchedhttps_ca_certs[stringbuilder.length] = '\0';
 
+exit:
     chillbuff_free(&stringbuilder);
     fclose(file);
 
