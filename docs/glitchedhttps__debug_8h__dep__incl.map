@@ -1,6 +1,0 @@
-<map id="include/glitchedhttps_debug.h" name="include/glitchedhttps_debug.h">
-<area shape="rect" id="node1" title="glitchedhttps debugging/error handling code. Mostly for internal use!" alt="" coords="13,5,155,47"/>
-<area shape="rect" id="node2" href="$glitchedhttps_8h.html" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests with the help of ARM&#39;s open&#45;so..." alt="" coords="5,273,157,300"/>
-<area shape="rect" id="node3" href="$glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="68,95,209,136"/>
-<area shape="rect" id="node4" href="$glitchedhttps__request_8h.html" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="119,184,260,225"/>
-</map>
