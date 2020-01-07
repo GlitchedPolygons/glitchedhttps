@@ -20,6 +20,8 @@ Just add glitchedhttps as a git submodule to your project (e.g. into some `lib/`
 
 If you use CMake you can just `add_subdirectory(path_to_submodule)` and then `target_link_libraries(your_project PRIVATE glitchedhttps)` inside your **CMakeLists.txt** file.
 
+Please note that you MUST include the scheme, ergo the URL must start with `http://` or `https://` (it won't default to one of the two!).
+
 ### Simple GET Request
 
 Here's how you can get started. Quick and easy setup:
