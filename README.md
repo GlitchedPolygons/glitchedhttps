@@ -29,7 +29,11 @@ Here's how you can get started. Quick and easy setup:
 
 int main() 
 {
-    /* Please note that you MUST include the scheme, ergo the URL must start with `http://` or `https://` (it won't default to one of the two!). */
+    /* 
+     * Please note that you MUST include the scheme, 
+     * ergo the URL must start with `http://` or `https://` 
+     * (it won't default to one of the two!). 
+     */
 
     glitchedhttps_request request = 
     {
