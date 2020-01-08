@@ -77,6 +77,18 @@ Dependencies</h1>
 <h1><a class="anchor" id="install"></a>
 Installation</h1>
 <p>See the git repository's <a href="https://github.com/GlitchedPolygons/glitchedhttps">README.md</a> for instructions on how to get started with this. </p>
+<h1><a class="anchor" id="usage"></a>
+Usage</h1>
+<p>Inside the git repo's <a href="https://github.com/GlitchedPolygons/glitchedhttps/tree/master/examples">examples/</a> folder you can find many examples on how to make requests using Glitched HTTPS. </p>
+<p>Furthermore, here is a list of the most important types used within Glitched HTTPS:</p><ul>
+<li><a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a> - This is a HTTP header (the ones you find in an HTTP request or response).</li>
+<li><a class="el" href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">glitchedhttps_method</a> - An enumeration that specifies the HTTP method to use for a request (e.g. "GET", "POST", ...).</li>
+<li><a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> - Struct containing all the parameters necessary for an HTTP request (HTTP Method, Body, URL, which <b>MUST</b> contain either the scheme <a href="#"><code>http://</code></a> or <a href="#"><code>https://</code></a>, etc...).</li>
+<li>➥ You can allocate this on the stack right before submitting the request if you want, just as seen as in the <a href="https://github.com/GlitchedPolygons/glitchedhttps/blob/master/examples/put/main.c"><code>PUT</code> request example</a>.</li>
+<li><a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> - HTTP Response data. This struct contains the mapped status code, response content (body), and all the headers..</li>
+<li>➥ Must be freed using the <a class="el" href="glitchedhttps__response_8h.html#a1a4d35cd997db0eb18a9b0b357600769">glitchedhttps_response_free()</a> function! </li>
+</ul>
+<p>Also: check out the <a class="el" href="glitchedhttps__exitcodes_8h.html">glitchedhttps_exitcodes.h</a> header file to find out what each of the Glitched HTTPS functions' exit codes means! </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->

@@ -29,6 +29,16 @@
  * * [ARM MbedTLS](https://github.com/ARMmbed/mbedtls)
  * @section install Installation
  * See the git repository's [README.md](https://github.com/GlitchedPolygons/glitchedhttps) for instructions on how to get started with this.
+ * @section usage Usage
+ * Inside the git repo's [examples/](https://github.com/GlitchedPolygons/glitchedhttps/tree/master/examples) folder you can find many examples on how to make requests using Glitched HTTPS. <p>
+ * Furthermore, here is a list of the most important types used within Glitched HTTPS:
+ * * {@link #glitchedhttps_header} - This is a HTTP header (the ones you find in an HTTP request or response).
+ * * {@link #glitchedhttps_method} - An enumeration that specifies the HTTP method to use for a request (e.g. "GET", "POST", ...).
+ * * {@link #glitchedhttps_request} - Struct containing all the parameters necessary for an HTTP request (HTTP Method, Body, URL, which **MUST** contain either the scheme [`http://`](#) or [`https://`](#), etc...).
+ * * ➥ You can allocate this on the stack right before submitting the request if you want, just as seen as in the [`PUT` request example](https://github.com/GlitchedPolygons/glitchedhttps/blob/master/examples/put/main.c).
+ * * {@link #glitchedhttps_response} - HTTP Response data. This struct contains the mapped status code, response content (body), and all the headers..
+ * * ➥ Must be freed using the {@link #glitchedhttps_response_free()} function!
+ * <p> Also: check out the @ref glitchedhttps_exitcodes.h header file to find out what each of the Glitched HTTPS functions' exit codes means!
  */
 
 #ifndef GLITCHEDHTTPS_H
