@@ -3,7 +3,7 @@
 [![License Shield](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat-square)](https://github.com/GlitchedPolygons/glitchedhttps/blob/master/LICENSE)
 
 # Glitched HTTPS
-### Simple, lightweight and straight-forward way of doing HTTP(S) requests with the help of [ARM's open-source MbedTLS library](https://github.com/ARMmbed/mbedtls).
+### Simple, lightweight and straight-forward way of doing HTTP(S) requests in C with the help of [ARM's open-source MbedTLS library](https://github.com/ARMmbed/mbedtls).
 
 > ᐳᐳ  Check out the API docs [here on github.io](https://glitchedpolygons.github.io/glitchedhttps/files.html)
 

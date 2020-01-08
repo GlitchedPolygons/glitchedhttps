@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_request.h
- *  @author Raphael Beck
  *  @brief Struct containing an HTTP request's parameters and headers.
  */
 

@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_guid.h
- *  @author Raphael Beck
  *  @brief GUID/UUID generator.
  */
 

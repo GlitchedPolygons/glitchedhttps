@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_debug.h
- *  @author Raphael Beck
  *  @brief glitchedhttps debugging/error handling code. Mostly for internal use!
  */
 

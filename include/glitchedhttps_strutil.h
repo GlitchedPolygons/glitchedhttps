@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_strutil.h
- *  @author Raphael Beck
  *  @brief Useful string-related utility functions.
  */
 

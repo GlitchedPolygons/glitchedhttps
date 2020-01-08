@@ -16,9 +16,19 @@
 
 /**
  *  @file glitchedhttps.h
- *  @author Raphael Beck
- *  @brief Simple, lightweight and straight-forward way of doing HTTP(S) requests with the help of ARM's open-source MbedTLS library.
+ *  @brief Simple, lightweight and straight-forward way of doing HTTP(S) requests in C with the help of ARM's open-source MbedTLS library.
  *  @see https://github.com/GlitchedPolygons/glitchedhttps
+ */
+
+/**
+ * @mainpage Glitched HTTPS
+ * @section intro Introduction
+ * Glitched HTTPS is a simple, lightweight and straight-forward way of doing HTTP(S) requests in C with the help of ARM's open-source MbedTLS library.
+ * @section deps Dependencies
+ * * [CMake >3.1](https://cmake.org/download/)
+ * * [ARM MbedTLS](https://github.com/ARMmbed/mbedtls)
+ * @section install Installation
+ * See the git repository's [README.md](https://github.com/GlitchedPolygons/glitchedhttps) for instructions on how to get started with this.
  */
 
 #ifndef GLITCHEDHTTPS_H

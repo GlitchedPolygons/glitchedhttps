@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_header.h
- *  @author Raphael Beck
  *  @brief HTTP request (or response) header (for example: type="Authorization" ; value="Basic YWxhZGRpbjpvcGVuc2VzYW1l").
  */
 
@@ -40,14 +39,14 @@ struct glitchedhttps_header
 
 /**
  * Creates and initializes a glitchedhttps_header instance and returns its pointer. <p>
- * @note Allocation is done for you: once you're done using this MAKE SURE to call {@link #glitchedhttps_header_free()} to prevent memory leaks!
+ * @note Allocation is done for you: once you're done using this MAKE SURE to call {@link #glitchedhttps_header_free()} on it to prevent memory leaks!
  * @param type The header type name (e.g. "Authorization", "Accept", etc...). Must be a NUL-terminated string!
  * @param type_length The length of the header type string.
  * @param value The header value (NUL-terminated string).
  * @param value_length The length of the header value string.
  * @return The freshly allocated and initialized glitchedhttps_header instance (a pointer to it). If init failed, <code>NULL</code> is returned!
  */
-struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length);
+struct glitchedhttps_header* glitchedhttps_header_init(const char* type, size_t type_length, const char* value, size_t value_length);
 
 /**
  * Frees a glitchedhttps_header instance as well as its two heap-allocated strings inside.

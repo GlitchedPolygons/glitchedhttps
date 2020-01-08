@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_method.h
- *  @author Raphael Beck
  *  @brief HTTP Method to use for a glitchedhttps_request
  */
 

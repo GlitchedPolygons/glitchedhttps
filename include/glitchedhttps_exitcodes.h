@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_exitcodes.h
- *  @author Raphael Beck
  *  @brief Exit codes returned by the various glitchedhttps functions.
  */
 

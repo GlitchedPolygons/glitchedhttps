@@ -4,7 +4,6 @@
 
 /**
  *  @file glitchedhttps_cacerts.h
- *  @author Raphael Beck
  *  @brief Trusted CA certificates chain for SSL connections. <p>
  */
 
@@ -18,7 +17,7 @@ extern "C" {
 #include <stdbool.h>
 #include <chillbuff.h>
 
-/** Gets a concatenated string of all trusted CA certificates. */
+/** Gets a concatenated string of all trusted CA certificates (NUL-terminated <code>char*</code> string). */
 #define GLITCHEDHTTPS_CA_CERTS (_glitchedhttps_get_ca_certs())
 
 /*

@@ -16,7 +16,6 @@
 
 /**
  *  @file glitchedhttps_response.h
- *  @author Raphael Beck
  *  @brief Struct containing an HTTP response's data.
  */
 
