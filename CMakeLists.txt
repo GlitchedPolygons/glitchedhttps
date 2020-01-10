@@ -21,6 +21,7 @@ add_subdirectory(lib/mbedtls)
 add_subdirectory(lib/chillbuff)
 
 set(glitchedhttps_headers
+        lib/chillbuff/include/chillbuff.h
         include/glitchedhttps_exitcodes.h
         include/glitchedhttps_cacerts.h
         include/glitchedhttps_strutil.h
@@ -45,9 +46,10 @@ set(glitchedhttps_sources
 add_library(glitchedhttps ${glitchedhttps_headers} ${glitchedhttps_sources})
 
 target_include_directories(glitchedhttps PUBLIC include)
+target_include_directories(glitchedhttps PRIVATE lib/chillbuff/include)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(glitchedhttps PRIVATE -luuid -lm)
 endif ()
 
-target_link_libraries(glitchedhttps PRIVATE mbedtls mbedx509 chillbuff)
+target_link_libraries(glitchedhttps PRIVATE mbedtls mbedx509)
