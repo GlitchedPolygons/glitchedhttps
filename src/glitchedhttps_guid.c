@@ -24,7 +24,7 @@ extern "C" {
 #include <uuid/uuid.h>
 #endif
 
-#include <stdio.h>
+#include <string.h>
 #include "glitchedhttps_guid.h"
 
 #define GLITCHEDHTTPS_GUID_LOWERCASE_HYPHENS "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x"
