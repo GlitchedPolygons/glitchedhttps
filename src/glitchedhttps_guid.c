@@ -24,6 +24,7 @@ extern "C" {
 #include <uuid/uuid.h>
 #endif
 
+#include <stdio.h>
 #include <string.h>
 #include "glitchedhttps_guid.h"
 
