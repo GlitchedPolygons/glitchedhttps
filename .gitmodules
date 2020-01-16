@@ -1,6 +1,4 @@
 [submodule "lib/chillbuff"]
 	path = lib/chillbuff
 	url = https://github.com/GlitchedPolygons/chillbuff
-[submodule "lib/mbedtls"]
-	path = lib/mbedtls
-	url = https://github.com/ARMmbed/mbedtls
+	
