@@ -18,7 +18,6 @@ project(glitchedhttps C)
 set(CMAKE_C_STANDARD 11)
 
 add_subdirectory(lib/mbedtls)
-add_subdirectory(lib/chillbuff)
 
 set(glitchedhttps_headers
         lib/chillbuff/include/chillbuff.h
@@ -46,6 +45,7 @@ set(glitchedhttps_sources
 add_library(glitchedhttps ${glitchedhttps_headers} ${glitchedhttps_sources})
 
 target_include_directories(glitchedhttps PUBLIC include)
+target_include_directories(glitchedhttps PRIVATE lib/mbedtls/include)
 target_include_directories(glitchedhttps PRIVATE lib/chillbuff/include)
 
 if (UNIX AND NOT APPLE)

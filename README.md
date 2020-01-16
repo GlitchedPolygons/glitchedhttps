@@ -9,7 +9,7 @@
 
 ### How to clone
 
-`git clone --recursive https://github.com/GlitchedPolygons/glitchedhttps.git`
+`git clone https://github.com/GlitchedPolygons/glitchedhttps.git`
 
 ### How to use
 
