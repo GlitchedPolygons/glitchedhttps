@@ -25,7 +25,7 @@ All credits for MbedTLS go to ARM and <a href="https://github.com/ARMmbed/mbedtl
 <strong>Chillbuff</strong>
 </summary>
 <p>
-This library makes use of chillbuff; a generic, lightweight, [(header-only)](https://en.wikipedia.org/wiki/Header-only) dynamic-size array, which at the time of writing (17. January 2020) is <a href="https://github.com/GlitchedPolygons/chillbuff/blob/master/LICENSE">Apache-2.0 licensed</a> and available here: https://github.com/GlitchedPolygons/chillbuff
+  This library makes use of chillbuff; a generic, lightweight, <a href="https://en.wikipedia.org/wiki/Header-only">(header-only)</a> dynamic-size array, which at the time of writing (17. January 2020) is <a href="https://github.com/GlitchedPolygons/chillbuff/blob/master/LICENSE">Apache-2.0 licensed</a> and available here: https://github.com/GlitchedPolygons/chillbuff
 </p>
 <p>
 
