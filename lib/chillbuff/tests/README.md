@@ -6,7 +6,7 @@
 <strong>cmocka</strong>
 </summary>
 <p>
-This library makes use of the [cmocka](https://cmocka.org/) unit testing framework, which at the time of writing (17. January 2020) is <a href="https://github.com/ARMmbed/mbedtls/blob/master/LICENSE">Apache-2.0 licensed</a> and available here: https://cmocka.org
+This library makes use of the cmocka unit testing framework, which at the time of writing (17. January 2020) is <a href="https://gitlab.com/cmocka/cmocka/blob/master/COPYING">Apache-2.0 licensed</a> and available here: https://cmocka.org
 </p>
 <p>
 All credits for cmocka go to <a href="https://gitlab.com/cmocka/cmocka/blob/master/AUTHORS">its authors</a>.
