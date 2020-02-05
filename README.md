@@ -1,6 +1,7 @@
-
-[![API Docs](https://img.shields.io/badge/api-docs-informational.svg?style=flat-square)](https://glitchedpolygons.github.io/glitchedhttps/)
-[![License Shield](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat-square)](https://github.com/GlitchedPolygons/glitchedhttps/blob/master/LICENSE)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/fea0ojql4sctbd2p/branch/master?svg=true)](https://ci.appveyor.com/project/GlitchedPolygons/glitchedhttps/branch/master)
+[![CircleCI](https://circleci.com/gh/GlitchedPolygons/glitchedhttps/tree/master.svg?style=shield)](https://circleci.com/gh/GlitchedPolygons/glitchedhttps/tree/master)
+[![API Docs](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/glitchedhttps/)
+[![License Shield](https://img.shields.io/badge/license-Apache--2.0-orange)](https://github.com/GlitchedPolygons/glitchedhttps/blob/master/LICENSE)
 
 # Glitched HTTPS
 ### Simple, lightweight and straight-forward way of doing HTTP(S) requests in C with the help of [ARM's open-source MbedTLS library](https://github.com/ARMmbed/mbedtls).
