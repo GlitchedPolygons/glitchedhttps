@@ -31,9 +31,16 @@ extern "C" {
  */
 struct glitchedhttps_header
 {
-    /** The type of HTTP request header (its name without the ':' colon). E.g. "Authorization", "Server", etc... */
+    /** 
+     * The type of HTTP request header (its name without the ':' colon). E.g. "Authorization", "Server", etc... <p>
+     * This MUST be a NUL-terminated C-string!
+     */
     char* type;
-    /** The header value (what comes after the ':' colon separator). */
+
+    /** 
+     * The header value (what comes after the ':' colon separator). <p>
+     * This MUST be a NUL-terminated C-string!
+     */
     char* value;
 };
 
