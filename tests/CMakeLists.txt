@@ -17,7 +17,7 @@ set(CMAKE_C_STANDARD 11)
 project(tests C)
 
 add_subdirectory(cmocka cmocka)
-add_subdirectory(../ l8w8jwt)
+add_subdirectory(../ glitchedhttps)
 
 set(TESTS tests.c)
 
@@ -25,4 +25,4 @@ add_executable(run_tests ${TESTS})
 
 target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
 
-target_link_libraries(run_tests PUBLIC l8w8jwt cmocka)
+target_link_libraries(run_tests PUBLIC glitchedhttps cmocka)

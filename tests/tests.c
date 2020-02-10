@@ -18,6 +18,7 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
+#include "glitchedhttps.h"
 
 static void null_test_success(void** state)
 {
