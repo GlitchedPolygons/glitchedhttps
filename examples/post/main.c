@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <glitchedhttps.h>
+#include <time.h>
 
 /* You can set a custom buffer size that will be used for recv() - anything above 8192 will be allocated on the heap! */
 static const size_t BUFFER_SIZE = 16384;
@@ -38,7 +39,11 @@ int main()
 
     struct glitchedhttps_response* response = NULL;
 
+    clock_t begin = clock();
     int result = glitchedhttps_submit(&request, &response);
+    clock_t end = clock();
+
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
 
     const bool success =
             result == GLITCHEDHTTPS_SUCCESS
@@ -51,7 +56,7 @@ int main()
         printf("\nConnection test SUCCESSFUL! Status Code: %d\n", response->status_code);
     }
 
-    printf("\nResponse from %s: \n\n%s\n", request.url, response != NULL ? response->content : "(NULL)");
+    printf("\nResponse (%d ms) from %s: \n\n%s\n", (int)time_spent, request.url, response != NULL ? response->content : "(NULL)");
 
     glitchedhttps_response_free(response);
 
