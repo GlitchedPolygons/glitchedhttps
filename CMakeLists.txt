@@ -17,6 +17,10 @@ project(glitchedhttps C)
 
 set(CMAKE_C_STANDARD 11)
 
+if (WIN32 AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
+
 add_subdirectory(lib/mbedtls)
 
 set(glitchedhttps_headers
@@ -42,10 +46,6 @@ set(glitchedhttps_sources
         src/glitchedhttps_response.c
         )
 
-if (WIN32 AND BUILD_SHARED_LIBS)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif ()
-
 add_library(glitchedhttps ${glitchedhttps_headers} ${glitchedhttps_sources})
 
 target_include_directories(glitchedhttps PUBLIC include)
@@ -56,4 +56,4 @@ if (UNIX AND NOT APPLE)
     target_link_libraries(glitchedhttps PRIVATE -luuid -lm)
 endif ()
 
-target_link_libraries(glitchedhttps PRIVATE mbedtls mbedx509)
+target_link_libraries(glitchedhttps PRIVATE mbedtls mbedx509 mbedcrypto)
