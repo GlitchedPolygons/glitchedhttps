@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <glitchedhttps.h>
+#include <time.h>
 
 int main(int argc, char* argv[])
 {
@@ -27,7 +28,11 @@ int main(int argc, char* argv[])
 
     struct glitchedhttps_response* response = NULL;
 
-    int result = glitchedhttps_submit(&request, &response);
+    clock_t begin = clock();
+    const int result = glitchedhttps_submit(&request, &response);
+    clock_t end = clock();
+
+    const double time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
 
     const bool success =
             result == GLITCHEDHTTPS_SUCCESS
@@ -40,7 +45,7 @@ int main(int argc, char* argv[])
         printf("\nConnection test SUCCESSFUL! Status Code: %d\n", response->status_code);
     }
 
-    printf("\nResponse from %s: \n\n%s\n", request.url, response != NULL ? response->content : "(NULL)");
+    printf("\nResponse (%d ms) from %s: \n\n%s\n", (int)time_spent, request.url, response != NULL ? response->content : "(NULL)");
 
     glitchedhttps_response_free(response);
 
