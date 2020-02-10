@@ -40,12 +40,12 @@ void _glitchedhttps_debug(void* ctx, int level, const char* file, int line, cons
  * @param error_callback The function to call when errors occur.
  * @return Whether the callback was set up correctly or not (<code>bool</code> as defined in <code>stdbool.h</code>).
  */
-static inline bool glitchedhttps_set_error_callback(void (*error_callback)(const char*));
+bool glitchedhttps_set_error_callback(void (*error_callback)(const char*));
 
 /**
  * Clears the glitchedhttps error callback (errors won't be printed anymore).
  */
-static inline void glitchedhttps_unset_error_callback();
+void glitchedhttps_unset_error_callback();
 
 #ifdef __cplusplus
 } // extern "C"

@@ -100,36 +100,28 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afa140282ad0c3e4626dbcc0e40898182"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__debug_8h.html#afa140282ad0c3e4626dbcc0e40898182">glitchedhttps_set_error_callback</a> (void(*error_callback)(const char *))</td></tr>
-<tr class="separator:afa140282ad0c3e4626dbcc0e40898182"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af127a2f6edb47b77150a7230255f8f66"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__debug_8h.html#af127a2f6edb47b77150a7230255f8f66">glitchedhttps_unset_error_callback</a> ()</td></tr>
-<tr class="separator:af127a2f6edb47b77150a7230255f8f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0533f8edf8eb30f49b73b1df14c92585"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__debug_8h.html#a0533f8edf8eb30f49b73b1df14c92585">glitchedhttps_set_error_callback</a> (void(*error_callback)(const char *))</td></tr>
+<tr class="separator:a0533f8edf8eb30f49b73b1df14c92585"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa575a25df3d7e8a6216f4ca13c5ffc1d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__debug_8h.html#aa575a25df3d7e8a6216f4ca13c5ffc1d">glitchedhttps_unset_error_callback</a> ()</td></tr>
+<tr class="separator:aa575a25df3d7e8a6216f4ca13c5ffc1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>glitchedhttps debugging/error handling code. Mostly for internal use! </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="afa140282ad0c3e4626dbcc0e40898182"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa140282ad0c3e4626dbcc0e40898182">&#9670;&nbsp;</a></span>glitchedhttps_set_error_callback()</h2>
+<a id="a0533f8edf8eb30f49b73b1df14c92585"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0533f8edf8eb30f49b73b1df14c92585">&#9670;&nbsp;</a></span>glitchedhttps_set_error_callback()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool glitchedhttps_set_error_callback </td>
+          <td class="memname">bool glitchedhttps_set_error_callback </td>
           <td>(</td>
           <td class="paramtype">void(*)(const char *)&#160;</td>
           <td class="paramname"><em>error_callback</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Sets the glitchedhttps error callback. </p>
 <p>If errors occur, they'll be passed as a string into the provided callback function. </p><dl class="params"><dt>Parameters</dt><dd>
@@ -142,27 +134,19 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af127a2f6edb47b77150a7230255f8f66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af127a2f6edb47b77150a7230255f8f66">&#9670;&nbsp;</a></span>glitchedhttps_unset_error_callback()</h2>
+<a id="aa575a25df3d7e8a6216f4ca13c5ffc1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa575a25df3d7e8a6216f4ca13c5ffc1d">&#9670;&nbsp;</a></span>glitchedhttps_unset_error_callback()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void glitchedhttps_unset_error_callback </td>
+          <td class="memname">void glitchedhttps_unset_error_callback </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Clears the glitchedhttps error callback (errors won't be printed anymore). </p>
 

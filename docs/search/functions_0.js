@@ -5,11 +5,11 @@ var searchData=
   ['glitchedhttps_5fheader_5finit_78',['glitchedhttps_header_init',['../glitchedhttps__header_8h.html#af1c1bd45b6295fdf62769aa9a7c4e19d',1,'glitchedhttps_header.h']]],
   ['glitchedhttps_5fis_5fhttp_79',['glitchedhttps_is_http',['../glitchedhttps__strutil_8h.html#a332327927d24a85a22e6421279f10bba',1,'glitchedhttps_strutil.h']]],
   ['glitchedhttps_5fis_5fhttps_80',['glitchedhttps_is_https',['../glitchedhttps__strutil_8h.html#a1947071608c92076573f433ed68e1669',1,'glitchedhttps_strutil.h']]],
-  ['glitchedhttps_5fmethod_5fto_5fstring_81',['glitchedhttps_method_to_string',['../glitchedhttps__method_8h.html#a2941a080a5a53f1dbba2812765086170',1,'glitchedhttps_method.h']]],
+  ['glitchedhttps_5fmethod_5fto_5fstring_81',['glitchedhttps_method_to_string',['../glitchedhttps__method_8h.html#abdad4fef6338b556e44b0b1062a95126',1,'glitchedhttps_method.h']]],
   ['glitchedhttps_5fnew_5fguid_82',['glitchedhttps_new_guid',['../glitchedhttps__guid_8h.html#a5737beb425731d00bc9e446a3c51586c',1,'glitchedhttps_guid.h']]],
   ['glitchedhttps_5fresponse_5ffree_83',['glitchedhttps_response_free',['../glitchedhttps__response_8h.html#a1a4d35cd997db0eb18a9b0b357600769',1,'glitchedhttps_response.h']]],
-  ['glitchedhttps_5fset_5ferror_5fcallback_84',['glitchedhttps_set_error_callback',['../glitchedhttps__debug_8h.html#afa140282ad0c3e4626dbcc0e40898182',1,'glitchedhttps_debug.h']]],
+  ['glitchedhttps_5fset_5ferror_5fcallback_84',['glitchedhttps_set_error_callback',['../glitchedhttps__debug_8h.html#a0533f8edf8eb30f49b73b1df14c92585',1,'glitchedhttps_debug.h']]],
   ['glitchedhttps_5fstrncmpic_85',['glitchedhttps_strncmpic',['../glitchedhttps__strutil_8h.html#ad1a768cf76a355953387f1e6b240b889',1,'glitchedhttps_strutil.h']]],
   ['glitchedhttps_5fsubmit_86',['glitchedhttps_submit',['../glitchedhttps_8h.html#a35cb658394e263d9e4249401108adf67',1,'glitchedhttps.h']]],
-  ['glitchedhttps_5funset_5ferror_5fcallback_87',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#af127a2f6edb47b77150a7230255f8f66',1,'glitchedhttps_debug.h']]]
+  ['glitchedhttps_5funset_5ferror_5fcallback_87',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#aa575a25df3d7e8a6216f4ca13c5ffc1d',1,'glitchedhttps_debug.h']]]
 ];

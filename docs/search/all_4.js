@@ -25,7 +25,7 @@ var searchData=
   ['glitchedhttps_5fis_5fhttps_30',['glitchedhttps_is_https',['../glitchedhttps__strutil_8h.html#a1947071608c92076573f433ed68e1669',1,'glitchedhttps_strutil.h']]],
   ['glitchedhttps_5fmethod_31',['glitchedhttps_method',['../glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72',1,'glitchedhttps_method.h']]],
   ['glitchedhttps_5fmethod_2eh_32',['glitchedhttps_method.h',['../glitchedhttps__method_8h.html',1,'']]],
-  ['glitchedhttps_5fmethod_5fto_5fstring_33',['glitchedhttps_method_to_string',['../glitchedhttps__method_8h.html#a2941a080a5a53f1dbba2812765086170',1,'glitchedhttps_method.h']]],
+  ['glitchedhttps_5fmethod_5fto_5fstring_33',['glitchedhttps_method_to_string',['../glitchedhttps__method_8h.html#abdad4fef6338b556e44b0b1062a95126',1,'glitchedhttps_method.h']]],
   ['glitchedhttps_5fnew_5fguid_34',['glitchedhttps_new_guid',['../glitchedhttps__guid_8h.html#a5737beb425731d00bc9e446a3c51586c',1,'glitchedhttps_guid.h']]],
   ['glitchedhttps_5fnull_5farg_35',['GLITCHEDHTTPS_NULL_ARG',['../glitchedhttps__exitcodes_8h.html#a52bd775c322c3cdc5c6d4b6a9862d5ee',1,'glitchedhttps_exitcodes.h']]],
   ['glitchedhttps_5fout_5fof_5fmem_36',['GLITCHEDHTTPS_OUT_OF_MEM',['../glitchedhttps__exitcodes_8h.html#ac4644ac4160a2fd53c605c594cef36dc',1,'glitchedhttps_exitcodes.h']]],
@@ -36,11 +36,11 @@ var searchData=
   ['glitchedhttps_5fresponse_2eh_41',['glitchedhttps_response.h',['../glitchedhttps__response_8h.html',1,'']]],
   ['glitchedhttps_5fresponse_5ffree_42',['glitchedhttps_response_free',['../glitchedhttps__response_8h.html#a1a4d35cd997db0eb18a9b0b357600769',1,'glitchedhttps_response.h']]],
   ['glitchedhttps_5fresponse_5fparse_5ferror_43',['GLITCHEDHTTPS_RESPONSE_PARSE_ERROR',['../glitchedhttps__exitcodes_8h.html#abe43db7bc6763c2a90924202aa6f99dd',1,'glitchedhttps_exitcodes.h']]],
-  ['glitchedhttps_5fset_5ferror_5fcallback_44',['glitchedhttps_set_error_callback',['../glitchedhttps__debug_8h.html#afa140282ad0c3e4626dbcc0e40898182',1,'glitchedhttps_debug.h']]],
+  ['glitchedhttps_5fset_5ferror_5fcallback_44',['glitchedhttps_set_error_callback',['../glitchedhttps__debug_8h.html#a0533f8edf8eb30f49b73b1df14c92585',1,'glitchedhttps_debug.h']]],
   ['glitchedhttps_5fstrncmpic_45',['glitchedhttps_strncmpic',['../glitchedhttps__strutil_8h.html#ad1a768cf76a355953387f1e6b240b889',1,'glitchedhttps_strutil.h']]],
   ['glitchedhttps_5fstrutil_2eh_46',['glitchedhttps_strutil.h',['../glitchedhttps__strutil_8h.html',1,'']]],
   ['glitchedhttps_5fsubmit_47',['glitchedhttps_submit',['../glitchedhttps_8h.html#a35cb658394e263d9e4249401108adf67',1,'glitchedhttps.h']]],
   ['glitchedhttps_5fsuccess_48',['GLITCHEDHTTPS_SUCCESS',['../glitchedhttps__exitcodes_8h.html#a086f1112e6e4ab0de6c038358668c20a',1,'glitchedhttps_exitcodes.h']]],
-  ['glitchedhttps_5funset_5ferror_5fcallback_49',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#af127a2f6edb47b77150a7230255f8f66',1,'glitchedhttps_debug.h']]],
+  ['glitchedhttps_5funset_5ferror_5fcallback_49',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#aa575a25df3d7e8a6216f4ca13c5ffc1d',1,'glitchedhttps_debug.h']]],
   ['glitched_20https_50',['Glitched HTTPS',['../index.html',1,'']]]
 ];

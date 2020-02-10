@@ -69,7 +69,7 @@ void _glitchedhttps_log_error(const char* error, const char* origin)
     free(error_msg_heap);
 }
 
-static inline bool glitchedhttps_set_error_callback(void (*error_callback)(const char*))
+bool glitchedhttps_set_error_callback(void (*error_callback)(const char*))
 {
     if (error_callback == NULL)
     {
@@ -81,7 +81,7 @@ static inline bool glitchedhttps_set_error_callback(void (*error_callback)(const
     return true;
 }
 
-static inline void glitchedhttps_unset_error_callback()
+void glitchedhttps_unset_error_callback()
 {
     _glitchedhttps_error_callback = NULL;
 }

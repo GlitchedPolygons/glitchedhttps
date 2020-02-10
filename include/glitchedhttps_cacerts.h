@@ -76,7 +76,11 @@ static char* _glitchedhttps_get_ca_certs()
     }
 
     chillbuff stringbuilder;
-    chillbuff_init(&stringbuilder, 320000, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    if (chillbuff_init(&stringbuilder, 320000, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
+    {
+        /* Out of memory! */
+        return "";
+    }
 
     char buffer[256];
     bool reading = false;
@@ -102,6 +106,7 @@ static char* _glitchedhttps_get_ca_certs()
     _glitchedhttps_ca_certs = malloc(stringbuilder.length + 1);
     if (_glitchedhttps_ca_certs == NULL)
     {
+        /* Out of memory! */
         goto exit;
     }
 

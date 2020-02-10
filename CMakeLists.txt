@@ -42,6 +42,10 @@ set(glitchedhttps_sources
         src/glitchedhttps_response.c
         )
 
+if (WIN32 AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
+
 add_library(glitchedhttps ${glitchedhttps_headers} ${glitchedhttps_sources})
 
 target_include_directories(glitchedhttps PUBLIC include)
