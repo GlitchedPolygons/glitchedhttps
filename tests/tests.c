@@ -14,23 +14,74 @@
    limitations under the License.
 */
 
+#include <stdio.h>
+#include <string.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
 #include "glitchedhttps.h"
+#include "glitchedhttps_debug.h"
 
 static void null_test_success(void** state)
 {
     (void)state;
 }
 
+static void test_glitchedhttps_method_to_string(void** state)
+{
+    char out[8];
+    assert_false(glitchedhttps_method_to_string(GLITCHEDHTTPS_GET, NULL, 8));
+    assert_false(glitchedhttps_method_to_string(GLITCHEDHTTPS_GET, out, 5));
+    assert_true(glitchedhttps_method_to_string(GLITCHEDHTTPS_GET, out, 8));
+    assert_true(glitchedhttps_method_to_string(GLITCHEDHTTPS_GET, out, sizeof(out)));
+    assert_false(glitchedhttps_method_to_string(-1337, out, sizeof(out)));
+    for(int i = 0; i <= 8; i++)
+    {
+        glitchedhttps_method_to_string(i, out, sizeof(out));
+        switch(i) 
+        {
+            case GLITCHEDHTTPS_GET:
+                assert_int_equal(strncmp(out, "GET", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_HEAD:
+                assert_int_equal(strncmp(out, "HEAD", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_POST:
+                assert_int_equal(strncmp(out, "POST", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_PATCH:
+                assert_int_equal(strncmp(out, "PATCH", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_PUT:
+                assert_int_equal(strncmp(out, "PUT", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_DELETE:
+                assert_int_equal(strncmp(out, "DELETE", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_CONNECT:
+                assert_int_equal(strncmp(out, "CONNECT", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_OPTIONS:
+                assert_int_equal(strncmp(out, "OPTIONS", strlen(out)), 0);
+                break;
+            case GLITCHEDHTTPS_TRACE:
+                assert_int_equal(strncmp(out, "TRACE", strlen(out)), 0);
+                break;
+            
+        }
+    }
+}
+
 // --------------------------------------------------------------------------------------------------------------
 
 int main(void)
 {
+    glitchedhttps_set_error_callback(printf);
+
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(null_test_success),
+        cmocka_unit_test(test_glitchedhttps_method_to_string),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
