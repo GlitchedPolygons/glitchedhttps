@@ -28,6 +28,22 @@ static void null_test_success(void** state)
     (void)state;
 }
 
+bool fail_malloc = false;
+bool fail_calloc = false;
+
+void* __real_malloc(size_t size);
+void* __real_calloc(size_t size);
+
+void* __wrap_malloc(size_t size)
+{
+    return fail_malloc ? NULL : __real_malloc(size);
+}
+
+void* __wrap_calloc(size_t size)
+{
+    return fail_calloc ? NULL : __real_calloc(size);
+}
+
 static void test_glitchedhttps_method_to_string(void** state)
 {
     char out[8];
