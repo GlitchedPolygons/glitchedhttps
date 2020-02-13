@@ -20,13 +20,11 @@
 
 int main()
 {
-    char* url = "https://postman-echo.com/delete?some-resource-to-delete=foo-bar";
+    struct glitchedhttps_request request;
+    glitchedhttps_request_init(&request);
 
-    struct glitchedhttps_request request = {
-            .url = url,
-            .method = GLITCHEDHTTPS_DELETE,
-            .ssl_verification_optional = false,
-    };
+    request.url = "https://postman-echo.com/delete?some-resource-to-delete=foo-bar";
+    request.method = GLITCHEDHTTPS_DELETE;
 
     struct glitchedhttps_response* response = NULL;
 

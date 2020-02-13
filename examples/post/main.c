@@ -24,18 +24,15 @@ static const size_t BUFFER_SIZE = 16384;
 
 int main()
 {
-    char* url = "https://postman-echo.com/post";
-    char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
+    struct glitchedhttps_request request;
+    glitchedhttps_request_init(&request);
 
-    struct glitchedhttps_request request = {
-            .url = url,
-            .method = GLITCHEDHTTPS_POST,
-            .buffer_size = BUFFER_SIZE,
-            .ssl_verification_optional = false,
-            .content_type = "application/json",
-            .content_length = strlen(body),
-            .content = body
-    };
+    request.url = "https://postman-echo.com/post";
+    request.method = GLITCHEDHTTPS_POST;
+    request.buffer_size = BUFFER_SIZE;
+    request.content_type = "application/json";
+    request.content = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
+    request.content_length = strlen(request.content);
 
     struct glitchedhttps_response* response = NULL;
 

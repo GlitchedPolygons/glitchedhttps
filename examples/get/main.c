@@ -20,11 +20,11 @@
 
 int main(int argc, char* argv[])
 {
-    struct glitchedhttps_request request = {
-        .url = argv[1],
-        .method = GLITCHEDHTTPS_GET,
-        .ssl_verification_optional = false,
-    };
+    struct glitchedhttps_request request;
+    glitchedhttps_request_init(&request);
+
+    request.url = argv[1];
+    request.method = GLITCHEDHTTPS_GET;
 
     struct glitchedhttps_response* response = NULL;
 

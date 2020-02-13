@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+#include <time.h>
 #include <stdio.h>
 #include <string.h>
 #include <glitchedhttps.h>
@@ -39,7 +40,12 @@ int main()
     request.additional_headers_count = sizeof(additional_headers) / sizeof(struct glitchedhttps_header);
 
     struct glitchedhttps_response* response = NULL;
+
+    clock_t begin = clock();
     int result = glitchedhttps_submit(&request, &response);
+    clock_t end = clock();
+
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000.0;
 
     const bool success =
             result == GLITCHEDHTTPS_SUCCESS
@@ -52,7 +58,7 @@ int main()
         printf("\nConnection test SUCCESSFUL! Status Code: %d\n", response->status_code);
     }
 
-    printf("\nResponse from %s: \n\n%s\n", request.url, response != NULL ? response->content : "(NULL)");
+    printf("\nResponse (%d ms) from %s: \n\n%s\n", (int)time_spent, request.url, response != NULL ? response->content : "(NULL)");
 
     glitchedhttps_response_free(response);
 
