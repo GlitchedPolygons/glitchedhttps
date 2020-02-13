@@ -18,17 +18,17 @@ project(glitchedhttps C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+if (WIN32 AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
+
 option(GLITCHEDHTTPS_ENABLE_TESTS "Build GlitchedHTTPS tests." OFF)
 option(GLITCHEDHTTPS_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF)
 
 option(ENABLE_TESTING "Build MbedTLS tests." OFF)
 option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
 
-if (WIN32 AND BUILD_SHARED_LIBS)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif ()
-
-add_subdirectory(lib/mbedtls)
+add_subdirectory(lib/mbedtls mbedtls)
 
 set(glitchedhttps_headers
         lib/chillbuff/include/chillbuff.h
