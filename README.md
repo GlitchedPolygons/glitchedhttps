@@ -58,6 +58,8 @@ int main()
     printf("\n Response from %s: \n\n %s \n", request.url, response != NULL ? response->content : "(NULL)");
     
     glitchedhttps_response_free(response);
+    
+    return 0;
 }
 ```
 
