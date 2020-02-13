@@ -15,4 +15,4 @@ jobs:
       - run:
           name: Upload coverage reports
           when: on_success
-          command: cd build/CMakeFiles/l8w8jwt.dir/src && bash <(curl -s https://codecov.io/bash)
+          command: cd build/CMakeFiles/glitchedhttps.dir/src && bash <(curl -s https://codecov.io/bash)
