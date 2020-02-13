@@ -39,13 +39,12 @@ int main()
      * ergo the URL must start with `http://` or `https://` 
      * (it won't default to one of the two!). 
      */
+     
+    struct glitchedhttps_request request;
+    glitchedhttps_request_init(&request);
 
-    glitchedhttps_request request = 
-    {
-        .url = "https://example.com/",
-        .method = GLITCHEDHTTPS_GET,
-        .ssl_verification_optional = false,
-    };
+    request.url = "https://example.com/";
+    request.method = GLITCHEDHTTPS_GET;
 
     glitchedhttps_response* response = NULL;
 
@@ -73,48 +72,42 @@ Also: NEVER forget to `glitchedhttps_response_free(response);` to prevent memory
 Check out the other examples inside the [`examples/`](https://github.com/GlitchedPolygons/glitchedhttps/tree/master/examples) folder too!
 
 ```C
+#include <time.h>
 #include <glitchedhttps.h>
 
 int main()
 {
-    char* url = "https://postman-echo.com/post";
-    char* body = "{ \"foo\" : \"bar\", \"test\" : \"value\" }";
-    
-    glitchedhttps_header additional_headers[] = 
-    {
-        { "Another-Foo", "anotherBar" },
-        { "Additional-Headers-Are-Cool", "SGVsbG8gV29ybGQh" },
-        { "Yet-Another-Header", "You can add as many of these as you want" }
-    };
-    
-    glitchedhttps_request request = 
-    {
-        .url = url,
-        .method = GLITCHEDHTTPS_POST,
-        .ssl_verification_optional = false,
-        .content_type = "application/json",
-        .content_length = strlen(body),
-        .content = body,
-        .additional_headers = additional_headers,
-        .additional_headers_count = sizeof(additional_headers) / sizeof(glitchedhttps_header)
-    };
+    struct glitchedhttps_request request;
+    glitchedhttps_request_init(&request);
 
-    glitchedhttps_response* response = NULL;
+    request.url = "https://postman-echo.com/post";
+    request.method = GLITCHEDHTTPS_POST;
+    request.content_type = "application/json";
+    request.content = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
+    request.content_length = strlen(request.content);
 
+    struct glitchedhttps_response* response = NULL;
+
+    clock_t begin = clock();
+    
     int result = glitchedhttps_submit(&request, &response);
+    
+    clock_t end = clock();
+
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
 
     const bool success =
-        result == GLITCHEDHTTPS_SUCCESS
-        && response != NULL
-        && response->status_code >= 200
-        && response->status_code < 300;
+            result == GLITCHEDHTTPS_SUCCESS
+            && response != NULL
+            && response->status_code >= 200
+            && response->status_code < 300;
 
     if (success)
     {
-        printf("\n Connection test SUCCESSFUL! Status Code: %d \n", response->status_code);
+        printf("\nConnection test SUCCESSFUL! Status Code: %d\n", response->status_code);
     }
 
-    printf("\n Response from %s: \n\n %s \n", request.url, response != NULL ? response->content : "(NULL)");
+    printf("\nResponse (%d ms) from %s: \n\n%s\n", (int)time_spent, request.url, response != NULL ? response->content : "(NULL)");
 
     glitchedhttps_response_free(response);
 
