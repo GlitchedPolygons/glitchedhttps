@@ -15,7 +15,8 @@
 #  limitations under the License.
 
 REPO=$(dirname "$0")
-rm -rf $REPO/tests/build/
-cd $REPO/tests/ && mkdir build && cd build
-cmake -DBUILD_SHARED_LIBS=Off .. && make
+rm -rf $REPO/build/
+mkdir build && cd build
+cmake -DBUILD_SHARED_LIBS=Off -DGLITCHEDHTTPS_ENABLE_TESTS=On -DENABLE_COVERAGE=On .. && make
 ./run_tests
+cd $REPO

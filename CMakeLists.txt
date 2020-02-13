@@ -17,6 +17,12 @@ project(glitchedhttps C)
 
 set(CMAKE_C_STANDARD 11)
 
+option(GLITCHEDHTTPS_ENABLE_TESTS "Build GlitchedHTTPS tests." OFF)
+option(GLITCHEDHTTPS_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF)
+
+option(ENABLE_TESTING "Build MbedTLS tests." OFF)
+option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
+
 if (WIN32 AND BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif ()
@@ -57,3 +63,36 @@ if (UNIX AND NOT APPLE)
 endif ()
 
 target_link_libraries(glitchedhttps PRIVATE mbedtls mbedx509 mbedcrypto)
+
+if (GLITCHEDHTTPS_ENABLE_EXAMPLES)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples)
+endif ()
+
+if (GLITCHEDHTTPS_ENABLE_TESTS)
+
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--wrap=malloc,--wrap=calloc")
+
+    if (WIN32 AND BUILD_SHARED_LIBS)
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif ()
+
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests/cmocka cmocka)
+
+    set(TESTS ${CMAKE_CURRENT_LIST_DIR}/tests/tests.c)
+    
+    add_executable(run_tests ${TESTS})
+
+    target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
+    target_link_libraries(run_tests PUBLIC glitchedhttps cmocka)
+
+    if (ENABLE_COVERAGE)
+        if (GLITCHEDHTTPS_ENABLE_EXAMPLES)
+            message (FATAL_ERROR "ENABLE_COVERAGE and GLITCHEDHTTPS_ENABLE_EXAMPLES are MUTUALLY EXCLUSIVE! Please enable either one or the other, but not both at the same time!")
+        else ()
+            find_package(codecov)
+            add_coverage(glitchedhttps)
+            add_coverage(run_tests)
+            coverage_evaluate()
+        endif ()
+    endif ()
+endif()
