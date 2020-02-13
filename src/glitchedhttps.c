@@ -645,12 +645,18 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
         return GLITCHEDHTTPS_NULL_ARG;
     }
 
+    if(request->url_length < 7 && strlen(request->url) < 7)
+    {
+        _glitchedhttps_log_error("Invalid URL!", __func__);
+        return GLITCHEDHTTPS_INVALID_ARG;
+    }
+
     const bool https = glitchedhttps_is_https(request->url);
     const char* server_host_ptr = https ? request->url + 8 : glitchedhttps_is_http(request->url) ? request->url + 7 : NULL;
 
     if (server_host_ptr == NULL)
     {
-        _glitchedhttps_log_error("Missing or invalid protocol in passed URL: needs \"http://\" or \"https://\"", __func__);
+        _glitchedhttps_log_error("Missing or invalid protocol in passed URL: needs to be \"http://\" or \"https://\"", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -708,28 +714,28 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
     const size_t crlf_length = strlen(crlf);
 
     const char whitespace[] = " ";
-    const size_t whitespace_length = strlen(whitespace);
+    const size_t whitespace_length = 1;
 
     const char header_separator[] = ": ";
-    const size_t header_separator_length = strlen(header_separator);
+    const size_t header_separator_length = 2;
 
     const char http_version[] = "HTTP/1.1";
-    const size_t http_version_length = strlen(http_version);
+    const size_t http_version_length = 8;
 
     const char host[] = "Host: ";
-    const size_t host_length = strlen(host);
+    const size_t host_length = 6;
 
     const char content_type[] = "Content-Type: ";
-    const size_t content_type_length = strlen(content_type);
+    const size_t content_type_length = 14;
 
     const char content_length[] = "Content-Length: ";
-    const size_t content_length_strlen = strlen(content_length);
+    const size_t content_length_strlen = 16;
 
     const char content_encoding[] = "Content-Encoding: ";
-    const size_t content_encoding_length = strlen(content_encoding);
+    const size_t content_encoding_length = 18;
 
     const char connection[] = "Connection: Close";
-    const size_t connection_length = strlen(connection);
+    const size_t connection_length = 17;
 
     chillbuff_push_back(&request_string, method, strlen(method));
     chillbuff_push_back(&request_string, whitespace, whitespace_length);
@@ -755,16 +761,15 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
 
     if (request->content != NULL && request->content_type != NULL && request->content_length > 0)
     {
-        const size_t content_strlen = strlen(request->content);
-        if (content_strlen > 0)
+        if (strlen(request->content) > 0)
         {
             chillbuff_push_back(&request_string, content_type, content_type_length);
-            chillbuff_push_back(&request_string, request->content_type, strlen(request->content_type));
+            chillbuff_push_back(&request_string, request->content_type, request->content_type_length ? request->content_type_length : strlen(request->content_type));
             chillbuff_push_back(&request_string, crlf, crlf_length);
 
             if (request->content_encoding != NULL)
             {
-                const size_t content_encoding_value_length = strlen(request->content_encoding);
+                const size_t content_encoding_value_length = request->content_encoding_length ? request->content_encoding_length : strlen(request->content_encoding);
                 if (content_encoding_value_length > 0)
                 {
                     chillbuff_push_back(&request_string, content_encoding, content_encoding_length);

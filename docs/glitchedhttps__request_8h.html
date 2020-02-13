@@ -66,7 +66,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">glitchedhttps_request.h File Reference</div>  </div>
 </div><!--header-->
@@ -75,6 +76,7 @@ $(function() {
 <p>Struct containing an HTTP request's parameters and headers.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="glitchedhttps__method_8h_source.html">glitchedhttps_method.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="glitchedhttps__header_8h_source.html">glitchedhttps_header.h</a>&quot;</code><br />
@@ -83,12 +85,13 @@ Include dependency graph for glitchedhttps_request.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="glitchedhttps__request_8h__incl.png" border="0" usemap="#include_2glitchedhttps__request_8h" alt=""/></div>
 <map name="include_2glitchedhttps__request_8h" id="include_2glitchedhttps__request_8h">
-<area shape="rect" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="190,5,331,47"/>
+<area shape="rect" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="162,5,303,47"/>
 <area shape="rect" title=" " alt="" coords="5,169,73,196"/>
-<area shape="rect" title=" " alt="" coords="186,244,261,271"/>
-<area shape="rect" href="glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="125,95,282,121"/>
-<area shape="rect" href="glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="373,95,527,121"/>
-<area shape="rect" href="glitchedhttps__debug_8h.html" title="glitchedhttps debugging/error handling code. Mostly for internal use!" alt="" coords="149,169,298,196"/>
+<area shape="rect" title=" " alt="" coords="64,95,129,121"/>
+<area shape="rect" title=" " alt="" coords="199,244,274,271"/>
+<area shape="rect" href="glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="154,95,311,121"/>
+<area shape="rect" href="glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="387,95,540,121"/>
+<area shape="rect" href="glitchedhttps__debug_8h.html" title="glitchedhttps debugging/error handling code. Mostly for internal use!" alt="" coords="162,169,311,196"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -108,10 +111,48 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct containing an HTTP request's parameters and headers.  <a href="structglitchedhttps__request.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a9febf7452b98f8f85d45f79212df16fd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__request_8h.html#a9febf7452b98f8f85d45f79212df16fd">glitchedhttps_request_init</a> (struct <a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> *request)</td></tr>
+<tr class="separator:a9febf7452b98f8f85d45f79212df16fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct containing an HTTP request's parameters and headers. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a9febf7452b98f8f85d45f79212df16fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9febf7452b98f8f85d45f79212df16fd">&#9670;&nbsp;</a></span>glitchedhttps_request_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void glitchedhttps_request_init </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> *&#160;</td>
+          <td class="paramname"><em>request</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Initializes a <a class="el" href="structglitchedhttps__request.html" title="Struct containing an HTTP request&#39;s parameters and headers.">glitchedhttps_request</a> instance by setting its fields to their default value of zero/<code>NULL</code>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">request</td><td>The <a class="el" href="structglitchedhttps__request.html" title="Struct containing an HTTP request&#39;s parameters and headers.">glitchedhttps_request</a> to initialize. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -27,6 +27,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
+#include <string.h>
 #include <stdbool.h>
 #include "glitchedhttps_method.h"
 #include "glitchedhttps_header.h"
@@ -39,9 +40,13 @@ struct glitchedhttps_request
     /**
      * The full, uncensored URL for the HTTP POST request including
      * protocol, host name, port (optional), resource URI and query parameters (if any).
-     * MUST BE NUL-TERMINATED!
      */
     char* url;
+
+    /**
+     * {@link #url} string length.
+     */
+    size_t url_length;
 
     /**
      * The request's HTTP method (E.g. GET, POST, ...).<p>
@@ -62,9 +67,19 @@ struct glitchedhttps_request
     char* content;
 
     /**
+     * Content-Length header that tells the server how many bytes to read from the message body. If this is zero, <code>strlen(content)</code> will be used!
+     */
+    size_t content_length;
+
+    /**
      * The mime-type of the request body content (e.g. text/plain; charset=utf-8).
      */
     char* content_type;
+
+    /**
+     * {@link #content_type} string length.
+     */
+    size_t content_type_length;
 
     /**
      * The request body's encoding (e.g. "gzip").
@@ -72,9 +87,9 @@ struct glitchedhttps_request
     char* content_encoding;
 
     /**
-     * Content-Length header that tells the server how many bytes to read from the message body.
+     * {@link #content_encoding} string length.
      */
-    size_t content_length;
+    size_t content_encoding_length;
 
     /**
      * [OPTIONAL] Additional headers for the HTTP request. <p>
@@ -100,8 +115,19 @@ struct glitchedhttps_request
      * This value is only taken into consideration in case of an HTTPS request (determined by the scheme defined in the url). Plain HTTP requests ignore this setting.
      */
     bool ssl_verification_optional;
-
 };
+
+/**
+ * Initializes a glitchedhttps_request instance by setting its fields to their default value of zero/<code>NULL</code>.
+ * @param request The glitchedhttps_request to initialize.
+ */
+static inline void glitchedhttps_request_init(struct glitchedhttps_request* request)
+{
+    if (request == NULL)
+        return;
+
+    memset(request, 0x00, sizeof(struct glitchedhttps_request));
+}
 
 #ifdef __cplusplus
 } // extern "C"

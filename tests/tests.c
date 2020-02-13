@@ -93,7 +93,7 @@ static void test_glitchedhttps_method_to_string(void** state)
 
 int main(void)
 {
-    glitchedhttps_set_error_callback(printf);
+    glitchedhttps_set_error_callback((void (*)(const char *))printf);
 
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(null_test_success),

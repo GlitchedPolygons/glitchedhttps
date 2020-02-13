@@ -20,25 +20,23 @@
 
 int main()
 {
-    char* url = "https://postman-echo.com/put";
-    char* body = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
-
-    struct glitchedhttps_header additional_headers[] = {
+    struct glitchedhttps_header additional_headers[] =
+    {
             { "Another-Foo", "anotherBar" },
             { "Additional-Headers-Are-Cool", "SGVsbG8gV29ybGQh" },
             { "Yet-Another-Header", "You can add as many of these as you want" }
     };
 
-    struct glitchedhttps_request request = {
-            .url = url,
-            .method = GLITCHEDHTTPS_PUT,
-            .ssl_verification_optional = false,
-            .content_type = "application/json",
-            .content_length = strlen(body),
-            .content = body,
-            .additional_headers = additional_headers,
-            .additional_headers_count = sizeof(additional_headers) / sizeof(struct glitchedhttps_header)
-    };
+    struct glitchedhttps_request request;
+    glitchedhttps_request_init(&request);
+
+    request.url = "https://postman-echo.com/put";
+    request.method = GLITCHEDHTTPS_PUT;
+    request.content_type = "application/json";
+    request.content = "{\"foo\" : \"bar\", \"test\" : \"value\"}";
+    request.content_length = strlen(request.content);
+    request.additional_headers = additional_headers;
+    request.additional_headers_count = sizeof(additional_headers) / sizeof(struct glitchedhttps_header);
 
     struct glitchedhttps_response* response = NULL;
     int result = glitchedhttps_submit(&request, &response);
