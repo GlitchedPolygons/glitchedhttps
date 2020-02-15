@@ -28,6 +28,10 @@ static void null_test_success(void** state)
     (void)state;
 }
 
+#define TEST_OOM defined(__GNUC__) && !defined(__clang__)
+
+#if TEST_OOM
+
 bool fail_malloc = false;
 bool fail_calloc = false;
 
@@ -43,6 +47,8 @@ void* __wrap_calloc(size_t size)
 {
     return fail_calloc ? NULL : __real_calloc(size);
 }
+
+#endif
 
 static void test_glitchedhttps_method_to_string(void** state)
 {
@@ -93,6 +99,10 @@ static void test_glitchedhttps_method_to_string(void** state)
 
 int main(void)
 {
+    #if TEST_OOM
+    printf("\n\nGCC\n\n");
+    #endif
+
     glitchedhttps_set_error_callback((void (*)(const char *))printf);
 
     const struct CMUnitTest tests[] = {
