@@ -28,7 +28,9 @@ option(GLITCHEDHTTPS_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF
 option(ENABLE_TESTING "Build MbedTLS tests." OFF)
 option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
 
-add_subdirectory(lib/mbedtls mbedtls)
+if (NOT TARGET mbedtls)
+    add_subdirectory(lib/mbedtls mbedtls)
+endif ()
 
 set(glitchedhttps_headers
         lib/chillbuff/include/chillbuff.h
