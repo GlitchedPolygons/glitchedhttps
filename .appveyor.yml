@@ -5,4 +5,4 @@ build_script:
 - sh: git submodule update --init --recursive
 - sh: cd tests/cmocka && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=/usr .. && make && sudo make install && cd ../../..
 test_script:
-- sh: sudo bash run-tests.sh
+- sh: sudo bash -eo pipefail run-tests.sh

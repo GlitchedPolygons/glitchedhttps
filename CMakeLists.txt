@@ -85,7 +85,7 @@ if (GLITCHEDHTTPS_ENABLE_TESTS)
         message(STATUS "cmocka not found; using included version inside tests/ folder...")
         add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests/cmocka cmocka)
     else ()
-        message(STATUS "cmocka found!")
+        message(STATUS "Found cmocka!")
     endif ()
 
     set(TESTS ${CMAKE_CURRENT_LIST_DIR}/tests/tests.c)
