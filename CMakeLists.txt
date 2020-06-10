@@ -79,10 +79,17 @@ if (GLITCHEDHTTPS_ENABLE_TESTS)
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     endif ()
 
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests/cmocka cmocka)
+    find_package(cmocka)
+
+    if (NOT ${cmocka_FOUND})
+        message(STATUS "cmocka not found; using included version inside tests/ folder...")
+        add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests/cmocka cmocka)
+    else ()
+        message(STATUS "cmocka found!")
+    endif ()
 
     set(TESTS ${CMAKE_CURRENT_LIST_DIR}/tests/tests.c)
-    
+
     add_executable(run_tests ${TESTS})
 
     target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
@@ -90,7 +97,7 @@ if (GLITCHEDHTTPS_ENABLE_TESTS)
 
     if (ENABLE_COVERAGE)
         if (GLITCHEDHTTPS_ENABLE_EXAMPLES)
-            message (FATAL_ERROR "ENABLE_COVERAGE and GLITCHEDHTTPS_ENABLE_EXAMPLES are MUTUALLY EXCLUSIVE! Please enable either one or the other, but not both at the same time!")
+            message(FATAL_ERROR "ENABLE_COVERAGE and GLITCHEDHTTPS_ENABLE_EXAMPLES are MUTUALLY EXCLUSIVE! Please enable either one or the other, but not both at the same time!")
         else ()
             find_package(codecov)
             add_coverage(glitchedhttps)
@@ -98,4 +105,4 @@ if (GLITCHEDHTTPS_ENABLE_TESTS)
             coverage_evaluate()
         endif ()
     endif ()
-endif()
+endif ()
