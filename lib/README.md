@@ -13,8 +13,8 @@ All credits for MbedTLS go to ARM and <a href="https://github.com/ARMmbed/mbedtl
 
 ---
 
-#### [ARM MbedTLS](https://en.wikipedia.org/wiki/Mbed_TLS) GitHub Repo: https://github.com/ARMmbed/mbedtls
-#### Used stable version 2.16.4: https://tls.mbed.org/download/start/mbedtls-2.16.4-apache.tgz
+#### GitHub Repo: https://github.com/ARMmbed/mbedtls
+#### Used commit: [`523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8`](https://github.com/GlitchedPolygons/chillbuff/tree/523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8)
 
 ---
 </p>
@@ -31,8 +31,8 @@ All credits for MbedTLS go to ARM and <a href="https://github.com/ARMmbed/mbedtl
 
 ---
 
-#### Chillbuff GitHub Repo: https://github.com/GlitchedPolygons/chillbuff
-#### Used commit: [`d5262716693db4e6dea5b9de81c479f7ca16b162`](https://github.com/GlitchedPolygons/chillbuff/tree/d5262716693db4e6dea5b9de81c479f7ca16b162)
+#### GitHub Repo: https://github.com/GlitchedPolygons/chillbuff
+#### Used commit: [`1bbbf3d2593c0aa80ca844d6ad67df11fc301e73`](https://github.com/GlitchedPolygons/chillbuff/tree/1bbbf3d2593c0aa80ca844d6ad67df11fc301e73)
 
 ---
 </p>
