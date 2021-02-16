@@ -109,9 +109,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a2f2663fc413bd3a3087742955fd6f88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d0c15ce9965d36b911bcb276bff2db3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglitchedhttps__request.html#a6d0c15ce9965d36b911bcb276bff2db3">buffer_size</a></td></tr>
 <tr class="separator:a6d0c15ce9965d36b911bcb276bff2db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadd3aa6601bc4cc4ad1a567863a9055f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglitchedhttps__request.html#aadd3aa6601bc4cc4ad1a567863a9055f">ssl_verification_optional</a></td></tr>
-<tr class="memdesc:aadd3aa6601bc4cc4ad1a567863a9055f"><td class="mdescLeft">&#160;</td><td class="mdescRight">SET THIS TO FALSE!  <a href="structglitchedhttps__request.html#aadd3aa6601bc4cc4ad1a567863a9055f">More...</a><br /></td></tr>
-<tr class="separator:aadd3aa6601bc4cc4ad1a567863a9055f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee8ec956902b1c91f2fcb30902652034"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglitchedhttps__request.html#aee8ec956902b1c91f2fcb30902652034">ssl_verification_optional</a></td></tr>
+<tr class="memdesc:aee8ec956902b1c91f2fcb30902652034"><td class="mdescLeft">&#160;</td><td class="mdescRight">SET THIS TO FALSE!  <a href="structglitchedhttps__request.html#aee8ec956902b1c91f2fcb30902652034">More...</a><br /></td></tr>
+<tr class="separator:aee8ec956902b1c91f2fcb30902652034"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct containing an HTTP request's parameters and headers. </p>
@@ -129,7 +129,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>[OPTIONAL] Additional headers for the HTTP request. </p>
 <p>Set this to <code>NULL</code> if you don't want to add any additional HTTP request headers. </p>
-<p>You can create headers using the <a class="el" href="glitchedhttps__header_8h.html#af1c1bd45b6295fdf62769aa9a7c4e19d">glitchedhttps_header_init()</a> function. </p>
+<p>You can create headers using the <a class="el" href="glitchedhttps__header_8h.html#ab90e3004dd1508b0e0b46a0409051509">glitchedhttps_header_init()</a> function. </p>
 
 </div>
 </div>
@@ -273,21 +273,21 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aadd3aa6601bc4cc4ad1a567863a9055f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadd3aa6601bc4cc4ad1a567863a9055f">&#9670;&nbsp;</a></span>ssl_verification_optional</h2>
+<a id="aee8ec956902b1c91f2fcb30902652034"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee8ec956902b1c91f2fcb30902652034">&#9670;&nbsp;</a></span>ssl_verification_optional</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool glitchedhttps_request::ssl_verification_optional</td>
+          <td class="memname">int glitchedhttps_request::ssl_verification_optional</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>SET THIS TO FALSE! </p>
-<p>It's best to leave this set to <code>false</code>.</p>
-<p>Only set this to <code>true</code> if you don't want to enforce verification of the server's SSL certificate (DEFINITIVELY NOT RECOMMENDED FOR PRODUCTION ENV!).</p>
+<p>It's best to leave this set to <code>0</code>.</p>
+<p>Only set this to <code>1</code> if you don't want to enforce verification of the server's SSL certificate (DEFINITIVELY NOT RECOMMENDED FOR PRODUCTION ENV!).</p>
 <p>This value is only taken into consideration in case of an HTTPS request (determined by the scheme defined in the url). Plain HTTP requests ignore this setting. </p>
 
 </div>

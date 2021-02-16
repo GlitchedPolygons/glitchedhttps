@@ -75,16 +75,17 @@ $(function() {
 
 <p>Struct containing an HTTP response's data.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="glitchedhttps__api_8h_source.html">glitchedhttps_api.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="glitchedhttps__header_8h_source.html">glitchedhttps_header.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for glitchedhttps_response.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="glitchedhttps__response_8h__incl.png" border="0" usemap="#include_2glitchedhttps__response_8h" alt=""/></div>
 <map name="include_2glitchedhttps__response_8h" id="include_2glitchedhttps__response_8h">
-<area shape="rect" title="Struct containing an HTTP response&#39;s data." alt="" coords="33,5,175,47"/>
-<area shape="rect" title=" " alt="" coords="5,95,69,121"/>
-<area shape="rect" href="glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="94,95,247,121"/>
+<area shape="rect" title="Struct containing an HTTP response&#39;s data." alt="" coords="57,5,199,47"/>
+<area shape="rect" href="glitchedhttps__api_8h.html" title="API macro for dllexport/dllimport." alt="" coords="5,169,136,196"/>
+<area shape="rect" href="glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="109,95,262,121"/>
+<area shape="rect" title=" " alt="" coords="161,169,229,196"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -107,20 +108,20 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1a4d35cd997db0eb18a9b0b357600769"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__response_8h.html#a1a4d35cd997db0eb18a9b0b357600769">glitchedhttps_response_free</a> (struct <a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> *response)</td></tr>
-<tr class="separator:a1a4d35cd997db0eb18a9b0b357600769"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19d091a6842147c4d9ddad8cba3e57b3"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__response_8h.html#a19d091a6842147c4d9ddad8cba3e57b3">glitchedhttps_response_free</a> (struct <a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> *response)</td></tr>
+<tr class="separator:a19d091a6842147c4d9ddad8cba3e57b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct containing an HTTP response's data. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a1a4d35cd997db0eb18a9b0b357600769"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a4d35cd997db0eb18a9b0b357600769">&#9670;&nbsp;</a></span>glitchedhttps_response_free()</h2>
+<a id="a19d091a6842147c4d9ddad8cba3e57b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19d091a6842147c4d9ddad8cba3e57b3">&#9670;&nbsp;</a></span>glitchedhttps_response_free()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void glitchedhttps_response_free </td>
+          <td class="memname">GLITCHEDHTTPS_API void glitchedhttps_response_free </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> *&#160;</td>
           <td class="paramname"><em>response</em></td><td>)</td>
@@ -128,7 +129,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Frees an <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> instance that was allocated by <a class="el" href="glitchedhttps_8h.html#a35cb658394e263d9e4249401108adf67">glitchedhttps_submit()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Frees an <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> instance that was allocated by <a class="el" href="glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e">glitchedhttps_submit()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">response</td><td>The <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> instance ready for deallocation. </td></tr>
   </table>

@@ -93,33 +93,32 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glitchedhttps__debug_8h.html">glitchedhttps_debug.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">   37</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">glitchedhttps_method</a></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    GLITCHEDHTTPS_GET = 0,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    GLITCHEDHTTPS_HEAD = 1,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    GLITCHEDHTTPS_POST = 2,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    GLITCHEDHTTPS_PATCH = 3,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    GLITCHEDHTTPS_PUT = 4,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    GLITCHEDHTTPS_DELETE = 5,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    GLITCHEDHTTPS_CONNECT = 6,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    GLITCHEDHTTPS_OPTIONS = 7,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    GLITCHEDHTTPS_TRACE = 8</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="glitchedhttps__method_8h.html#abdad4fef6338b556e44b0b1062a95126">glitchedhttps_method_to_string</a>(<span class="keyword">const</span> <span class="keyword">enum</span> <a class="code" href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">glitchedhttps_method</a> method, <span class="keywordtype">char</span>* out, <span class="keyword">const</span> <span class="keywordtype">size_t</span> out_size);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;} <span class="comment">// extern &quot;C&quot;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif // GLITCHEDHTTPS_METHOD_H</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glitchedhttps__api_8h.html">glitchedhttps_api.h</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">   36</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">glitchedhttps_method</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    GLITCHEDHTTPS_GET = 0,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    GLITCHEDHTTPS_HEAD = 1,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    GLITCHEDHTTPS_POST = 2,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    GLITCHEDHTTPS_PATCH = 3,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    GLITCHEDHTTPS_PUT = 4,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    GLITCHEDHTTPS_DELETE = 5,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    GLITCHEDHTTPS_CONNECT = 6,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    GLITCHEDHTTPS_OPTIONS = 7,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    GLITCHEDHTTPS_TRACE = 8</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;GLITCHEDHTTPS_API <span class="keywordtype">int</span> <a class="code" href="glitchedhttps__method_8h.html#a94daa6dd261c7dc64a0ac363141444a4">glitchedhttps_method_to_string</a>(<span class="keyword">enum</span> <a class="code" href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">glitchedhttps_method</a> method, <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span> out_size);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;} <span class="comment">// extern &quot;C&quot;</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif // GLITCHEDHTTPS_METHOD_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aglitchedhttps__method_8h_html_abdad4fef6338b556e44b0b1062a95126"><div class="ttname"><a href="glitchedhttps__method_8h.html#abdad4fef6338b556e44b0b1062a95126">glitchedhttps_method_to_string</a></div><div class="ttdeci">bool glitchedhttps_method_to_string(const enum glitchedhttps_method method, char *out, const size_t out_size)</div></div>
-<div class="ttc" id="aglitchedhttps__method_8h_html_a6c7ccac5d790727582f7e7d900e66c72"><div class="ttname"><a href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">glitchedhttps_method</a></div><div class="ttdeci">glitchedhttps_method</div><div class="ttdoc">HTTP Method to use for a glitchedhttps_request.</div><div class="ttdef"><b>Definition:</b> glitchedhttps_method.h:37</div></div>
-<div class="ttc" id="aglitchedhttps__debug_8h_html"><div class="ttname"><a href="glitchedhttps__debug_8h.html">glitchedhttps_debug.h</a></div><div class="ttdoc">glitchedhttps debugging/error handling code. Mostly for internal use!</div></div>
+<div class="ttc" id="aglitchedhttps__method_8h_html_a6c7ccac5d790727582f7e7d900e66c72"><div class="ttname"><a href="glitchedhttps__method_8h.html#a6c7ccac5d790727582f7e7d900e66c72">glitchedhttps_method</a></div><div class="ttdeci">glitchedhttps_method</div><div class="ttdoc">HTTP Method to use for a glitchedhttps_request.</div><div class="ttdef"><b>Definition:</b> glitchedhttps_method.h:36</div></div>
+<div class="ttc" id="aglitchedhttps__api_8h_html"><div class="ttname"><a href="glitchedhttps__api_8h.html">glitchedhttps_api.h</a></div><div class="ttdoc">API macro for dllexport/dllimport.</div></div>
+<div class="ttc" id="aglitchedhttps__method_8h_html_a94daa6dd261c7dc64a0ac363141444a4"><div class="ttname"><a href="glitchedhttps__method_8h.html#a94daa6dd261c7dc64a0ac363141444a4">glitchedhttps_method_to_string</a></div><div class="ttdeci">GLITCHEDHTTPS_API int glitchedhttps_method_to_string(enum glitchedhttps_method method, char *out, size_t out_size)</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

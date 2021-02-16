@@ -75,16 +75,16 @@ $(function() {
 
 <p>GUID/UUID generator.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="glitchedhttps__api_8h_source.html">glitchedhttps_api.h</a>&quot;</code><br />
 <code>#include &lt;uuid/uuid.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for glitchedhttps_guid.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="glitchedhttps__guid_8h__incl.png" border="0" usemap="#include_2glitchedhttps__guid_8h" alt=""/></div>
 <map name="include_2glitchedhttps__guid_8h" id="include_2glitchedhttps__guid_8h">
-<area shape="rect" title="GUID/UUID generator." alt="" coords="24,5,165,47"/>
-<area shape="rect" title=" " alt="" coords="5,95,80,121"/>
-<area shape="rect" title=" " alt="" coords="104,95,189,121"/>
+<area shape="rect" title="GUID/UUID generator." alt="" coords="65,5,207,47"/>
+<area shape="rect" href="glitchedhttps__api_8h.html" title="API macro for dllexport/dllimport." alt="" coords="5,95,136,121"/>
+<area shape="rect" title=" " alt="" coords="160,95,245,121"/>
 </map>
 </div>
 </div>
@@ -93,33 +93,33 @@ Include dependency graph for glitchedhttps_guid.h:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglitchedhttps__guid.html">glitchedhttps_guid</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct containing the output from a call to the <a class="el" href="glitchedhttps__guid_8h.html#a5737beb425731d00bc9e446a3c51586c">glitchedhttps_new_guid()</a> function.  <a href="structglitchedhttps__guid.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct containing the output from a call to the <a class="el" href="glitchedhttps__guid_8h.html#a0c1f64ce75a8585548796514c37183fd">glitchedhttps_new_guid()</a> function.  <a href="structglitchedhttps__guid.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5737beb425731d00bc9e446a3c51586c"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structglitchedhttps__guid.html">glitchedhttps_guid</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__guid_8h.html#a5737beb425731d00bc9e446a3c51586c">glitchedhttps_new_guid</a> (const bool lowercase, const bool hyphens)</td></tr>
-<tr class="separator:a5737beb425731d00bc9e446a3c51586c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c1f64ce75a8585548796514c37183fd"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API struct <a class="el" href="structglitchedhttps__guid.html">glitchedhttps_guid</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__guid_8h.html#a0c1f64ce75a8585548796514c37183fd">glitchedhttps_new_guid</a> (int lowercase, int hyphens)</td></tr>
+<tr class="separator:a0c1f64ce75a8585548796514c37183fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>GUID/UUID generator. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a5737beb425731d00bc9e446a3c51586c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5737beb425731d00bc9e446a3c51586c">&#9670;&nbsp;</a></span>glitchedhttps_new_guid()</h2>
+<a id="a0c1f64ce75a8585548796514c37183fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c1f64ce75a8585548796514c37183fd">&#9670;&nbsp;</a></span>glitchedhttps_new_guid()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structglitchedhttps__guid.html">glitchedhttps_guid</a> glitchedhttps_new_guid </td>
+          <td class="memname">GLITCHEDHTTPS_API struct <a class="el" href="structglitchedhttps__guid.html">glitchedhttps_guid</a> glitchedhttps_new_guid </td>
           <td>(</td>
-          <td class="paramtype">const bool&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>lowercase</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>hyphens</em>&#160;</td>
         </tr>
         <tr>
@@ -131,8 +131,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Generates a new GUID (a.k.a. UUID). </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lowercase</td><td>Should the GUID be lowercase or UPPERCASE only? </td></tr>
-    <tr><td class="paramname">hyphens</td><td>Should the GUID contain hyphen separators? </td></tr>
+    <tr><td class="paramname">lowercase</td><td>Should the GUID be lowercase or UPPERCASE only? <code>0</code> for <code>false</code> - anything else for <code>true</code> </td></tr>
+    <tr><td class="paramname">hyphens</td><td>Should the GUID contain hyphen separators? <code>0</code> for <code>false</code> - anything else for <code>true</code> </td></tr>
   </table>
   </dd>
 </dl>

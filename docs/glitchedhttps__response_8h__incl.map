@@ -1,5 +1,6 @@
 <map id="include/glitchedhttps_response.h" name="include/glitchedhttps_response.h">
-<area shape="rect" id="node1" title="Struct containing an HTTP response&#39;s data." alt="" coords="33,5,175,47"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,95,69,121"/>
-<area shape="rect" id="node3" href="$glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="94,95,247,121"/>
+<area shape="rect" id="node1" title="Struct containing an HTTP response&#39;s data." alt="" coords="57,5,199,47"/>
+<area shape="rect" id="node2" href="$glitchedhttps__api_8h.html" title="API macro for dllexport/dllimport." alt="" coords="5,169,136,196"/>
+<area shape="rect" id="node3" href="$glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="109,95,262,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="161,169,229,196"/>
 </map>

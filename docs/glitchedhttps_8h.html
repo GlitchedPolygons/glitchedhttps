@@ -74,25 +74,24 @@ $(function() {
 
 <p>Simple, lightweight and straight-forward way of doing HTTP(S) requests in C with the help of ARM's open-source MbedTLS library.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="glitchedhttps__exitcodes_8h_source.html">glitchedhttps_exitcodes.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="glitchedhttps__request_8h_source.html">glitchedhttps_request.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="glitchedhttps__response_8h_source.html">glitchedhttps_response.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="glitchedhttps__api_8h_source.html">glitchedhttps_api.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="glitchedhttps__request_8h_source.html">glitchedhttps_request.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="glitchedhttps__response_8h_source.html">glitchedhttps_response.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="glitchedhttps__exitcodes_8h_source.html">glitchedhttps_exitcodes.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for glitchedhttps.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="glitchedhttps_8h__incl.png" border="0" usemap="#include_2glitchedhttps_8h" alt=""/></div>
 <map name="include_2glitchedhttps_8h" id="include_2glitchedhttps_8h">
-<area shape="rect" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests in C with the help of ARM&#39;s op..." alt="" coords="212,5,364,32"/>
-<area shape="rect" href="glitchedhttps__exitcodes_8h.html" title="Exit codes returned by the various glitchedhttps functions." alt="" coords="14,80,185,107"/>
-<area shape="rect" href="glitchedhttps__request_8h.html" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="209,80,366,107"/>
-<area shape="rect" href="glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="400,80,567,107"/>
-<area shape="rect" title=" " alt="" coords="246,229,314,256"/>
-<area shape="rect" title=" " alt="" coords="318,155,383,181"/>
-<area shape="rect" title=" " alt="" coords="58,304,133,331"/>
-<area shape="rect" href="glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="85,155,242,181"/>
-<area shape="rect" href="glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="407,155,560,181"/>
-<area shape="rect" href="glitchedhttps__debug_8h.html" title="glitchedhttps debugging/error handling code. Mostly for internal use!" alt="" coords="21,229,170,256"/>
-<area shape="rect" title=" " alt="" coords="585,155,649,181"/>
+<area shape="rect" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests in C with the help of ARM&#39;s op..." alt="" coords="451,5,603,32"/>
+<area shape="rect" href="glitchedhttps__api_8h.html" title="API macro for dllexport/dllimport." alt="" coords="358,229,489,256"/>
+<area shape="rect" href="glitchedhttps__request_8h.html" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="159,80,317,107"/>
+<area shape="rect" href="glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="384,80,551,107"/>
+<area shape="rect" href="glitchedhttps__exitcodes_8h.html" title="Exit codes returned by the various glitchedhttps functions." alt="" coords="626,80,797,107"/>
+<area shape="rect" title=" " alt="" coords="68,229,136,256"/>
+<area shape="rect" title=" " alt="" coords="205,155,271,181"/>
+<area shape="rect" href="glitchedhttps__method_8h.html" title="HTTP Method to use for a glitchedhttps_request." alt="" coords="23,155,181,181"/>
+<area shape="rect" href="glitchedhttps__header_8h.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="347,155,500,181"/>
 </map>
 </div>
 </div>
@@ -100,21 +99,21 @@ Include dependency graph for glitchedhttps.h:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a35cb658394e263d9e4249401108adf67"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a35cb658394e263d9e4249401108adf67">glitchedhttps_submit</a> (const struct <a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> *request, struct <a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> **out)</td></tr>
-<tr class="separator:a35cb658394e263d9e4249401108adf67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16da7fa9f208242a62f8be559e90db0e"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e">glitchedhttps_submit</a> (const struct <a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> *request, struct <a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> **out)</td></tr>
+<tr class="separator:a16da7fa9f208242a62f8be559e90db0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Simple, lightweight and straight-forward way of doing HTTP(S) requests in C with the help of ARM's open-source MbedTLS library. </p>
 <dl class="section see"><dt>See also</dt><dd><a href="https://github.com/GlitchedPolygons/glitchedhttps">https://github.com/GlitchedPolygons/glitchedhttps</a> </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a35cb658394e263d9e4249401108adf67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35cb658394e263d9e4249401108adf67">&#9670;&nbsp;</a></span>glitchedhttps_submit()</h2>
+<a id="a16da7fa9f208242a62f8be559e90db0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16da7fa9f208242a62f8be559e90db0e">&#9670;&nbsp;</a></span>glitchedhttps_submit()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int glitchedhttps_submit </td>
+          <td class="memname">GLITCHEDHTTPS_API int glitchedhttps_submit </td>
           <td>(</td>
           <td class="paramtype">const struct <a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> *&#160;</td>
           <td class="paramname"><em>request</em>, </td>
@@ -133,7 +132,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Submits a given HTTP request and writes the server response into the provided output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> instance. </p>
-<p>This allocates memory, so don't forget to <a class="el" href="glitchedhttps__response_8h.html#a1a4d35cd997db0eb18a9b0b357600769">glitchedhttps_response_free()</a> the output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> instance after usage!! </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This allocates memory, so don't forget to <a class="el" href="glitchedhttps__response_8h.html#a19d091a6842147c4d9ddad8cba3e57b3">glitchedhttps_response_free()</a> the output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> instance after usage!! </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">request</td><td>The <a class="el" href="structglitchedhttps__request.html" title="Struct containing an HTTP request&#39;s parameters and headers.">glitchedhttps_request</a> instance containing the request parameters and data (e.g. url, body, etc...). </td></tr>
     <tr><td class="paramname">out</td><td>The output <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> into which to write the response's data and headers. Must be a pointer to a <a class="el" href="structglitchedhttps__response.html" title="Struct containing an HTTP response&#39;s data.">glitchedhttps_response</a> pointer: will be malloc'ed! Make sure it's fresh!! </td></tr>

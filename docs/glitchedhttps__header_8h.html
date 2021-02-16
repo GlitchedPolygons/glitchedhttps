@@ -75,15 +75,26 @@ $(function() {
 
 <p>HTTP request (or response) header (for example: type="Authorization" ; value="Basic YWxhZGRpbjpvcGVuc2VzYW1l").  
 <a href="#details">More...</a></p>
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &quot;<a class="el" href="glitchedhttps__api_8h_source.html">glitchedhttps_api.h</a>&quot;</code><br />
+<code>#include &lt;stddef.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for glitchedhttps_header.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="glitchedhttps__header_8h__incl.png" border="0" usemap="#include_2glitchedhttps__header_8h" alt=""/></div>
+<map name="include_2glitchedhttps__header_8h" id="include_2glitchedhttps__header_8h">
+<area shape="rect" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="61,5,203,47"/>
+<area shape="rect" href="glitchedhttps__api_8h.html" title="API macro for dllexport/dllimport." alt="" coords="5,95,136,121"/>
+<area shape="rect" title=" " alt="" coords="161,95,229,121"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="glitchedhttps__header_8h__dep__incl.png" border="0" usemap="#include_2glitchedhttps__header_8hdep" alt=""/></div>
 <map name="include_2glitchedhttps__header_8hdep" id="include_2glitchedhttps__header_8hdep">
-<area shape="rect" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="88,5,229,47"/>
-<area shape="rect" href="glitchedhttps__request_8h.html" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="5,95,147,136"/>
-<area shape="rect" href="glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="171,95,312,136"/>
-<area shape="rect" href="glitchedhttps_8h.html" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests in C with the help of ARM&#39;s op..." alt="" coords="83,184,235,211"/>
+<area shape="rect" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="11,5,152,47"/>
+<area shape="rect" href="glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="11,95,152,136"/>
+<area shape="rect" href="glitchedhttps_8h.html" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests in C with the help of ARM&#39;s op..." alt="" coords="5,184,157,211"/>
 </map>
 </div>
 </div>
@@ -97,36 +108,28 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af1c1bd45b6295fdf62769aa9a7c4e19d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__header_8h.html#af1c1bd45b6295fdf62769aa9a7c4e19d">glitchedhttps_header_init</a> (const char *type, const size_t type_length, const char *value, const size_t value_length)</td></tr>
-<tr class="separator:af1c1bd45b6295fdf62769aa9a7c4e19d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29768c03941926cd7d4f96bc259a3cb8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__header_8h.html#a29768c03941926cd7d4f96bc259a3cb8">glitchedhttps_header_free</a> (struct <a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a> *header)</td></tr>
-<tr class="separator:a29768c03941926cd7d4f96bc259a3cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab90e3004dd1508b0e0b46a0409051509"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API struct <a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__header_8h.html#ab90e3004dd1508b0e0b46a0409051509">glitchedhttps_header_init</a> (const char *type, size_t type_length, const char *value, size_t value_length)</td></tr>
+<tr class="separator:ab90e3004dd1508b0e0b46a0409051509"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70e6c037d4ba9c95c494eb08c2e5fac1"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__header_8h.html#a70e6c037d4ba9c95c494eb08c2e5fac1">glitchedhttps_header_free</a> (struct <a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a> *header)</td></tr>
+<tr class="separator:a70e6c037d4ba9c95c494eb08c2e5fac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>HTTP request (or response) header (for example: type="Authorization" ; value="Basic YWxhZGRpbjpvcGVuc2VzYW1l"). </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a29768c03941926cd7d4f96bc259a3cb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29768c03941926cd7d4f96bc259a3cb8">&#9670;&nbsp;</a></span>glitchedhttps_header_free()</h2>
+<a id="a70e6c037d4ba9c95c494eb08c2e5fac1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70e6c037d4ba9c95c494eb08c2e5fac1">&#9670;&nbsp;</a></span>glitchedhttps_header_free()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void glitchedhttps_header_free </td>
+          <td class="memname">GLITCHEDHTTPS_API void glitchedhttps_header_free </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a> *&#160;</td>
           <td class="paramname"><em>header</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Frees a <a class="el" href="structglitchedhttps__header.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc...">glitchedhttps_header</a> instance as well as its two heap-allocated strings inside. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -137,14 +140,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af1c1bd45b6295fdf62769aa9a7c4e19d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1c1bd45b6295fdf62769aa9a7c4e19d">&#9670;&nbsp;</a></span>glitchedhttps_header_init()</h2>
+<a id="ab90e3004dd1508b0e0b46a0409051509"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab90e3004dd1508b0e0b46a0409051509">&#9670;&nbsp;</a></span>glitchedhttps_header_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a>* glitchedhttps_header_init </td>
+          <td class="memname">GLITCHEDHTTPS_API struct <a class="el" href="structglitchedhttps__header.html">glitchedhttps_header</a>* glitchedhttps_header_init </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>type</em>, </td>
@@ -152,7 +155,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>type_length</em>, </td>
         </tr>
         <tr>
@@ -164,7 +167,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>value_length</em>&#160;</td>
         </tr>
         <tr>
@@ -175,7 +178,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Creates and initializes a <a class="el" href="structglitchedhttps__header.html" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc...">glitchedhttps_header</a> instance and returns its pointer. </p>
-<dl class="section note"><dt>Note</dt><dd>Allocation is done for you: once you're done using this MAKE SURE to call <a class="el" href="glitchedhttps__header_8h.html#a29768c03941926cd7d4f96bc259a3cb8">glitchedhttps_header_free()</a> on it to prevent memory leaks! </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Allocation is done for you: once you're done using this MAKE SURE to call <a class="el" href="glitchedhttps__header_8h.html#a70e6c037d4ba9c95c494eb08c2e5fac1">glitchedhttps_header_free()</a> on it to prevent memory leaks! </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">type</td><td>The header type name (e.g. "Authorization", "Accept", etc...). Must be a NUL-terminated string! </td></tr>

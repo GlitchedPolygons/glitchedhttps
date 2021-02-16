@@ -71,7 +71,7 @@ Introduction</h1>
 <h1><a class="anchor" id="deps"></a>
 Dependencies</h1>
 <ul>
-<li><a href="https://cmake.org/download/">CMake &gt;3.1</a></li>
+<li><a href="https://cmake.org/download/">CMake &gt;3.12</a></li>
 <li><a href="https://github.com/ARMmbed/mbedtls">ARM MbedTLS</a> </li>
 </ul>
 <h1><a class="anchor" id="install"></a>
@@ -86,7 +86,7 @@ Usage</h1>
 <li><a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> - Struct containing all the parameters necessary for an HTTP request (HTTP Method, Body, URL, which <b>MUST</b> contain either the scheme <a href="#"><code>http://</code></a> or <a href="#"><code>https://</code></a>, etc...).</li>
 <li>➥ You can allocate this on the stack right before submitting the request if you want, just as seen as in the <a href="https://github.com/GlitchedPolygons/glitchedhttps/blob/master/examples/put/main.c"><code>PUT</code> request example</a>.</li>
 <li><a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> - HTTP Response data. This struct contains the mapped status code, response content (body), and all the headers..</li>
-<li>➥ Must be freed using the <a class="el" href="glitchedhttps__response_8h.html#a1a4d35cd997db0eb18a9b0b357600769">glitchedhttps_response_free()</a> function! </li>
+<li>➥ Must be freed using the <a class="el" href="glitchedhttps__response_8h.html#a19d091a6842147c4d9ddad8cba3e57b3">glitchedhttps_response_free()</a> function! </li>
 </ul>
 <p>Also: check out the <a class="el" href="glitchedhttps__exitcodes_8h.html">glitchedhttps_exitcodes.h</a> header file to find out what each of the Glitched HTTPS functions' exit codes means! </p>
 </div></div><!-- PageDoc -->

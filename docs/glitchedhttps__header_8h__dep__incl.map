@@ -1,6 +1,5 @@
 <map id="include/glitchedhttps_header.h" name="include/glitchedhttps_header.h">
-<area shape="rect" id="node1" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="88,5,229,47"/>
-<area shape="rect" id="node2" href="$glitchedhttps__request_8h.html" title="Struct containing an HTTP request&#39;s parameters and headers." alt="" coords="5,95,147,136"/>
-<area shape="rect" id="node4" href="$glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="171,95,312,136"/>
-<area shape="rect" id="node3" href="$glitchedhttps_8h.html" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests in C with the help of ARM&#39;s op..." alt="" coords="83,184,235,211"/>
+<area shape="rect" id="node1" title="HTTP request (or response) header (for example: type=&quot;Authorization&quot; ; value=&quot;Basic YWxhZGRpbjpvcGVuc..." alt="" coords="11,5,152,47"/>
+<area shape="rect" id="node2" href="$glitchedhttps__response_8h.html" title="Struct containing an HTTP response&#39;s data." alt="" coords="11,95,152,136"/>
+<area shape="rect" id="node3" href="$glitchedhttps_8h.html" title="Simple, lightweight and straight&#45;forward way of doing HTTP(S) requests in C with the help of ARM&#39;s op..." alt="" coords="5,184,157,211"/>
 </map>

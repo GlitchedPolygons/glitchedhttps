@@ -66,7 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">glitchedhttps_cacerts.h File Reference</div>  </div>
 </div><!--header-->
@@ -74,41 +74,66 @@ $(function() {
 
 <p>Trusted CA certificates chain for SSL connections.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="glitchedhttps__api_8h_source.html">glitchedhttps_api.h</a>&quot;</code><br />
 <code>#include &quot;chillbuff.h&quot;</code><br />
+<code>#include &quot;stddef.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for glitchedhttps_cacerts.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="glitchedhttps__cacerts_8h__incl.png" border="0" usemap="#include_2glitchedhttps__cacerts_8h" alt=""/></div>
 <map name="include_2glitchedhttps__cacerts_8h" id="include_2glitchedhttps__cacerts_8h">
-<area shape="rect" title="Trusted CA certificates chain for SSL connections." alt="" coords="21,5,163,47"/>
-<area shape="rect" title=" " alt="" coords="5,95,80,121"/>
-<area shape="rect" title=" " alt="" coords="105,95,181,121"/>
+<area shape="rect" title="Trusted CA certificates chain for SSL connections." alt="" coords="128,5,269,47"/>
+<area shape="rect" href="glitchedhttps__api_8h.html" title="API macro for dllexport/dllimport." alt="" coords="5,95,136,121"/>
+<area shape="rect" title=" " alt="" coords="161,95,237,121"/>
+<area shape="rect" title=" " alt="" coords="261,95,329,121"/>
 </map>
 </div>
 </div>
 <p><a href="glitchedhttps__cacerts_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a0015a1a48046d896255375c867461449"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__cacerts_8h.html#a0015a1a48046d896255375c867461449">GLITCHEDHTTPS_CA_CERTS</a>&#160;&#160;&#160;(_glitchedhttps_get_ca_certs())</td></tr>
-<tr class="separator:a0015a1a48046d896255375c867461449"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab99087aa05e37a5a23813af59537ef9f"><td class="memItemLeft" align="right" valign="top">const GLITCHEDHTTPS_API char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__cacerts_8h.html#ab99087aa05e37a5a23813af59537ef9f">glitchedhttps_get_ca_certs</a> ()</td></tr>
+<tr class="separator:ab99087aa05e37a5a23813af59537ef9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e8d4a2f50ca7e29a8b110d92ae4aded"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__cacerts_8h.html#a9e8d4a2f50ca7e29a8b110d92ae4aded">glitchedhttps_get_ca_certs_length</a> ()</td></tr>
+<tr class="separator:a9e8d4a2f50ca7e29a8b110d92ae4aded"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Trusted CA certificates chain for SSL connections. </p>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a0015a1a48046d896255375c867461449"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0015a1a48046d896255375c867461449">&#9670;&nbsp;</a></span>GLITCHEDHTTPS_CA_CERTS</h2>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="ab99087aa05e37a5a23813af59537ef9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab99087aa05e37a5a23813af59537ef9f">&#9670;&nbsp;</a></span>glitchedhttps_get_ca_certs()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GLITCHEDHTTPS_CA_CERTS&#160;&#160;&#160;(_glitchedhttps_get_ca_certs())</td>
+          <td class="memname">const GLITCHEDHTTPS_API char* glitchedhttps_get_ca_certs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets a concatenated string of all trusted CA certificates (NUL-terminated <code>char*</code> string). </p>
+<p>Gets a concatenated string of all trusted CA certificates (NUL-terminated <code>char*</code> string). </p><dl class="section return"><dt>Returns</dt><dd>Concatenated string of all trusted CA certificates (NUL-terminated <code>char*</code> string). </dd></dl>
+
+</div>
+</div>
+<a id="a9e8d4a2f50ca7e29a8b110d92ae4aded"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e8d4a2f50ca7e29a8b110d92ae4aded">&#9670;&nbsp;</a></span>glitchedhttps_get_ca_certs_length()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLITCHEDHTTPS_API size_t glitchedhttps_get_ca_certs_length </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the length of the string returned by glitchedhttps_get_ca_certs. </p><dl class="section return"><dt>Returns</dt><dd>String length (without the NUL-terminator). </dd></dl>
 
 </div>
 </div>
