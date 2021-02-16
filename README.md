@@ -1,6 +1,4 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1769711fb52041daa272e209aaddb0f4)](https://www.codacy.com/manual/GlitchedPolygons/glitchedhttps?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GlitchedPolygons/glitchedhttps&amp;utm_campaign=Badge_Grade)
-[![Codecov](https://codecov.io/gh/GlitchedPolygons/glitchedhttps/branch/master/graph/badge.svg)](https://codecov.io/gh/GlitchedPolygons/glitchedhttps)
-[![CircleCI](https://circleci.com/gh/GlitchedPolygons/glitchedhttps/tree/master.svg?style=shield)](https://circleci.com/gh/GlitchedPolygons/glitchedhttps/tree/master)
 [![API Docs](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/glitchedhttps/)
 [![License Shield](https://img.shields.io/badge/license-Apache--2.0-orange)](https://github.com/GlitchedPolygons/glitchedhttps/blob/master/LICENSE)
 
