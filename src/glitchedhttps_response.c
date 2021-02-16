@@ -47,7 +47,7 @@ void glitchedhttps_response_free(struct glitchedhttps_response* response)
 
     if (response->headers_count > 0)
     {
-        for (size_t i = 0; i < response->headers_count; i++)
+        for (size_t i = 0; i < response->headers_count; ++i)
         {
             struct glitchedhttps_header* h = &(response->headers[i]);
 

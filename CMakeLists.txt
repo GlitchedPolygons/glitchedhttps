@@ -18,10 +18,6 @@ project(glitchedhttps C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-if (WIN32 AND BUILD_SHARED_LIBS)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif ()
-
 option(GLITCHEDHTTPS_ENABLE_TESTS "Build GlitchedHTTPS tests." OFF)
 option(GLITCHEDHTTPS_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF)
 
@@ -29,37 +25,38 @@ option(ENABLE_TESTING "Build MbedTLS tests." OFF)
 option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
 
 if (NOT TARGET mbedtls)
-    add_subdirectory(lib/mbedtls mbedtls)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls mbedtls)
 endif ()
 
 set(glitchedhttps_headers
-        lib/chillbuff/include/chillbuff.h
-        include/glitchedhttps_exitcodes.h
-        include/glitchedhttps_cacerts.h
-        include/glitchedhttps_strutil.h
-        include/glitchedhttps_debug.h
-        include/glitchedhttps_guid.h
-        include/glitchedhttps_method.h
-        include/glitchedhttps_header.h
-        include/glitchedhttps_request.h
-        include/glitchedhttps_response.h
-        include/glitchedhttps.h
+        ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include/chillbuff.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_exitcodes.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_cacerts.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_strutil.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_debug.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_guid.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_method.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_header.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_request.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_response.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps.h
         )
 
 set(glitchedhttps_sources
-        src/glitchedhttps.c
-        src/glitchedhttps_debug.c
-        src/glitchedhttps_guid.c
-        src/glitchedhttps_method.c
-        src/glitchedhttps_header.c
-        src/glitchedhttps_response.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_debug.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_guid.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_method.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_header.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_cacerts.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_response.c
         )
 
 add_library(glitchedhttps ${glitchedhttps_headers} ${glitchedhttps_sources})
 
 target_include_directories(glitchedhttps PUBLIC include)
-target_include_directories(glitchedhttps PRIVATE lib/mbedtls/include)
-target_include_directories(glitchedhttps PRIVATE lib/chillbuff/include)
+target_include_directories(glitchedhttps PRIVATE ${CMAKE_CURRENT_LIST_DIR}lib/mbedtls/include)
+target_include_directories(glitchedhttps PRIVATE ${CMAKE_CURRENT_LIST_DIR}lib/chillbuff/include)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(glitchedhttps PRIVATE -luuid -lm)

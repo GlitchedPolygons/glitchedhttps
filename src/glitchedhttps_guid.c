@@ -36,7 +36,7 @@ extern "C" {
 
 #ifdef _WIN32
 
-struct glitchedhttps_guid glitchedhttps_new_guid(const bool lowercase, const bool hyphens)
+struct glitchedhttps_guid glitchedhttps_new_guid(const int lowercase, const int hyphens)
 {
     struct glitchedhttps_guid out;
     memset(out.string, '\0', sizeof(out.string));
@@ -51,7 +51,7 @@ struct glitchedhttps_guid glitchedhttps_new_guid(const bool lowercase, const boo
 
 #else
 
-struct glitchedhttps_guid glitchedhttps_new_guid(const bool lowercase, const bool hyphens)
+struct glitchedhttps_guid glitchedhttps_new_guid(const int lowercase, const int hyphens)
 {
     struct glitchedhttps_guid out;
     memset(out.string, '\0', sizeof(out.string));
@@ -76,7 +76,7 @@ struct glitchedhttps_guid glitchedhttps_new_guid(const bool lowercase, const boo
     else
     {
         char* c = out.string;
-        for (int i = 0; i < sizeof(tmp); i++)
+        for (int i = 0; i < sizeof(tmp); ++i)
         {
             if (tmp[i] != '-')
             {

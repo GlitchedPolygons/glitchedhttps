@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
+#include "glitchedhttps.h"
 
 /** @private */
 void _glitchedhttps_log_error(const char* error, const char* origin);
@@ -38,14 +38,14 @@ void _glitchedhttps_debug(void* ctx, int level, const char* file, int line, cons
  * Sets the glitchedhttps error callback. <p>
  * If errors occur, they'll be passed as a string into the provided callback function.
  * @param error_callback The function to call when errors occur.
- * @return Whether the callback was set up correctly or not (<code>bool</code> as defined in <code>stdbool.h</code>).
+ * @return Whether the callback was set up correctly or not (<code>1</code> for \c true and <code>0</code> for \c false).
  */
-bool glitchedhttps_set_error_callback(void (*error_callback)(const char*));
+GLITCHEDHTTPS_API int glitchedhttps_set_error_callback(void (*error_callback)(const char*));
 
 /**
  * Clears the glitchedhttps error callback (errors won't be printed anymore).
  */
-void glitchedhttps_unset_error_callback();
+GLITCHEDHTTPS_API int glitchedhttps_unset_error_callback();
 
 #ifdef __cplusplus
 } // extern "C"

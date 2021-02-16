@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
+#include "glitchedhttps.h"
 
 #ifdef _WIN32
 #include <objbase.h>
@@ -46,11 +46,11 @@ struct glitchedhttps_guid
 
 /**
  * Generates a new GUID (a.k.a. UUID).
- * @param lowercase Should the GUID be lowercase or UPPERCASE only?
- * @param hyphens Should the GUID contain hyphen separators?
+ * @param lowercase Should the GUID be lowercase or UPPERCASE only? \c 0 for \c false - anything else for \c true
+ * @param hyphens Should the GUID contain hyphen separators? \c 0 for \c false - anything else for \c true
  * @return The glitchedhttps_guid
  */
-struct glitchedhttps_guid glitchedhttps_new_guid(const bool lowercase, const bool hyphens);
+GLITCHEDHTTPS_API struct glitchedhttps_guid glitchedhttps_new_guid(int lowercase, int hyphens);
 
 #ifdef __cplusplus
 } // extern "C"

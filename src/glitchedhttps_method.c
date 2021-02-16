@@ -22,50 +22,50 @@ extern "C" {
 #include "glitchedhttps_debug.h"
 #include "glitchedhttps_method.h"
 
-bool glitchedhttps_method_to_string(const enum glitchedhttps_method method, char* out, const size_t out_size)
+int glitchedhttps_method_to_string(const enum glitchedhttps_method method, char* out, const size_t out_size)
 {
     if (out == NULL)
     {
         _glitchedhttps_log_error("Pointer argument \"out\" is NULL! Please provide a valid output string to write (strncpy) into.", __func__);
-        return false;
+        return 0;
     }
     if (out_size < 8)
     {
         _glitchedhttps_log_error("Insufficient output buffer size: please allocate at least 8 bytes for the out string!", __func__);
-        return false;
+        return 0;
     }
     switch (method)
     {
         case GLITCHEDHTTPS_GET:
             strncpy(out, "GET", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_HEAD:
             strncpy(out, "HEAD", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_POST:
             strncpy(out, "POST", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_PATCH:
             strncpy(out, "PATCH", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_PUT:
             strncpy(out, "PUT", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_DELETE:
             strncpy(out, "DELETE", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_CONNECT:
             strncpy(out, "CONNECT", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_OPTIONS:
             strncpy(out, "OPTIONS", out_size);
-            return true;
+            return 1;
         case GLITCHEDHTTPS_TRACE:
             strncpy(out, "TRACE", out_size);
-            return true;
+            return 1;
         default:
             _glitchedhttps_log_error("Invalid HTTP Method!", __func__);
-            return false;
+            return 0;
     }
 }
 

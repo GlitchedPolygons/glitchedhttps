@@ -27,7 +27,6 @@ extern "C" {
 #endif
 
 #include <stddef.h>
-#include <stdbool.h>
 #include "glitchedhttps_debug.h"
 
 /**
@@ -55,7 +54,7 @@ enum glitchedhttps_method
  * @param out_size The size of the output <code>char*</code> buffer (must be greater than or equals 8).
  * @return Whether the passed glitchedhttps_method was converted to string successfully or not.
  */
-bool glitchedhttps_method_to_string(const enum glitchedhttps_method method, char* out, const size_t out_size);
+GLITCHEDHTTPS_API int glitchedhttps_method_to_string(enum glitchedhttps_method method, char* out, size_t out_size);
 
 #ifdef __cplusplus
 } // extern "C"

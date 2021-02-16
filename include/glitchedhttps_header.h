@@ -53,13 +53,13 @@ struct glitchedhttps_header
  * @param value_length The length of the header value string.
  * @return The freshly allocated and initialized glitchedhttps_header instance (a pointer to it). If init failed, <code>NULL</code> is returned!
  */
-struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length);
+GLITCHEDHTTPS_API struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length);
 
 /**
  * Frees a glitchedhttps_header instance as well as its two heap-allocated strings inside.
  * @param header The glitchedhttps_header to deallocate.
  */
-static inline void glitchedhttps_header_free(struct glitchedhttps_header* header);
+GLITCHEDHTTPS_API void glitchedhttps_header_free(struct glitchedhttps_header* header);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -69,16 +69,16 @@ void _glitchedhttps_log_error(const char* error, const char* origin)
     free(error_msg_heap);
 }
 
-bool glitchedhttps_set_error_callback(void (*error_callback)(const char*))
+int glitchedhttps_set_error_callback(void (*error_callback)(const char*))
 {
     if (error_callback == NULL)
     {
         _glitchedhttps_log_error("The passed error callback is empty; Operation cancelled!", __func__);
-        return false;
+        return 0;
     }
 
     _glitchedhttps_error_callback = error_callback;
-    return true;
+    return 1;
 }
 
 void glitchedhttps_unset_error_callback()

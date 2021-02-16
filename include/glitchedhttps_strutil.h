@@ -26,7 +26,6 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -53,9 +52,9 @@ int glitchedhttps_strncmpic(const char* str1, const char* str2, size_t n)
         {
             break;
         }
-        cmp++;
-        str1++;
-        str2++;
+        ++cmp;
+        ++str1;
+        ++str2;
     }
 
     return ret;
@@ -66,7 +65,7 @@ int glitchedhttps_strncmpic(const char* str1, const char* str2, size_t n)
  * @param url The URL string to check.
  * @return Whether the passed URL has the http scheme at its beginning or not.
  */
-static inline bool glitchedhttps_is_http(const char* url)
+static inline int glitchedhttps_is_http(const char* url)
 {
     return strlen(url) >= 7 && strncmp(url, "http://", 7) == 0;
 }
@@ -76,7 +75,7 @@ static inline bool glitchedhttps_is_http(const char* url)
  * @param url The URL string to check.
  * @return Whether the passed URL has the https scheme at its beginning or not.
  */
-static inline bool glitchedhttps_is_https(const char* url)
+static inline int glitchedhttps_is_https(const char* url)
 {
     return strlen(url) >= 8 && strncmp(url, "https://", 8) == 0;
 }
@@ -92,7 +91,7 @@ static inline size_t glitchedhttps_count_digits(const size_t number)
     while (n != 0)
     {
         n /= 10;
-        digits++;
+        ++digits;
     }
     return digits;
 }

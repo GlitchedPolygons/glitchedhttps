@@ -331,7 +331,7 @@ static int https_request(const char* server_name, const int server_port, const c
 
     /* Load the CA root certificates. */
 
-    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)GLITCHEDHTTPS_CA_CERTS, strlen(GLITCHEDHTTPS_CA_CERTS) + 1);
+    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)glitchedhttps_get_ca_certs(), glitchedhttps_get_ca_certs_length());
     if (ret < 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);

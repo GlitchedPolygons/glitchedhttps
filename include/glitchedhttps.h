@@ -69,7 +69,7 @@ extern "C" {
  * @param out The output glitchedhttps_response into which to write the response's data and headers. Must be a pointer to a glitchedhttps_response pointer: will be malloc'ed! Make sure it's fresh!!
  * @return <code>GLITCHEDHTTPS_SUCCESS</code> (zero) if the request was submitted successfully; <code>GLITCHEDHTTPS_{ERROR_ID}</code> if the request couldn't even be submitted (e.g. invalid URL/server not found/no internet/whatever..). Check out the <code>glitchedhttps_exitcodes.h</code> header file to find out more about the glitchedhttps error codes!
  */
-int glitchedhttps_submit(const struct glitchedhttps_request* request, struct glitchedhttps_response** out);
+GLITCHEDHTTPS_API int glitchedhttps_submit(const struct glitchedhttps_request* request, struct glitchedhttps_response** out);
 
 #ifdef __cplusplus
 } // extern "C"
