@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#include <string.h>
 #include <ctype.h>
+#include <string.h>
 
 /**
  * Compares two strings ignoring UPPER vs. lowercase.
@@ -36,7 +36,7 @@ extern "C" {
  * @param n How many characters of the string should be compared (starting from index 0)?
  * @return If the strings are equal, <code>0</code> is returned. Otherwise, something else.
  */
-int glitchedhttps_strncmpic(const char* str1, const char* str2, size_t n)
+GLITCHEDHTTPS_API int glitchedhttps_strncmpic(const char* str1, const char* str2, size_t n)
 {
     size_t cmp = 0;
     int ret = INT_MIN;

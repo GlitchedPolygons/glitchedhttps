@@ -28,8 +28,8 @@ extern "C" {
 
 #include <stddef.h>
 #include <string.h>
+#include "glitchedhttps_api.h"
 #include "glitchedhttps_method.h"
-#include "glitchedhttps_header.h"
 
 /**
  * @brief Struct containing an HTTP request's parameters and headers.

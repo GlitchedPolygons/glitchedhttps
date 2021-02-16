@@ -26,13 +26,13 @@
 extern "C" {
 #endif
 
-#include "glitchedhttps.h"
+#include "glitchedhttps_api.h"
 
 /** @private */
-void _glitchedhttps_log_error(const char* error, const char* origin);
+GLITCHEDHTTPS_API void glitchedhttps_debug(void* ctx, int level, const char* file, int line, const char* str);
 
 /** @private */
-void _glitchedhttps_debug(void* ctx, int level, const char* file, int line, const char* str);
+GLITCHEDHTTPS_API void glitchedhttps_log_error(const char* error, const char* origin);
 
 /**
  * Sets the glitchedhttps error callback. <p>

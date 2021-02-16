@@ -51,11 +51,9 @@ void clear_win_sock()
 #include "chillbuff.h"
 
 #include <mbedtls/net.h>
-#include <mbedtls/ssl.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/certs.h>
-#include <mbedtls/debug.h>
 #include <mbedtls/platform.h>
 #include <mbedtls/error.h>
 
@@ -70,7 +68,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
 {
     if (response_string == NULL)
     {
-        _glitchedhttps_log_error("HTTP response parse error: \"response_string\" argument NULL; nothing to parse!", __func__);
+        glitchedhttps_log_error("HTTP response parse error: \"response_string\" argument NULL; nothing to parse!", __func__);
         return GLITCHEDHTTPS_RESPONSE_PARSE_ERROR;
     }
 
@@ -79,7 +77,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
     struct glitchedhttps_response* response = malloc(sizeof(struct glitchedhttps_response));
     if (response == NULL)
     {
-        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
+        glitchedhttps_log_error("OUT OF MEMORY!", __func__);
         return GLITCHEDHTTPS_OUT_OF_MEM;
     }
 
@@ -98,7 +96,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
     if (response->raw == NULL)
     {
         glitchedhttps_response_free(response);
-        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
+        glitchedhttps_log_error("OUT OF MEMORY!", __func__);
         return GLITCHEDHTTPS_OUT_OF_MEM;
     }
 
@@ -121,7 +119,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
     chillbuff header_builder;
     if (chillbuff_init(&header_builder, 16, sizeof(struct glitchedhttps_header), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
-        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
         return GLITCHEDHTTPS_CHILLBUFF_ERROR;
     }
 
@@ -256,7 +254,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
     return GLITCHEDHTTPS_SUCCESS;
 
 out_of_mem:
-    _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
+    glitchedhttps_log_error("OUT OF MEMORY!", __func__);
     glitchedhttps_response_free(response);
     chillbuff_free(&header_builder);
     return GLITCHEDHTTPS_OUT_OF_MEM;
@@ -267,7 +265,7 @@ static int https_request(const char* server_name, const int server_port, const c
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
-        _glitchedhttps_log_error("INVALID HTTPS parameters passed into \"https_request\". Returning NULL...", __func__);
+        glitchedhttps_log_error("INVALID HTTPS parameters passed into \"https_request\". Returning NULL...", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -275,7 +273,7 @@ static int https_request(const char* server_name, const int server_port, const c
 
     if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
-        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
         return GLITCHEDHTTPS_CHILLBUFF_ERROR;
     }
 
@@ -293,7 +291,7 @@ static int https_request(const char* server_name, const int server_port, const c
         buffer_heap = malloc(buffer_size * sizeof(unsigned char));
         if (buffer_heap == NULL)
         {
-            _glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
+            glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
         }
     }
 
@@ -324,7 +322,7 @@ static int https_request(const char* server_name, const int server_port, const c
     if (ret != 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
-        _glitchedhttps_log_error(error_msg, __func__);
+        glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -335,7 +333,7 @@ static int https_request(const char* server_name, const int server_port, const c
     if (ret < 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
-        _glitchedhttps_log_error(error_msg, __func__);
+        glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -350,7 +348,7 @@ static int https_request(const char* server_name, const int server_port, const c
     if (ret != 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_net_connect\" returned %d", ret);
-        _glitchedhttps_log_error(error_msg, __func__);
+        glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -361,7 +359,7 @@ static int https_request(const char* server_name, const int server_port, const c
     if (ret != 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
-        _glitchedhttps_log_error(error_msg, __func__);
+        glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -369,13 +367,13 @@ static int https_request(const char* server_name, const int server_port, const c
     mbedtls_ssl_conf_authmode(&ssl_config, ssl_verification_optional ? MBEDTLS_SSL_VERIFY_OPTIONAL : MBEDTLS_SSL_VERIFY_REQUIRED);
     mbedtls_ssl_conf_ca_chain(&ssl_config, &cacert, NULL);
     mbedtls_ssl_conf_rng(&ssl_config, mbedtls_ctr_drbg_random, &ctr_drbg);
-    mbedtls_ssl_conf_dbg(&ssl_config, &_glitchedhttps_debug, stdout);
+    mbedtls_ssl_conf_dbg(&ssl_config, &glitchedhttps_debug, stdout);
 
     ret = mbedtls_ssl_setup(&ssl_context, &ssl_config);
     if (ret != 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_setup\" returned %d", ret);
-        _glitchedhttps_log_error(error_msg, __func__);
+        glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -384,7 +382,7 @@ static int https_request(const char* server_name, const int server_port, const c
     if (ret != 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_set_hostname\" returned %d", ret);
-        _glitchedhttps_log_error(error_msg, __func__);
+        glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -398,7 +396,7 @@ static int https_request(const char* server_name, const int server_port, const c
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
         {
             snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_handshake\" returned -0x%x", -ret);
-            _glitchedhttps_log_error(error_msg, __func__);
+            glitchedhttps_log_error(error_msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
@@ -411,7 +409,7 @@ static int https_request(const char* server_name, const int server_port, const c
     {
         char verification_buffer[1024];
         mbedtls_x509_crt_verify_info(verification_buffer, sizeof(verification_buffer), "  ! ", flags);
-        _glitchedhttps_log_error(verification_buffer, __func__);
+        glitchedhttps_log_error(verification_buffer, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -423,7 +421,7 @@ static int https_request(const char* server_name, const int server_port, const c
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
         {
             snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_write\" returned %d", ret);
-            _glitchedhttps_log_error(error_msg, __func__);
+            glitchedhttps_log_error(error_msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
@@ -450,7 +448,7 @@ static int https_request(const char* server_name, const int server_port, const c
         if (ret < 0)
         {
             snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_read\" returned %d", ret);
-            _glitchedhttps_log_error(error_msg, __func__);
+            glitchedhttps_log_error(error_msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
@@ -466,7 +464,7 @@ static int https_request(const char* server_name, const int server_port, const c
 
     if (response_string.length == 0)
     {
-        _glitchedhttps_log_error("HTTP response string empty!", __func__);
+        glitchedhttps_log_error("HTTP response string empty!", __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
     }
@@ -484,7 +482,7 @@ exit:
         memset(error_buf, '\0', sizeof(error_buf));
         int f = snprintf(error_buf, sizeof(error_buf), "HTTPS request unsuccessful! Last error was: %d - ", ret);
         mbedtls_strerror(ret, error_buf + f, sizeof(error_buf) - f - 1);
-        _glitchedhttps_log_error(error_buf, __func__);
+        glitchedhttps_log_error(error_buf, __func__);
     }
 #endif
 
@@ -507,7 +505,7 @@ static int http_request(const char* server_name, const int server_port, const ch
 
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
-        _glitchedhttps_log_error("INVALID HTTP parameters passed into \"http_request()\".", __func__);
+        glitchedhttps_log_error("INVALID HTTP parameters passed into \"http_request()\".", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -516,7 +514,7 @@ static int http_request(const char* server_name, const int server_port, const ch
     ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (ret != 0)
     {
-        _glitchedhttps_log_error("Error at \"WSAStartup\".", __func__);
+        glitchedhttps_log_error("Error at \"WSAStartup\".", __func__);
         return GLITCHEDHTTPS_EXTERNAL_ERROR;
     }
 #endif
@@ -525,7 +523,7 @@ static int http_request(const char* server_name, const int server_port, const ch
 
     if (chillbuff_init(&response_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
-        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
         return GLITCHEDHTTPS_CHILLBUFF_ERROR;
     }
 
@@ -544,7 +542,7 @@ static int http_request(const char* server_name, const int server_port, const ch
     {
         char msg[128];
         snprintf(msg, sizeof(msg), "\"getaddrinfo\" failed with error code: %d", ret);
-        _glitchedhttps_log_error(msg, __func__);
+        glitchedhttps_log_error(msg, __func__);
         chillbuff_free(&response_string);
         if (res != NULL)
             freeaddrinfo(res);
@@ -558,7 +556,7 @@ static int http_request(const char* server_name, const int server_port, const ch
         buffer_heap = malloc(buffer_size * sizeof(char));
         if (buffer_heap == NULL)
         {
-            _glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
+            glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
         }
     }
 
@@ -568,14 +566,14 @@ static int http_request(const char* server_name, const int server_port, const ch
 
     if (connect(sockfd, res->ai_addr, (int)res->ai_addrlen) != 0)
     {
-        _glitchedhttps_log_error("Connection to server failed!", __func__);
+        glitchedhttps_log_error("Connection to server failed!", __func__);
         exit_code = GLITCHEDHTTPS_CONNECTION_TO_SERVER_FAILED;
         goto exit;
     }
 
     if (send(sockfd, request, (int)strlen(request), 0) < 0)
     {
-        _glitchedhttps_log_error("Connection to server was successful but HTTP Request could not be transmitted!", __func__);
+        glitchedhttps_log_error("Connection to server was successful but HTTP Request could not be transmitted!", __func__);
         exit_code = GLITCHEDHTTPS_HTTP_REQUEST_TRANSMISSION_FAILED;
         goto exit;
     }
@@ -590,7 +588,7 @@ static int http_request(const char* server_name, const int server_port, const ch
         {
             char msg[128];
             snprintf(msg, sizeof(msg), "HTTP request failed: \"recv()\" returned %d", ret);
-            _glitchedhttps_log_error(msg, __func__);
+            glitchedhttps_log_error(msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
             goto exit;
         }
@@ -606,7 +604,7 @@ static int http_request(const char* server_name, const int server_port, const ch
 
     if (response_string.length == 0)
     {
-        _glitchedhttps_log_error("HTTP response string empty!", __func__);
+        glitchedhttps_log_error("HTTP response string empty!", __func__);
         exit_code = GLITCHEDHTTPS_EMPTY_RESPONSE;
         goto exit;
     }
@@ -629,25 +627,25 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
 {
     if (request == NULL)
     {
-        _glitchedhttps_log_error("Request parameter NULL!", __func__);
+        glitchedhttps_log_error("Request parameter NULL!", __func__);
         return GLITCHEDHTTPS_NULL_ARG;
     }
 
     if (out == NULL)
     {
-        _glitchedhttps_log_error("Out parameter NULL; nothing to write the HTTP request's response into!", __func__);
+        glitchedhttps_log_error("Out parameter NULL; nothing to write the HTTP request's response into!", __func__);
         return GLITCHEDHTTPS_NULL_ARG;
     }
 
     if (request->url == NULL)
     {
-        _glitchedhttps_log_error("URL parameter NULL!", __func__);
+        glitchedhttps_log_error("URL parameter NULL!", __func__);
         return GLITCHEDHTTPS_NULL_ARG;
     }
 
     if(request->url_length < 7 && strlen(request->url) < 7)
     {
-        _glitchedhttps_log_error("Invalid URL!", __func__);
+        glitchedhttps_log_error("Invalid URL!", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -656,7 +654,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
 
     if (server_host_ptr == NULL)
     {
-        _glitchedhttps_log_error("Missing or invalid protocol in passed URL: needs to be \"http://\" or \"https://\"", __func__);
+        glitchedhttps_log_error("Missing or invalid protocol in passed URL: needs to be \"http://\" or \"https://\"", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
@@ -679,7 +677,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
             {
                 char msg[128];
                 snprintf(msg, sizeof(msg), "Invalid port number \"%d\"", server_port);
-                _glitchedhttps_log_error(msg, __func__);
+                glitchedhttps_log_error(msg, __func__);
                 return GLITCHEDHTTPS_INVALID_PORT_NUMBER;
             }
             memset(custom_port, '\0', strlen(custom_port));
@@ -698,7 +696,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
 
     if (!glitchedhttps_method_to_string(request->method, method, sizeof(method)))
     {
-        _glitchedhttps_log_error("HTTP request submission rejected due to invalid HTTP method name.", __func__);
+        glitchedhttps_log_error("HTTP request submission rejected due to invalid HTTP method name.", __func__);
         return GLITCHEDHTTPS_INVALID_HTTP_METHOD_NAME;
     }
 
@@ -706,7 +704,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
 
     if (chillbuff_init(&request_string, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
-        _glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
+        glitchedhttps_log_error("Chillbuff init failed: can't proceed without a proper request string builder... Perhaps go check out the chillbuff error logs!", __func__);
         return GLITCHEDHTTPS_CHILLBUFF_ERROR;
     }
 

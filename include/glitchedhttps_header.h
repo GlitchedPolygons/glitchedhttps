@@ -26,18 +26,21 @@
 extern "C" {
 #endif
 
+#include "glitchedhttps_api.h"
+#include <stddef.h>
+
 /**
  * @brief HTTP request (or response) header (for example: type="Authorization" ; value="Basic YWxhZGRpbjpvcGVuc2VzYW1l").
  */
 struct glitchedhttps_header
 {
-    /** 
+    /**
      * The type of HTTP request header (its name without the ':' colon). E.g. "Authorization", "Server", etc... <p>
      * This MUST be a NUL-terminated C-string!
      */
     char* type;
 
-    /** 
+    /**
      * The header value (what comes after the ':' colon separator). <p>
      * This MUST be a NUL-terminated C-string!
      */
@@ -53,7 +56,7 @@ struct glitchedhttps_header
  * @param value_length The length of the header value string.
  * @return The freshly allocated and initialized glitchedhttps_header instance (a pointer to it). If init failed, <code>NULL</code> is returned!
  */
-GLITCHEDHTTPS_API struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length);
+GLITCHEDHTTPS_API struct glitchedhttps_header* glitchedhttps_header_init(const char* type, size_t type_length, const char* value, size_t value_length);
 
 /**
  * Frees a glitchedhttps_header instance as well as its two heap-allocated strings inside.

@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
-#include "glitchedhttps_debug.h"
+#include "glitchedhttps_api.h"
 
 /**
  * @brief HTTP Method to use for a glitchedhttps_request

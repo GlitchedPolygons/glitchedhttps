@@ -25,7 +25,7 @@
  * @section intro Introduction
  * Glitched HTTPS is a simple, lightweight and straight-forward way of doing HTTP(S) requests in C with the help of ARM's open-source MbedTLS library.
  * @section deps Dependencies
- * * [CMake >3.1](https://cmake.org/download/)
+ * * [CMake >3.12](https://cmake.org/download/)
  * * [ARM MbedTLS](https://github.com/ARMmbed/mbedtls)
  * @section install Installation
  * See the git repository's [README.md](https://github.com/GlitchedPolygons/glitchedhttps) for instructions on how to get started with this.
@@ -48,19 +48,10 @@
 extern "C" {
 #endif
 
-#include <glitchedhttps_exitcodes.h>
-#include <glitchedhttps_request.h>
-#include <glitchedhttps_response.h>
-
-#if defined(_WIN32) && defined(GLITCHEDHTTPS_DLL)
-#ifdef GLITCHEDHTTPS_BUILD_DLL
-#define GLITCHEDHTTPS_API __declspec(dllexport)
-#else
-#define GLITCHEDHTTPS_API __declspec(dllimport)
-#endif
-#else
-#define GLITCHEDHTTPS_API
-#endif
+#include "glitchedhttps_api.h"
+#include "glitchedhttps_request.h"
+#include "glitchedhttps_response.h"
+#include "glitchedhttps_exitcodes.h"
 
 /**
  * Submits a given HTTP request and writes the server response into the provided output glitchedhttps_response instance. <p>

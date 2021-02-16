@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include <stdlib.h>
+#include "glitchedhttps_api.h"
 #include "glitchedhttps_header.h"
 
 /**
@@ -69,7 +69,7 @@ struct glitchedhttps_response
  * Frees an glitchedhttps_response instance that was allocated by {@link #glitchedhttps_submit()}.
  * @param response The glitchedhttps_response instance ready for deallocation.
  */
-void glitchedhttps_response_free(struct glitchedhttps_response* response);
+GLITCHEDHTTPS_API void glitchedhttps_response_free(struct glitchedhttps_response* response);
 
 #ifdef __cplusplus
 } // extern "C"

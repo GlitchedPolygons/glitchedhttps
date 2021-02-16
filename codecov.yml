@@ -1,6 +1,0 @@
-ignore:
-  - "lib"
-  - "tests"
-  - "include"
-  - "examples"
-  - "programs"

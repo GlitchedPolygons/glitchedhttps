@@ -14,9 +14,9 @@
    limitations under the License.
 */
 
+#include <time.h>
 #include <stdio.h>
 #include <glitchedhttps.h>
-#include <time.h>
 
 int main(int argc, char* argv[])
 {
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
     const double time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
 
-    const bool success =
+    const int success =
             result == GLITCHEDHTTPS_SUCCESS
             && response != NULL
             && response->status_code >= 200

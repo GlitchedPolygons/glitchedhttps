@@ -30,7 +30,7 @@ int main()
 
     int result = glitchedhttps_submit(&request, &response);
 
-    const bool success =
+    const int success =
             result == GLITCHEDHTTPS_SUCCESS
             && response != NULL
             && response->status_code >= 200

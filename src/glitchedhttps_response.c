@@ -19,6 +19,7 @@ extern "C" {
 #endif
 
 #include "glitchedhttps_response.h"
+#include <stdlib.h>
 
 void glitchedhttps_response_free(struct glitchedhttps_response* response)
 {

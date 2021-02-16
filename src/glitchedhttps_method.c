@@ -26,14 +26,16 @@ int glitchedhttps_method_to_string(const enum glitchedhttps_method method, char*
 {
     if (out == NULL)
     {
-        _glitchedhttps_log_error("Pointer argument \"out\" is NULL! Please provide a valid output string to write (strncpy) into.", __func__);
+        glitchedhttps_log_error("Pointer argument \"out\" is NULL! Please provide a valid output string to write (strncpy) into.", __func__);
         return 0;
     }
+
     if (out_size < 8)
     {
-        _glitchedhttps_log_error("Insufficient output buffer size: please allocate at least 8 bytes for the out string!", __func__);
+        glitchedhttps_log_error("Insufficient output buffer size: please allocate at least 8 bytes for the out string!", __func__);
         return 0;
     }
+
     switch (method)
     {
         case GLITCHEDHTTPS_GET:
@@ -64,7 +66,7 @@ int glitchedhttps_method_to_string(const enum glitchedhttps_method method, char*
             strncpy(out, "TRACE", out_size);
             return 1;
         default:
-            _glitchedhttps_log_error("Invalid HTTP Method!", __func__);
+            glitchedhttps_log_error("Invalid HTTP Method!", __func__);
             return 0;
     }
 }

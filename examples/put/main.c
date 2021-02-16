@@ -47,7 +47,7 @@ int main()
 
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000.0;
 
-    const bool success =
+    const int success =
             result == GLITCHEDHTTPS_SUCCESS
             && response != NULL
             && response->status_code >= 200

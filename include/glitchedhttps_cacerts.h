@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+#include "glitchedhttps_api.h"
 #include "chillbuff.h"
 #include "stddef.h"
 
@@ -27,7 +28,7 @@ GLITCHEDHTTPS_API const char* glitchedhttps_get_ca_certs();
  * Gets the length of the string returned by glitchedhttps_get_ca_certs.
  * @return String length (without the NUL-terminator).
  */
-GLITCHEDHTTPS_API const size_t glitchedhttps_get_ca_certs_length();
+GLITCHEDHTTPS_API size_t glitchedhttps_get_ca_certs_length();
 
 #ifdef __cplusplus
 } // extern "C"

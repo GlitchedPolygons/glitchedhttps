@@ -18,16 +18,15 @@
 extern "C" {
 #endif
 
+#include "glitchedhttps_debug.h"
+
 #include <stddef.h>
 #include <string.h>
 #include <mbedtls/platform.h>
-#include "glitchedhttps_debug.h"
 
-/** @private */
-void (*_glitchedhttps_error_callback)(const char*) = NULL;
+static void (*glitchedhttps_error_callback)(const char*) = NULL;
 
-/** @private */
-void _glitchedhttps_debug(void* ctx, int level, const char* file, int line, const char* str)
+void glitchedhttps_debug(void* ctx, int level, const char* file, int line, const char* str)
 {
     ((void)level);
 
@@ -35,8 +34,7 @@ void _glitchedhttps_debug(void* ctx, int level, const char* file, int line, cons
     fflush((FILE*)ctx);
 }
 
-/** @private */
-void _glitchedhttps_log_error(const char* error, const char* origin)
+void glitchedhttps_log_error(const char* error, const char* origin)
 {
     size_t error_msg_length = 64 + strlen(error) + strlen(origin);
 
@@ -61,9 +59,9 @@ void _glitchedhttps_log_error(const char* error, const char* origin)
     printf(error_msg);
 #endif
 
-    if (_glitchedhttps_error_callback != NULL)
+    if (glitchedhttps_error_callback != NULL)
     {
-        _glitchedhttps_error_callback(error_msg);
+        glitchedhttps_error_callback(error_msg);
     }
 
     free(error_msg_heap);
@@ -73,17 +71,18 @@ int glitchedhttps_set_error_callback(void (*error_callback)(const char*))
 {
     if (error_callback == NULL)
     {
-        _glitchedhttps_log_error("The passed error callback is empty; Operation cancelled!", __func__);
+        glitchedhttps_log_error("The passed error callback is empty; Operation cancelled!", __func__);
         return 0;
     }
 
-    _glitchedhttps_error_callback = error_callback;
+    glitchedhttps_error_callback = error_callback;
     return 1;
 }
 
-void glitchedhttps_unset_error_callback()
+int glitchedhttps_unset_error_callback()
 {
-    _glitchedhttps_error_callback = NULL;
+    glitchedhttps_error_callback = NULL;
+    return 1;
 }
 
 #ifdef __cplusplus

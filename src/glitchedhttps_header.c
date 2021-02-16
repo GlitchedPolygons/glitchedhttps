@@ -18,29 +18,29 @@
 extern "C" {
 #endif
 
-#include <stdlib.h>
-#include <string.h>
 #include "glitchedhttps_debug.h"
 #include "glitchedhttps_header.h"
+#include <stdlib.h>
+#include <string.h>
 
 struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const size_t type_length, const char* value, const size_t value_length)
 {
     if (type == NULL || value == NULL)
     {
-        _glitchedhttps_log_error("Header type or value string NULL!", __func__);
+        glitchedhttps_log_error("Header type or value string NULL!", __func__);
         return NULL;
     }
 
     if (type_length == 0)
     {
-        _glitchedhttps_log_error("Header type string empty!", __func__);
+        glitchedhttps_log_error("Header type string empty!", __func__);
         return NULL;
     }
 
     struct glitchedhttps_header* out = malloc(sizeof(struct glitchedhttps_header));
     if (out == NULL)
     {
-        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
+        glitchedhttps_log_error("OUT OF MEMORY!", __func__);
         return NULL;
     }
 
@@ -49,7 +49,7 @@ struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const s
 
     if (out->type == NULL || out->value == NULL)
     {
-        _glitchedhttps_log_error("OUT OF MEMORY!", __func__);
+        glitchedhttps_log_error("OUT OF MEMORY!", __func__);
         return NULL;
     }
 
@@ -69,7 +69,7 @@ struct glitchedhttps_header* glitchedhttps_header_init(const char* type, const s
     return out;
 }
 
-static inline void glitchedhttps_header_free(struct glitchedhttps_header* header)
+void glitchedhttps_header_free(struct glitchedhttps_header* header)
 {
     if (header != NULL)
     {

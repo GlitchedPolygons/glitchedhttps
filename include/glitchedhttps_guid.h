@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include "glitchedhttps.h"
+#include "glitchedhttps_api.h"
 
 #ifdef _WIN32
 #include <objbase.h>

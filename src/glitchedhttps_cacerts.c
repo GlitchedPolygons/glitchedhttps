@@ -19,10 +19,7 @@ extern "C" {
 #endif
 
 #include "glitchedhttps_cacerts.h"
-#include <string.h>
-#include <stdio.h>
 
-/** @private */
 static char* CA_CERTS = NULL;
 static size_t CA_CERTS_LEN = 0;
 
@@ -31,8 +28,7 @@ size_t glitchedhttps_get_ca_certs_length()
     return CA_CERTS_LEN;
 }
 
-/** @private */
-static char* glitchedhttps_get_ca_certs()
+const char* glitchedhttps_get_ca_certs()
 {
     if (CA_CERTS != NULL)
     {
