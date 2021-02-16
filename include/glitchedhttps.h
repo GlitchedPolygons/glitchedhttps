@@ -52,6 +52,16 @@ extern "C" {
 #include <glitchedhttps_request.h>
 #include <glitchedhttps_response.h>
 
+#if defined(_WIN32) && defined(GLITCHEDHTTPS_DLL)
+#ifdef GLITCHEDHTTPS_BUILD_DLL
+#define GLITCHEDHTTPS_API __declspec(dllexport)
+#else
+#define GLITCHEDHTTPS_API __declspec(dllimport)
+#endif
+#else
+#define GLITCHEDHTTPS_API
+#endif
+
 /**
  * Submits a given HTTP request and writes the server response into the provided output glitchedhttps_response instance. <p>
  * This allocates memory, so don't forget to {@link #glitchedhttps_response_free()} the output glitchedhttps_response instance after usage!!
