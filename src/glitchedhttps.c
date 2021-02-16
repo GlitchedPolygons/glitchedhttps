@@ -329,7 +329,10 @@ static int https_request(const char* server_name, const int server_port, const c
 
     /* Load the CA root certificates. */
 
-    ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)glitchedhttps_get_ca_certs(), glitchedhttps_get_ca_certs_length());
+    const unsigned char* ca = (const unsigned char*)glitchedhttps_get_ca_certs();
+    const size_t calen = glitchedhttps_get_ca_certs_length();
+
+    ret = mbedtls_x509_crt_parse(&cacert, ca, calen);
     if (ret < 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
@@ -643,7 +646,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
         return GLITCHEDHTTPS_NULL_ARG;
     }
 
-    if(request->url_length < 7 && strlen(request->url) < 7)
+    if (request->url_length < 7 && strlen(request->url) < 7)
     {
         glitchedhttps_log_error("Invalid URL!", __func__);
         return GLITCHEDHTTPS_INVALID_ARG;
@@ -747,7 +750,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
     chillbuff_push_back(&request_string, connection, connection_length);
     chillbuff_push_back(&request_string, crlf, crlf_length);
 
-    for (size_t i = 0; i < request->additional_headers_count; i++)
+    for (size_t i = 0; i < request->additional_headers_count; ++i)
     {
         struct glitchedhttps_header header = request->additional_headers[i];
 

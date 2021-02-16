@@ -51,11 +51,12 @@ const char* glitchedhttps_get_ca_certs()
     char buffer[256];
     int reading = 0;
 
-    while (fgets(buffer, sizeof buffer, file) != NULL)
+    while (fgets(buffer, sizeof(buffer), file) != NULL)
     {
         if (strncmp(buffer, "-----BEGIN CERTIFICATES LIST-----", 33) == 0)
         {
             reading = 1;
+            continue;
         }
 
         if (reading)
@@ -78,7 +79,7 @@ const char* glitchedhttps_get_ca_certs()
 
     memcpy((char*)CA_CERTS, (char*)stringbuilder.array, stringbuilder.length);
     CA_CERTS[stringbuilder.length] = '\0';
-    CA_CERTS_LEN = stringbuilder.length;
+    CA_CERTS_LEN = stringbuilder.length + 1;
 
 exit:
     chillbuff_free(&stringbuilder);
