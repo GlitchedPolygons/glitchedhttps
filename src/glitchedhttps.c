@@ -46,7 +46,6 @@ void clear_win_sock()
 #include <time.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <stdbool.h>
 
 #include "chillbuff.h"
 
@@ -114,7 +113,9 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
     char* current = response_string->array;
     char* next = strstr(current, header_delimiter);
 
-    bool parsed_status = false, parsed_server = false, parsed_date = false, parsed_content_type = false, parsed_content_encoding = false, parsed_content_length = false;
+    // TODO: implement chunked transfers!
+
+    int parsed_status = 0, parsed_server = 0, parsed_date = 0, parsed_content_type = 0, parsed_content_encoding = 0, parsed_content_length = 0;
 
     chillbuff header_builder;
     if (chillbuff_init(&header_builder, 16, sizeof(struct glitchedhttps_header), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
@@ -135,9 +136,9 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
             {
                 n[3] = '\0';
                 memcpy(n, c + 1, 3);
-                response->status_code = atoi(n);
+                response->status_code = strtol(n, NULL, 10);
             }
-            parsed_status = true;
+            parsed_status = 1;
         }
         else if (!parsed_server && glitchedhttps_strncmpic(current, "Server: ", 8) == 0)
         {
@@ -150,7 +151,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
             memcpy(response->server, current + 8, out_length);
             response->server[out_length] = '\0';
             chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 6, response->server, out_length), 1);
-            parsed_server = true;
+            parsed_server = 1;
         }
         else if (!parsed_date && glitchedhttps_strncmpic(current, "Date: ", 6) == 0)
         {
@@ -163,7 +164,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
             memcpy(response->date, current + 6, out_length);
             response->date[out_length] = '\0';
             chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 4, response->date, out_length), 1);
-            parsed_date = true;
+            parsed_date = 1;
         }
         else if (!parsed_content_type && glitchedhttps_strncmpic(current, "Content-Type: ", 14) == 0)
         {
@@ -176,7 +177,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
             memcpy(response->content_type, current + 14, out_length);
             response->content_type[out_length] = '\0';
             chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 12, response->content_type, out_length), 1);
-            parsed_content_type = true;
+            parsed_content_type = 1;
         }
         else if (!parsed_content_encoding && glitchedhttps_strncmpic(current, "Content-Encoding: ", 18) == 0)
         {
@@ -189,7 +190,7 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
             memcpy(response->content_encoding, current + 18, out_length);
             response->content_encoding[out_length] = '\0';
             chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 16, response->content_encoding, out_length), 1);
-            parsed_content_encoding = true;
+            parsed_content_encoding = 1;
         }
         else if (!parsed_content_length && glitchedhttps_strncmpic(current, "Content-Length: ", 16) == 0)
         {
@@ -199,11 +200,11 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
             if (c != NULL)
             {
                 memcpy(n, c + 1, current_length - 1);
-                response->content_length = atoi(n);
+                response->content_length = strtol(n, NULL, 10);
                 snprintf(n, sizeof(n), "%zu", response->content_length);
                 chillbuff_push_back(&header_builder, glitchedhttps_header_init(current, 14, n, strlen(n)), 1);
             }
-            parsed_content_length = true;
+            parsed_content_length = 1;
         }
         else if (current != response_string->array && strncmp(current - header_delimiter_length, content_delimiter, content_delimiter_length) == 0)
         {
@@ -261,7 +262,7 @@ out_of_mem:
 }
 
 /** @private */
-static int https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const bool ssl_verification_optional, struct glitchedhttps_response** out)
+static int https_request(const char* server_name, const int server_port, const char* request, const size_t buffer_size, const int ssl_verification_optional, struct glitchedhttps_response** out)
 {
     if (server_name == NULL || request == NULL || server_port <= 0)
     {
@@ -652,7 +653,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
-    const bool https = glitchedhttps_is_https(request->url);
+    const int https = glitchedhttps_is_https(request->url);
     const char* server_host_ptr = https ? request->url + 8 : glitchedhttps_is_http(request->url) ? request->url + 7 : NULL;
 
     if (server_host_ptr == NULL)
@@ -675,7 +676,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
         /* IPv6 safety check. */
         if (*server_host_ptr != '[' || *(custom_port - 1) == ']')
         {
-            server_port = atoi(custom_port + 1);
+            server_port = strtol(custom_port + 1, NULL, 10);
             if (server_port <= 0 || server_port >= 65536)
             {
                 char msg[128];
