@@ -45,5 +45,7 @@ var searchData=
   ['glitchedhttps_5fsubmit_52',['glitchedhttps_submit',['../glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e',1,'glitchedhttps.h']]],
   ['glitchedhttps_5fsuccess_53',['GLITCHEDHTTPS_SUCCESS',['../glitchedhttps__exitcodes_8h.html#a086f1112e6e4ab0de6c038358668c20a',1,'glitchedhttps_exitcodes.h']]],
   ['glitchedhttps_5funset_5ferror_5fcallback_54',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#a2f40e384b4324d173e07213e6d3bdc95',1,'glitchedhttps_debug.h']]],
-  ['glitched_20https_55',['Glitched HTTPS',['../index.html',1,'']]]
+  ['glitchedhttps_5fversion_55',['GLITCHEDHTTPS_VERSION',['../glitchedhttps_8h.html#ac900b314e4f763a94e9b6c3ea6ef5b2e',1,'glitchedhttps.h']]],
+  ['glitchedhttps_5fversion_5fstr_56',['GLITCHEDHTTPS_VERSION_STR',['../glitchedhttps_8h.html#aba8b08c26485d7045d5f893c30d8fe47',1,'glitchedhttps.h']]],
+  ['glitched_20https_57',['Glitched HTTPS',['../index.html',1,'']]]
 ];
