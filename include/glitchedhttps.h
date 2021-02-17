@@ -54,6 +54,16 @@ extern "C" {
 #include "glitchedhttps_exitcodes.h"
 
 /**
+ * Current version of the used GlitchedHTTPS library.
+ */
+#define GLITCHEDHTTPS_VERSION 91
+
+/**
+ * Current version of the used GlitchedHTTPS library (nicely-formatted string).
+ */
+#define GLITCHEDHTTPS_VERSION_STR "0.9.1"
+
+/**
  * Submits a given HTTP request and writes the server response into the provided output glitchedhttps_response instance. <p>
  * This allocates memory, so don't forget to {@link #glitchedhttps_response_free()} the output glitchedhttps_response instance after usage!!
  * @param request The glitchedhttps_request instance containing the request parameters and data (e.g. url, body, etc...).

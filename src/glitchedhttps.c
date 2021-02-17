@@ -216,13 +216,13 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
         else if (current != response_string->array && strncmp(current - header_delimiter_length, content_delimiter, content_delimiter_length) == 0) // content body found
         {
             char* content = (current - header_delimiter_length) + content_delimiter_length;
-            size_t content_length = strlen(content);
+            size_t content_length = parsed_chunked_transfer ? GLITCHEDHTTPS_DEFAULT_CHUNK_BUFFERSIZE : response->content_length;
             if (content_length > 0)
             {
                 if (parsed_chunked_transfer)
                 {
                     chillbuff content_buffer;
-                    int r = chillbuff_init(&content_buffer, GLITCHEDHTTPS_MAX(GLITCHEDHTTPS_DEFAULT_CHUNK_BUFFERSIZE, content_length), sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+                    int r = chillbuff_init(&content_buffer, content_length, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
                     if (r != CHILLBUFF_SUCCESS)
                     {
                         goto out_of_mem;
