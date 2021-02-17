@@ -50,8 +50,6 @@ for:
         - image: Visual Studio 2017
     install:
     - cmd: git submodule update --init --recursive
-    before_build:
-    - cmd: call test.bat
     build_script:
     - cmd: call build.bat
     artifacts:
