@@ -62,6 +62,15 @@ void clear_win_sock()
 #include "glitchedhttps_debug.h"
 #include "glitchedhttps_guid.h"
 
+static const char header_delimiter[] = "\r\n";
+static const size_t header_delimiter_length = 2;
+
+static const char content_delimiter[] = "\r\n\r\n";
+static const size_t content_delimiter_length = 4;
+
+#define GLITCHEDHTTPS_DEFAULT_CHUNK_BUFFERSIZE 1024
+#define GLITCHEDHTTPS_MAX(x, y) (((x) > (y)) ? (x) : (y))
+
 /** @private */
 static int parse_response_string(const chillbuff* response_string, struct glitchedhttps_response** out)
 {
@@ -104,18 +113,11 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
     response->raw[response_string->length] = '\0';
 
     /* Next comes the tedious parsing. */
-    const char header_delimiter[] = "\r\n";
-    const size_t header_delimiter_length = strlen(header_delimiter);
-
-    const char content_delimiter[] = "\r\n\r\n";
-    const size_t content_delimiter_length = strlen(content_delimiter);
 
     char* current = response_string->array;
     char* next = strstr(current, header_delimiter);
 
-    // TODO: implement chunked transfers!
-
-    int parsed_status = 0, parsed_server = 0, parsed_date = 0, parsed_content_type = 0, parsed_content_encoding = 0, parsed_content_length = 0;
+    int parsed_status = 0, parsed_server = 0, parsed_date = 0, parsed_content_type = 0, parsed_content_encoding = 0, parsed_content_length = 0, parsed_chunked_transfer = 0;
 
     chillbuff header_builder;
     if (chillbuff_init(&header_builder, 16, sizeof(struct glitchedhttps_header), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
@@ -206,17 +208,64 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
             }
             parsed_content_length = 1;
         }
-        else if (current != response_string->array && strncmp(current - header_delimiter_length, content_delimiter, content_delimiter_length) == 0)
+        else if (glitchedhttps_strncmpic(current, "Transfer-Encoding: chunked", 26) == 0) // Allow HTTP/1.1's chunked transfer encoding.
         {
-            const char* content = (current - header_delimiter_length) + content_delimiter_length;
-            const size_t content_length = strlen(content);
-            response->content = malloc(content_length + 1);
-            if (response->content == NULL)
+            chillbuff_push_back(&header_builder, glitchedhttps_header_init("Transfer-Encoding", 17, "chunked", 7), 1);
+            parsed_chunked_transfer = 1;
+        }
+        else if (current != response_string->array && strncmp(current - header_delimiter_length, content_delimiter, content_delimiter_length) == 0) // content body found
+        {
+            char* content = (current - header_delimiter_length) + content_delimiter_length;
+            size_t content_length = strlen(content);
+            if (content_length > 0)
             {
-                goto out_of_mem;
+                if (parsed_chunked_transfer)
+                {
+                    chillbuff content_buffer;
+                    int r = chillbuff_init(&content_buffer, GLITCHEDHTTPS_MAX(GLITCHEDHTTPS_DEFAULT_CHUNK_BUFFERSIZE, content_length), sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+                    if (r != CHILLBUFF_SUCCESS)
+                    {
+                        goto out_of_mem;
+                    }
+
+                    size_t chunksize;
+                    while ((chunksize = strtol(content, NULL, 16)) != 0)
+                    {
+                        content = strstr(content, header_delimiter);
+                        if (content == NULL)
+                        {
+                            break;
+                        }
+                        content += header_delimiter_length;
+                        chillbuff_push_back(&content_buffer, content, chunksize);
+                        content += chunksize + header_delimiter_length;
+                    }
+
+                    response->content = malloc(content_buffer.length + 1);
+                    if (response->content == NULL)
+                    {
+                        goto out_of_mem;
+                    }
+                    memcpy(response->content, content_buffer.array, content_buffer.length);
+                    response->content[content_buffer.length] = '\0';
+                    chillbuff_clear(&content_buffer);
+                }
+                else
+                {
+                    response->content = malloc(content_length + 1);
+                    if (response->content == NULL)
+                    {
+                        goto out_of_mem;
+                    }
+                    memcpy(response->content, content, content_length);
+                    response->content[content_length] = '\0';
+                }
             }
-            memcpy(response->content, content, content_length);
-            response->content[content_length] = '\0';
+            else
+            {
+                response->content = NULL;
+                response->content_length = 0;
+            }
             break; // If the content (request body) was found, it's time to stop. Because there won't be anything else to come.
         }
         else
@@ -800,6 +849,8 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
 }
 
 #undef closesocket
+#undef GLITCHEDHTTPS_MAX
+#undef GLITCHEDHTTPS_DEFAULT_CHUNK_BUFFERSIZE
 
 #ifdef __cplusplus
 } // extern "C"

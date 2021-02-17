@@ -18,16 +18,34 @@ project(glitchedhttps C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-option(GLITCHEDHTTPS_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF)
+set(${PROJECT_NAME}_MAJOR 0)
+set(${PROJECT_NAME}_MINOR 9)
+set(${PROJECT_NAME}_PATCH 0)
+set(${PROJECT_NAME}_VERSION_STRING "${${PROJECT_NAME}_MAJOR}.${${PROJECT_NAME}_MINOR}.${${PROJECT_NAME}_PATCH}")
+
+option(${PROJECT_NAME}_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF)
+option(${PROJECT_NAME}_DLL "Use as a DLL." OFF)
+option(${PROJECT_NAME}_BUILD_DLL "Build as a DLL." OFF)
+option(${PROJECT_NAME}_PACKAGE "Build the library and package it into a .tar.gz after successfully building." OFF)
 
 option(ENABLE_TESTING "Build MbedTLS tests." OFF)
 option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
 
-if (NOT TARGET mbedtls)
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls mbedtls)
+
+if (${${PROJECT_NAME}_BUILD_DLL})
+    add_compile_definitions("GLITCHEDHTTPS_BUILD_DLL=1")
+    set(${PROJECT_NAME}_DLL ON)
 endif ()
 
-set(glitchedhttps_headers
+if (${${PROJECT_NAME}_DLL})
+    add_compile_definitions("GLITCHEDHTTPS_DLL=1")
+endif ()
+
+set(${PROJECT_NAME}_INCLUDE_DIR
+        ${CMAKE_CURRENT_LIST_DIR}/include
+        )
+
+set(${PROJECT_NAME}_headers
         ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include/chillbuff.h
         ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_api.h
         ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps_exitcodes.h
@@ -42,7 +60,7 @@ set(glitchedhttps_headers
         ${CMAKE_CURRENT_LIST_DIR}/include/glitchedhttps.h
         )
 
-set(glitchedhttps_sources
+set(${PROJECT_NAME}_sources
         ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps.c
         ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_debug.c
         ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_guid.c
@@ -52,18 +70,72 @@ set(glitchedhttps_sources
         ${CMAKE_CURRENT_LIST_DIR}/src/glitchedhttps_response.c
         )
 
-add_library(glitchedhttps ${glitchedhttps_headers} ${glitchedhttps_sources})
+add_library(${PROJECT_NAME}
+        ${${PROJECT_NAME}_headers}
+        ${${PROJECT_NAME}_sources}
+        )
 
-target_include_directories(glitchedhttps PUBLIC include)
-target_include_directories(glitchedhttps PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
-target_include_directories(glitchedhttps PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
-
-if (UNIX AND NOT APPLE)
-    target_link_libraries(glitchedhttps PRIVATE -luuid -lm)
+if (NOT TARGET mbedtls)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls mbedtls)
 endif ()
 
-target_link_libraries(glitchedhttps PRIVATE mbedtls mbedx509 mbedcrypto)
+if (${${PROJECT_NAME}_BUILD_DLL} OR BUILD_SHARED_LIBS)
+    set_property(TARGET mbedtls PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET mbedx509 PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET mbedcrypto PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+            VERSION ${${PROJECT_NAME}_VERSION_STRING}
+            SOVERSION ${${PROJECT_NAME}_MAJOR}
+            )
+endif ()
 
-if (GLITCHEDHTTPS_ENABLE_EXAMPLES)
+if (${${PROJECT_NAME}_PACKAGE})
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
+            LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
+
+            ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/debug"
+            LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/debug"
+            RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/debug"
+
+            ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/release"
+            LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/release"
+            RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/release"
+            )
+
+    add_custom_command(TARGET ${PROJECT_NAME}
+            POST_BUILD COMMAND ${CMAKE_COMMAND}
+            -E copy ${CMAKE_CURRENT_LIST_DIR}/NOTICE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/NOTICE"
+            )
+
+    add_custom_command(TARGET ${PROJECT_NAME}
+            POST_BUILD COMMAND ${CMAKE_COMMAND}
+            -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/include "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/include"
+            )
+
+    string(TOLOWER "${PROJECT_NAME}-${${PROJECT_NAME}_VERSION_STRING}-${CMAKE_SYSTEM_NAME}-${CMAKE_HOST_SYSTEM_PROCESSOR}.tar.gz" ${PROJECT_NAME}_OUTPUT_ARCHIVE_FILENAME)
+
+    add_custom_command(TARGET ${PROJECT_NAME}
+            POST_BUILD COMMAND ${CMAKE_COMMAND}
+            -E tar "czvf" ${${PROJECT_NAME}_OUTPUT_ARCHIVE_FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
+            )
+endif ()
+
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
+
+if ((${CMAKE_SYSTEM_NAME} STREQUAL "Linux") OR (${CYGWIN}))
+    target_link_libraries(${PROJECT_NAME} PRIVATE -luuid -lm)
+endif ()
+
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PUBLIC bcrypt)
+endif ()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE mbedtls mbedx509 mbedcrypto)
+
+if (${${PROJECT_NAME}_ENABLE_EXAMPLES})
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples)
 endif ()
