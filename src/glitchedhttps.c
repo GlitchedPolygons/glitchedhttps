@@ -246,8 +246,10 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
                     {
                         goto out_of_mem;
                     }
+
                     memcpy(response->content, content_buffer.array, content_buffer.length);
                     response->content[content_buffer.length] = '\0';
+                    response->content_length = content_buffer.length;
                     chillbuff_clear(&content_buffer);
                 }
                 else

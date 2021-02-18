@@ -56,12 +56,12 @@ extern "C" {
 /**
  * Current version of the used GlitchedHTTPS library.
  */
-#define GLITCHEDHTTPS_VERSION 91
+#define GLITCHEDHTTPS_VERSION 92
 
 /**
  * Current version of the used GlitchedHTTPS library (nicely-formatted string).
  */
-#define GLITCHEDHTTPS_VERSION_STR "0.9.1"
+#define GLITCHEDHTTPS_VERSION_STR "0.9.2"
 
 /**
  * Submits a given HTTP request and writes the server response into the provided output glitchedhttps_response instance. <p>
