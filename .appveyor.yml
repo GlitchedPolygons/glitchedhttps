@@ -1,8 +1,8 @@
 version: 1.0.{build}
 image: 
   - Ubuntu2004
-  - macos
   - macos-mojave
+  - macos
   - Visual Studio 2017
 for:
   -
@@ -21,7 +21,7 @@ for:
   -
     matrix:
       only:
-        - image: macos
+        - image: macos-mojave
     install:
     - sh: git submodule update --init --recursive
     - sh: export CC=clang
@@ -34,7 +34,7 @@ for:
   -
     matrix:
       only:
-        - image: macos-mojave
+        - image: macos
     install:
     - sh: git submodule update --init --recursive
     - sh: export CC=clang

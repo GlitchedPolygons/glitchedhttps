@@ -40,12 +40,13 @@ var searchData=
   ['glitchedhttps_5fresponse_5ffree_47',['glitchedhttps_response_free',['../glitchedhttps__response_8h.html#a19d091a6842147c4d9ddad8cba3e57b3',1,'glitchedhttps_response.h']]],
   ['glitchedhttps_5fresponse_5fparse_5ferror_48',['GLITCHEDHTTPS_RESPONSE_PARSE_ERROR',['../glitchedhttps__exitcodes_8h.html#abe43db7bc6763c2a90924202aa6f99dd',1,'glitchedhttps_exitcodes.h']]],
   ['glitchedhttps_5fset_5ferror_5fcallback_49',['glitchedhttps_set_error_callback',['../glitchedhttps__debug_8h.html#aeb91641fe085cb945d3f074bc99b6085',1,'glitchedhttps_debug.h']]],
-  ['glitchedhttps_5fstrncmpic_50',['glitchedhttps_strncmpic',['../glitchedhttps__strutil_8h.html#a597396819d19dc4f4a18235db3b2fe5d',1,'glitchedhttps_strutil.h']]],
-  ['glitchedhttps_5fstrutil_2eh_51',['glitchedhttps_strutil.h',['../glitchedhttps__strutil_8h.html',1,'']]],
-  ['glitchedhttps_5fsubmit_52',['glitchedhttps_submit',['../glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e',1,'glitchedhttps.h']]],
-  ['glitchedhttps_5fsuccess_53',['GLITCHEDHTTPS_SUCCESS',['../glitchedhttps__exitcodes_8h.html#a086f1112e6e4ab0de6c038358668c20a',1,'glitchedhttps_exitcodes.h']]],
-  ['glitchedhttps_5funset_5ferror_5fcallback_54',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#a2f40e384b4324d173e07213e6d3bdc95',1,'glitchedhttps_debug.h']]],
-  ['glitchedhttps_5fversion_55',['GLITCHEDHTTPS_VERSION',['../glitchedhttps_8h.html#ac900b314e4f763a94e9b6c3ea6ef5b2e',1,'glitchedhttps.h']]],
-  ['glitchedhttps_5fversion_5fstr_56',['GLITCHEDHTTPS_VERSION_STR',['../glitchedhttps_8h.html#aba8b08c26485d7045d5f893c30d8fe47',1,'glitchedhttps.h']]],
-  ['glitched_20https_57',['Glitched HTTPS',['../index.html',1,'']]]
+  ['glitchedhttps_5fstack_5fbuffersize_50',['GLITCHEDHTTPS_STACK_BUFFERSIZE',['../glitchedhttps_8h.html#ae876b7eff1c824ea7888ee1f6a2796b2',1,'glitchedhttps.h']]],
+  ['glitchedhttps_5fstrncmpic_51',['glitchedhttps_strncmpic',['../glitchedhttps__strutil_8h.html#a597396819d19dc4f4a18235db3b2fe5d',1,'glitchedhttps_strutil.h']]],
+  ['glitchedhttps_5fstrutil_2eh_52',['glitchedhttps_strutil.h',['../glitchedhttps__strutil_8h.html',1,'']]],
+  ['glitchedhttps_5fsubmit_53',['glitchedhttps_submit',['../glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e',1,'glitchedhttps.h']]],
+  ['glitchedhttps_5fsuccess_54',['GLITCHEDHTTPS_SUCCESS',['../glitchedhttps__exitcodes_8h.html#a086f1112e6e4ab0de6c038358668c20a',1,'glitchedhttps_exitcodes.h']]],
+  ['glitchedhttps_5funset_5ferror_5fcallback_55',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#a2f40e384b4324d173e07213e6d3bdc95',1,'glitchedhttps_debug.h']]],
+  ['glitchedhttps_5fversion_56',['GLITCHEDHTTPS_VERSION',['../glitchedhttps_8h.html#ac900b314e4f763a94e9b6c3ea6ef5b2e',1,'glitchedhttps.h']]],
+  ['glitchedhttps_5fversion_5fstr_57',['GLITCHEDHTTPS_VERSION_STR',['../glitchedhttps_8h.html#aba8b08c26485d7045d5f893c30d8fe47',1,'glitchedhttps.h']]],
+  ['glitched_20https_58',['Glitched HTTPS',['../index.html',1,'']]]
 ];

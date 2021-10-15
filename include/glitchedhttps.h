@@ -56,12 +56,19 @@ extern "C" {
 /**
  * Current version of the used GlitchedHTTPS library.
  */
-#define GLITCHEDHTTPS_VERSION 92
+#define GLITCHEDHTTPS_VERSION 93
 
 /**
  * Current version of the used GlitchedHTTPS library (nicely-formatted string).
  */
-#define GLITCHEDHTTPS_VERSION_STR "0.9.2"
+#define GLITCHEDHTTPS_VERSION_STR "0.9.3"
+
+#ifndef GLITCHEDHTTPS_STACK_BUFFERSIZE
+/**
+ * The maximum size in byts that a temporary buffer may allocate on the stack before requiring a \c malloc
+ */
+#define GLITCHEDHTTPS_STACK_BUFFERSIZE 8192
+#endif
 
 /**
  * Submits a given HTTP request and writes the server response into the provided output glitchedhttps_response instance. <p>

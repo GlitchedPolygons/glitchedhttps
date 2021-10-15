@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 
+#include "glitchedhttps.h"
 #include "glitchedhttps_debug.h"
 
 #include <stddef.h>
@@ -38,11 +39,11 @@ void glitchedhttps_log_error(const char* error, const char* origin)
 {
     size_t error_msg_length = 64 + strlen(error) + strlen(origin);
 
-    char error_msg_stack[8192];
+    char error_msg_stack[GLITCHEDHTTPS_STACK_BUFFERSIZE];
     memset(error_msg_stack, '\0', sizeof(error_msg_stack));
 
     char* error_msg_heap = NULL;
-    if (error_msg_length > 8192)
+    if (error_msg_length > GLITCHEDHTTPS_STACK_BUFFERSIZE)
     {
         error_msg_heap = calloc(error_msg_length, sizeof(char));
         if (error_msg_heap == NULL)

@@ -20,7 +20,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 set(${PROJECT_NAME}_MAJOR 0)
 set(${PROJECT_NAME}_MINOR 9)
-set(${PROJECT_NAME}_PATCH 2)
+set(${PROJECT_NAME}_PATCH 3)
 set(${PROJECT_NAME}_VERSION_STRING "${${PROJECT_NAME}_MAJOR}.${${PROJECT_NAME}_MINOR}.${${PROJECT_NAME}_PATCH}")
 
 option(${PROJECT_NAME}_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF)
@@ -94,7 +94,7 @@ if (${${PROJECT_NAME}_PACKAGE})
     if (NOT ${PROJECT_NAME}_SYSNAME)
         set(${PROJECT_NAME}_SYSNAME ${CMAKE_SYSTEM_NAME})
     endif ()
-    
+
     set_target_properties(${PROJECT_NAME} PROPERTIES
             ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
@@ -136,6 +136,7 @@ if ((${CMAKE_SYSTEM_NAME} STREQUAL "Linux") OR (${CYGWIN}))
 endif ()
 
 if (WIN32)
+    add_compile_definitions("_CRT_SECURE_NO_WARNINGS=1")
     target_link_libraries(${PROJECT_NAME} PUBLIC bcrypt)
 endif ()
 

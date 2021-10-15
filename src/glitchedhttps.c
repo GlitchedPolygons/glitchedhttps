@@ -49,10 +49,9 @@ void clear_win_sock()
 
 #include "chillbuff.h"
 
-#include <mbedtls/net.h>
+#include <mbedtls/net_sockets.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
-#include <mbedtls/certs.h>
 #include <mbedtls/platform.h>
 #include <mbedtls/error.h>
 
@@ -132,11 +131,10 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
 
         if (!parsed_status && glitchedhttps_strncmpic(current, "HTTP/", 5) == 0)
         {
-            char n[4];
             const char* c = memchr(current, ' ', current_length);
             if (c != NULL)
             {
-                n[3] = '\0';
+                char n[4] = { 0x00 };
                 memcpy(n, c + 1, 3);
                 response->status_code = strtol(n, NULL, 10);
             }
@@ -196,11 +194,10 @@ static int parse_response_string(const chillbuff* response_string, struct glitch
         }
         else if (!parsed_content_length && glitchedhttps_strncmpic(current, "Content-Length: ", 16) == 0)
         {
-            char n[64];
-            memset(n, '\0', sizeof(n));
             const char* c = memchr(current, ' ', current_length);
             if (c != NULL)
             {
+                char n[64] = { 0x00 };
                 memcpy(n, c + 1, current_length - 1);
                 response->content_length = strtol(n, NULL, 10);
                 snprintf(n, sizeof(n), "%zu", response->content_length);
@@ -336,14 +333,14 @@ static int https_request(const char* server_name, const int server_port, const c
     char error_msg[256];
     memset(error_msg, '\0', sizeof error_msg);
 
-    unsigned char buffer_stack[8192];
+    unsigned char buffer_stack[GLITCHEDHTTPS_STACK_BUFFERSIZE];
     unsigned char* buffer_heap = NULL;
     if (buffer_size > sizeof(buffer_stack))
     {
         buffer_heap = malloc(buffer_size * sizeof(unsigned char));
         if (buffer_heap == NULL)
         {
-            glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
+            glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) buffer instead...", __func__);
         }
     }
 
@@ -395,8 +392,7 @@ static int https_request(const char* server_name, const int server_port, const c
 
     /* Open the connection to the specified host. */
 
-    char port[8];
-    memset(port, '\0', sizeof(port));
+    char port[8] = { 0x00 };
     snprintf(port, sizeof(port), "%d", server_port);
 
     ret = mbedtls_net_connect(&net_context, server_name, port, MBEDTLS_NET_PROTO_TCP);
@@ -533,8 +529,7 @@ exit:
 #ifdef MBEDTLS_ERROR_C
     if (mbedtls_exit_code != MBEDTLS_EXIT_SUCCESS)
     {
-        char error_buf[2048];
-        memset(error_buf, '\0', sizeof(error_buf));
+        char error_buf[2048] = { 0x00 };
         int f = snprintf(error_buf, sizeof(error_buf), "HTTPS request unsuccessful! Last error was: %d - ", ret);
         mbedtls_strerror(ret, error_buf + f, sizeof(error_buf) - f - 1);
         glitchedhttps_log_error(error_buf, __func__);
@@ -587,8 +582,7 @@ static int http_request(const char* server_name, const int server_port, const ch
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
-    char port[8];
-    memset(port, '\0', sizeof(port));
+    char port[8] = { 0x00 };
     snprintf(port, sizeof(port), "%d", server_port);
 
     struct addrinfo* res = NULL;
@@ -604,14 +598,14 @@ static int http_request(const char* server_name, const int server_port, const ch
         return GLITCHEDHTTPS_HTTP_GETADDRINFO_FAILED;
     }
 
-    char buffer_stack[8192];
+    char buffer_stack[GLITCHEDHTTPS_STACK_BUFFERSIZE];
     char* buffer_heap = NULL;
     if (buffer_size > sizeof(buffer_stack))
     {
         buffer_heap = malloc(buffer_size * sizeof(char));
         if (buffer_heap == NULL)
         {
-            glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) 8192-Bytes buffer instead...", __func__);
+            glitchedhttps_log_error("Buffer size too big; malloc failed! Using default (stack-allocated) buffer instead...", __func__);
         }
     }
 
@@ -641,7 +635,7 @@ static int http_request(const char* server_name, const int server_port, const ch
 
         if (ret < 0)
         {
-            char msg[128];
+            char msg[128] = { 0x00 };
             snprintf(msg, sizeof(msg), "HTTP request failed: \"recv()\" returned %d", ret);
             glitchedhttps_log_error(msg, __func__);
             exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
@@ -746,8 +740,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
     if (path == NULL)
         path = "/";
 
-    char method[8];
-    method[sizeof(method) - 1] = '\0';
+    char method[8] = { 0x00 };
 
     if (!glitchedhttps_method_to_string(request->method, method, sizeof(method)))
     {
