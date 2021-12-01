@@ -4,3 +4,6 @@
 [submodule "lib/mbedtls"]
 	path = lib/mbedtls
 	url = https://github.com/ARMmbed/mbedtls
+[submodule "lib/doxygen-awesome"]
+	path = lib/doxygen-awesome
+	url = https://github.com/GlitchedPolygons/doxygen-awesome-css.git
