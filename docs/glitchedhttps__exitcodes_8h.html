@@ -91,6 +91,8 @@ This graph shows which files directly or indirectly include this file:</div>
 Macros</h2></td></tr>
 <tr class="memitem:a086f1112e6e4ab0de6c038358668c20a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__exitcodes_8h.html#a086f1112e6e4ab0de6c038358668c20a">GLITCHEDHTTPS_SUCCESS</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a086f1112e6e4ab0de6c038358668c20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93c97fbb29d72f2ad4a6032f9ec40395"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__exitcodes_8h.html#a93c97fbb29d72f2ad4a6032f9ec40395">GLITCHEDHTTPS_UNINITIALIZED</a>&#160;&#160;&#160;10</td></tr>
+<tr class="separator:a93c97fbb29d72f2ad4a6032f9ec40395"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4644ac4160a2fd53c605c594cef36dc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__exitcodes_8h.html#ac4644ac4160a2fd53c605c594cef36dc">GLITCHEDHTTPS_OUT_OF_MEM</a>&#160;&#160;&#160;100</td></tr>
 <tr class="separator:ac4644ac4160a2fd53c605c594cef36dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52bd775c322c3cdc5c6d4b6a9862d5ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__exitcodes_8h.html#a52bd775c322c3cdc5c6d4b6a9862d5ee">GLITCHEDHTTPS_NULL_ARG</a>&#160;&#160;&#160;200</td></tr>
@@ -328,6 +330,22 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Returned from a glitchedhttps function when everything went as expected. </p>
+
+</div>
+</div>
+<a id="a93c97fbb29d72f2ad4a6032f9ec40395" name="a93c97fbb29d72f2ad4a6032f9ec40395"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93c97fbb29d72f2ad4a6032f9ec40395">&#9670;&nbsp;</a></span>GLITCHEDHTTPS_UNINITIALIZED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GLITCHEDHTTPS_UNINITIALIZED&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Returned when trying to submit a request without having initialized GlitchedHTTPS with the <a class="el" href="glitchedhttps_8h.html#a9a203a73ec1ae9e5b6bb6c7f3baae0d1">glitchedhttps_init()</a> function first. </p>
+<p >Never forget to <a class="el" href="glitchedhttps_8h.html#ac521dce184f5975c855446a26b8a8a5d">glitchedhttps_free()</a> once you're done using GlitchedHTTPS to release the resources and prevent memory leaks! </p>
 
 </div>
 </div>

@@ -67,8 +67,58 @@ static const size_t header_delimiter_length = 2;
 static const char content_delimiter[] = "\r\n\r\n";
 static const size_t content_delimiter_length = 4;
 
+static int initialized = 0;
+static mbedtls_x509_crt cacert;
+static mbedtls_ssl_config ssl_config;
+
 #define GLITCHEDHTTPS_DEFAULT_CHUNK_BUFFERSIZE 1024
 #define GLITCHEDHTTPS_MAX(x, y) (((x) > (y)) ? (x) : (y))
+
+int glitchedhttps_init()
+{
+    if (initialized)
+        return 0;
+
+    /* Load the CA root certificates and set up the SSL/TLS structure. */
+
+    mbedtls_x509_crt_init(&cacert);
+    mbedtls_ssl_config_init(&ssl_config);
+
+    const unsigned char* ca = (const unsigned char*)glitchedhttps_get_ca_certs();
+    const size_t calen = glitchedhttps_get_ca_certs_length();
+
+    int ret = mbedtls_x509_crt_parse(&cacert, ca, calen);
+    if (ret < 0)
+    {
+        char error_msg[256];
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
+        glitchedhttps_log_error(error_msg, __func__);
+        return ret;
+    }
+
+    ret = mbedtls_ssl_config_defaults(&ssl_config, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT);
+    if (ret != 0)
+    {
+        char error_msg[256];
+        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
+        glitchedhttps_log_error(error_msg, __func__);
+        mbedtls_x509_crt_free(&cacert);
+        return ret;
+    }
+
+    mbedtls_ssl_conf_ca_chain(&ssl_config, &cacert, NULL);
+    mbedtls_ssl_conf_dbg(&ssl_config, &glitchedhttps_debug, stdout);
+
+    initialized = 1;
+    return 0;
+}
+
+void glitchedhttps_free()
+{
+    mbedtls_x509_crt_free(&cacert);
+    mbedtls_ssl_config_free(&ssl_config);
+    initialized = 0;
+}
 
 /** @private */
 static int parse_response_string(const chillbuff* response_string, struct glitchedhttps_response** out)
@@ -330,8 +380,7 @@ static int https_request(const char* server_name, const int server_port, const c
     int ret = 1, exit_code = -1;
     int mbedtls_exit_code = MBEDTLS_EXIT_FAILURE;
 
-    char error_msg[256];
-    memset(error_msg, '\0', sizeof error_msg);
+    char error_msg[256] = { 0x00 };
 
     unsigned char buffer_stack[GLITCHEDHTTPS_STACK_BUFFERSIZE];
     unsigned char* buffer_heap = NULL;
@@ -351,19 +400,15 @@ static int https_request(const char* server_name, const int server_port, const c
 
     struct glitchedhttps_guid guid = glitchedhttps_new_guid(rand() & 1, rand() & 1);
 
-    mbedtls_x509_crt cacert;
-    mbedtls_ssl_config ssl_config;
-    mbedtls_ssl_context ssl_context;
     mbedtls_net_context net_context;
+    mbedtls_ssl_context ssl_context;
     mbedtls_entropy_context entropy;
     mbedtls_ctr_drbg_context ctr_drbg;
 
     mbedtls_net_init(&net_context);
     mbedtls_ssl_init(&ssl_context);
-    mbedtls_ssl_config_init(&ssl_config);
-    mbedtls_x509_crt_init(&cacert);
-    mbedtls_ctr_drbg_init(&ctr_drbg);
     mbedtls_entropy_init(&entropy);
+    mbedtls_ctr_drbg_init(&ctr_drbg);
 
     /* Seed the random number generator. */
 
@@ -371,20 +416,6 @@ static int https_request(const char* server_name, const int server_port, const c
     if (ret != 0)
     {
         snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ctr_drbg_seed\" returned %d", ret);
-        glitchedhttps_log_error(error_msg, __func__);
-        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
-        goto exit;
-    }
-
-    /* Load the CA root certificates. */
-
-    const unsigned char* ca = (const unsigned char*)glitchedhttps_get_ca_certs();
-    const size_t calen = glitchedhttps_get_ca_certs_length();
-
-    ret = mbedtls_x509_crt_parse(&cacert, ca, calen);
-    if (ret < 0)
-    {
-        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_x509_crt_parse\" returned -0x%x", -ret);
         glitchedhttps_log_error(error_msg, __func__);
         exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
         goto exit;
@@ -404,21 +435,8 @@ static int https_request(const char* server_name, const int server_port, const c
         goto exit;
     }
 
-    /*  Set up the SSL/TLS structure. */
-
-    ret = mbedtls_ssl_config_defaults(&ssl_config, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT);
-    if (ret != 0)
-    {
-        snprintf(error_msg, sizeof(error_msg), "HTTPS request failed: \"mbedtls_ssl_config_defaults\" returned %d", ret);
-        glitchedhttps_log_error(error_msg, __func__);
-        exit_code = GLITCHEDHTTPS_EXTERNAL_ERROR;
-        goto exit;
-    }
-
-    mbedtls_ssl_conf_authmode(&ssl_config, ssl_verification_optional ? MBEDTLS_SSL_VERIFY_OPTIONAL : MBEDTLS_SSL_VERIFY_REQUIRED);
-    mbedtls_ssl_conf_ca_chain(&ssl_config, &cacert, NULL);
     mbedtls_ssl_conf_rng(&ssl_config, mbedtls_ctr_drbg_random, &ctr_drbg);
-    mbedtls_ssl_conf_dbg(&ssl_config, &glitchedhttps_debug, stdout);
+    mbedtls_ssl_conf_authmode(&ssl_config, ssl_verification_optional ? MBEDTLS_SSL_VERIFY_OPTIONAL : MBEDTLS_SSL_VERIFY_REQUIRED);
 
     ret = mbedtls_ssl_setup(&ssl_context, &ssl_config);
     if (ret != 0)
@@ -538,9 +556,7 @@ exit:
 
     free(buffer_heap);
     mbedtls_net_free(&net_context);
-    mbedtls_x509_crt_free(&cacert);
     mbedtls_ssl_free(&ssl_context);
-    mbedtls_ssl_config_free(&ssl_config);
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
     chillbuff_free(&response_string);
@@ -578,7 +594,7 @@ static int http_request(const char* server_name, const int server_port, const ch
     }
 
     struct addrinfo hints;
-    memset(&hints, 0, sizeof(hints));
+    memset(&hints, 0x00, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
@@ -674,6 +690,12 @@ exit:
 
 int glitchedhttps_submit(const struct glitchedhttps_request* request, struct glitchedhttps_response** out)
 {
+    if (!initialized)
+    {
+        glitchedhttps_log_error("GlitchedHTTPS uninitialized! Please call \"glitchedhttps_init()\" before making the first request (and don't forget to \"glitchedhttps_free()\" again once you're done).", __func__);
+        return GLITCHEDHTTPS_UNINITIALIZED;
+    }
+
     if (request == NULL)
     {
         glitchedhttps_log_error("Request parameter NULL!", __func__);
@@ -707,8 +729,7 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
         return GLITCHEDHTTPS_INVALID_ARG;
     }
 
-    char server_host[256];
-    memset(server_host, '\0', sizeof(server_host));
+    char server_host[256] = { 0x00 };
 
     char* path = strchr(server_host_ptr, '/');
     strncpy(server_host, server_host_ptr, path == NULL ? strlen(server_host_ptr) : path - server_host_ptr);
@@ -838,7 +859,10 @@ int glitchedhttps_submit(const struct glitchedhttps_request* request, struct gli
 
     chillbuff_push_back(&request_string, crlf, crlf_length);
 
-    int result = https ? https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional, out) : http_request(server_host, server_port, request_string.array, request->buffer_size, out);
+    int result = https //
+            ? https_request(server_host, server_port, request_string.array, request->buffer_size, request->ssl_verification_optional, out) //
+            : http_request(server_host, server_port, request_string.array, request->buffer_size, out);
+
     chillbuff_free(&request_string);
     return result;
 }

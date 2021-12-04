@@ -39,8 +39,7 @@ void glitchedhttps_log_error(const char* error, const char* origin)
 {
     size_t error_msg_length = 64 + strlen(error) + strlen(origin);
 
-    char error_msg_stack[GLITCHEDHTTPS_STACK_BUFFERSIZE];
-    memset(error_msg_stack, '\0', sizeof(error_msg_stack));
+    char error_msg_stack[GLITCHEDHTTPS_STACK_BUFFERSIZE] = { 0x00 };
 
     char* error_msg_heap = NULL;
     if (error_msg_length > GLITCHEDHTTPS_STACK_BUFFERSIZE)
@@ -48,7 +47,7 @@ void glitchedhttps_log_error(const char* error, const char* origin)
         error_msg_heap = calloc(error_msg_length, sizeof(char));
         if (error_msg_heap == NULL)
         {
-            error_msg_length = sizeof error_msg_stack;
+            error_msg_length = sizeof(error_msg_stack);
         }
     }
 
@@ -56,8 +55,8 @@ void glitchedhttps_log_error(const char* error, const char* origin)
 
     snprintf(error_msg, error_msg_length, "\nGLITCHEDHTTPS ERROR: (%s) %s\n", origin, error);
 
-#ifdef GLITCHEDHTTPS_PRINTF_ERRORS
-    printf(error_msg);
+#ifdef GLITCHEDHTTPS_PRINT_ERRORS
+    fprintf(stderr, error_msg);
 #endif
 
     if (glitchedhttps_error_callback != NULL)

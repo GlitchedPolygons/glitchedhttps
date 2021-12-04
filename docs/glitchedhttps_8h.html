@@ -101,15 +101,19 @@ Include dependency graph for glitchedhttps.h:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ac900b314e4f763a94e9b6c3ea6ef5b2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#ac900b314e4f763a94e9b6c3ea6ef5b2e">GLITCHEDHTTPS_VERSION</a>&#160;&#160;&#160;93</td></tr>
+<tr class="memitem:ac900b314e4f763a94e9b6c3ea6ef5b2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#ac900b314e4f763a94e9b6c3ea6ef5b2e">GLITCHEDHTTPS_VERSION</a>&#160;&#160;&#160;100</td></tr>
 <tr class="separator:ac900b314e4f763a94e9b6c3ea6ef5b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba8b08c26485d7045d5f893c30d8fe47"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#aba8b08c26485d7045d5f893c30d8fe47">GLITCHEDHTTPS_VERSION_STR</a>&#160;&#160;&#160;&quot;0.9.3&quot;</td></tr>
+<tr class="memitem:aba8b08c26485d7045d5f893c30d8fe47"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#aba8b08c26485d7045d5f893c30d8fe47">GLITCHEDHTTPS_VERSION_STR</a>&#160;&#160;&#160;&quot;1.0.0&quot;</td></tr>
 <tr class="separator:aba8b08c26485d7045d5f893c30d8fe47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae876b7eff1c824ea7888ee1f6a2796b2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#ae876b7eff1c824ea7888ee1f6a2796b2">GLITCHEDHTTPS_STACK_BUFFERSIZE</a>&#160;&#160;&#160;8192</td></tr>
 <tr class="separator:ae876b7eff1c824ea7888ee1f6a2796b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a9a203a73ec1ae9e5b6bb6c7f3baae0d1"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a9a203a73ec1ae9e5b6bb6c7f3baae0d1">glitchedhttps_init</a> ()</td></tr>
+<tr class="separator:a9a203a73ec1ae9e5b6bb6c7f3baae0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac521dce184f5975c855446a26b8a8a5d"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#ac521dce184f5975c855446a26b8a8a5d">glitchedhttps_free</a> ()</td></tr>
+<tr class="separator:ac521dce184f5975c855446a26b8a8a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16da7fa9f208242a62f8be559e90db0e"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e">glitchedhttps_submit</a> (const struct <a class="el" href="structglitchedhttps__request.html">glitchedhttps_request</a> *request, struct <a class="el" href="structglitchedhttps__response.html">glitchedhttps_response</a> **out)</td></tr>
 <tr class="separator:a16da7fa9f208242a62f8be559e90db0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -128,7 +132,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The maximum size in byts that a temporary buffer may allocate on the stack before requiring a <code>malloc</code> </p>
+<p >The maximum size in bytes that a temporary buffer may allocate on the stack before requiring a <code>malloc</code> </p>
 
 </div>
 </div>
@@ -139,7 +143,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GLITCHEDHTTPS_VERSION&#160;&#160;&#160;93</td>
+          <td class="memname">#define GLITCHEDHTTPS_VERSION&#160;&#160;&#160;100</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -154,7 +158,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GLITCHEDHTTPS_VERSION_STR&#160;&#160;&#160;&quot;0.9.3&quot;</td>
+          <td class="memname">#define GLITCHEDHTTPS_VERSION_STR&#160;&#160;&#160;&quot;1.0.0&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -163,6 +167,44 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ac521dce184f5975c855446a26b8a8a5d" name="ac521dce184f5975c855446a26b8a8a5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac521dce184f5975c855446a26b8a8a5d">&#9670;&nbsp;</a></span>glitchedhttps_free()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLITCHEDHTTPS_API void glitchedhttps_free </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Releases the library's resources. </p><dl class="section warning"><dt>Warning</dt><dd>Only call this when you are very sure that there are no more pending requests! </dd></dl>
+<p>GlitchedHTTPS will <b>NOT</b> check this for you: make sure to only call this when you're truly done making calls to <a class="el" href="glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e">glitchedhttps_submit()</a> ! </p>
+
+</div>
+</div>
+<a id="a9a203a73ec1ae9e5b6bb6c7f3baae0d1" name="a9a203a73ec1ae9e5b6bb6c7f3baae0d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a203a73ec1ae9e5b6bb6c7f3baae0d1">&#9670;&nbsp;</a></span>glitchedhttps_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLITCHEDHTTPS_API int glitchedhttps_init </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Initializes the library's resources, allocating everything needed for making HTTPS requests that requires some warmup (e.g. parsing the x509 CA root certificates into a mbedtls_x509_crt context only needs to be done once). </p>
+<p >Don't forget to <a class="el" href="glitchedhttps_8h.html#ac521dce184f5975c855446a26b8a8a5d">glitchedhttps_free()</a> again once you're done using glitchedhttps! </p><dl class="section return"><dt>Returns</dt><dd><code>0</code> on success; mbedtls error code on failure. </dd></dl>
+
+</div>
+</div>
 <a id="a16da7fa9f208242a62f8be559e90db0e" name="a16da7fa9f208242a62f8be559e90db0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16da7fa9f208242a62f8be559e90db0e">&#9670;&nbsp;</a></span>glitchedhttps_submit()</h2>
 

@@ -15,6 +15,7 @@ var searchData=
   ['glitchedhttps_5fresponse_5fparse_5ferror_12',['GLITCHEDHTTPS_RESPONSE_PARSE_ERROR',['../glitchedhttps__exitcodes_8h.html#abe43db7bc6763c2a90924202aa6f99dd',1,'glitchedhttps_exitcodes.h']]],
   ['glitchedhttps_5fstack_5fbuffersize_13',['GLITCHEDHTTPS_STACK_BUFFERSIZE',['../glitchedhttps_8h.html#ae876b7eff1c824ea7888ee1f6a2796b2',1,'glitchedhttps.h']]],
   ['glitchedhttps_5fsuccess_14',['GLITCHEDHTTPS_SUCCESS',['../glitchedhttps__exitcodes_8h.html#a086f1112e6e4ab0de6c038358668c20a',1,'glitchedhttps_exitcodes.h']]],
-  ['glitchedhttps_5fversion_15',['GLITCHEDHTTPS_VERSION',['../glitchedhttps_8h.html#ac900b314e4f763a94e9b6c3ea6ef5b2e',1,'glitchedhttps.h']]],
-  ['glitchedhttps_5fversion_5fstr_16',['GLITCHEDHTTPS_VERSION_STR',['../glitchedhttps_8h.html#aba8b08c26485d7045d5f893c30d8fe47',1,'glitchedhttps.h']]]
+  ['glitchedhttps_5funinitialized_15',['GLITCHEDHTTPS_UNINITIALIZED',['../glitchedhttps__exitcodes_8h.html#a93c97fbb29d72f2ad4a6032f9ec40395',1,'glitchedhttps_exitcodes.h']]],
+  ['glitchedhttps_5fversion_16',['GLITCHEDHTTPS_VERSION',['../glitchedhttps_8h.html#ac900b314e4f763a94e9b6c3ea6ef5b2e',1,'glitchedhttps.h']]],
+  ['glitchedhttps_5fversion_5fstr_17',['GLITCHEDHTTPS_VERSION_STR',['../glitchedhttps_8h.html#aba8b08c26485d7045d5f893c30d8fe47',1,'glitchedhttps.h']]]
 ];

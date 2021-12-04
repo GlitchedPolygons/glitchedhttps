@@ -20,6 +20,8 @@
 
 int main(int argc, char* argv[])
 {
+    glitchedhttps_init();
+
     struct glitchedhttps_request request;
     glitchedhttps_request_init(&request);
 
@@ -48,6 +50,7 @@ int main(int argc, char* argv[])
     printf("\nResponse (%d ms) from %s: \n\n%s\n", (int)time_spent, request.url, response != NULL ? response->content : "(NULL)");
 
     glitchedhttps_response_free(response);
+    glitchedhttps_free();
 
     return 0;
 }

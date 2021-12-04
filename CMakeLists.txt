@@ -18,19 +18,19 @@ project(glitchedhttps C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-set(${PROJECT_NAME}_MAJOR 0)
-set(${PROJECT_NAME}_MINOR 9)
-set(${PROJECT_NAME}_PATCH 3)
+set(${PROJECT_NAME}_MAJOR 1)
+set(${PROJECT_NAME}_MINOR 0)
+set(${PROJECT_NAME}_PATCH 0)
 set(${PROJECT_NAME}_VERSION_STRING "${${PROJECT_NAME}_MAJOR}.${${PROJECT_NAME}_MINOR}.${${PROJECT_NAME}_PATCH}")
 
 option(${PROJECT_NAME}_ENABLE_EXAMPLES "Build GlitchedHTTPS example programs." OFF)
+option(${PROJECT_NAME}_PRINT_ERRORS "Allows error messages to be printed to stderr." OFF)
 option(${PROJECT_NAME}_DLL "Use as a DLL." OFF)
 option(${PROJECT_NAME}_BUILD_DLL "Build as a DLL." OFF)
 option(${PROJECT_NAME}_PACKAGE "Build the library and package it into a .tar.gz after successfully building." OFF)
 
 option(ENABLE_TESTING "Build MbedTLS tests." OFF)
 option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
-
 
 if (${${PROJECT_NAME}_BUILD_DLL})
     add_compile_definitions("GLITCHEDHTTPS_BUILD_DLL=1")
@@ -39,6 +39,10 @@ endif ()
 
 if (${${PROJECT_NAME}_DLL})
     add_compile_definitions("GLITCHEDHTTPS_DLL=1")
+endif ()
+
+if (${${PROJECT_NAME}_PRINT_ERRORS})
+    add_compile_definitions("GLITCHEDHTTPS_PRINT_ERRORS=1")
 endif ()
 
 set(${PROJECT_NAME}_INCLUDE_DIR

@@ -32,6 +32,12 @@ extern "C" {
 #define GLITCHEDHTTPS_SUCCESS 0
 
 /**
+ * Returned when trying to submit a request without having initialized GlitchedHTTPS with the glitchedhttps_init() function first. <p>
+ * Never forget to glitchedhttps_free() once you're done using GlitchedHTTPS to release the resources and prevent memory leaks!
+ */
+#define GLITCHEDHTTPS_UNINITIALIZED 10
+
+/**
  * If you get this, it means you're out of memory!
  */
 #define GLITCHEDHTTPS_OUT_OF_MEM 100

@@ -56,19 +56,34 @@ extern "C" {
 /**
  * Current version of the used GlitchedHTTPS library.
  */
-#define GLITCHEDHTTPS_VERSION 93
+#define GLITCHEDHTTPS_VERSION 100
 
 /**
  * Current version of the used GlitchedHTTPS library (nicely-formatted string).
  */
-#define GLITCHEDHTTPS_VERSION_STR "0.9.3"
+#define GLITCHEDHTTPS_VERSION_STR "1.0.0"
 
 #ifndef GLITCHEDHTTPS_STACK_BUFFERSIZE
 /**
- * The maximum size in byts that a temporary buffer may allocate on the stack before requiring a \c malloc
+ * The maximum size in bytes that a temporary buffer may allocate on the stack before requiring a \c malloc
  */
 #define GLITCHEDHTTPS_STACK_BUFFERSIZE 8192
 #endif
+
+/**
+ * Initializes the library's resources, allocating everything needed for making HTTPS requests that requires some warmup
+ * (e.g. parsing the x509 CA root certificates into a mbedtls_x509_crt context only needs to be done once). <p>
+ * Don't forget to #glitchedhttps_free() again once you're done using glitchedhttps!
+ * @return \c 0 on success; mbedtls error code on failure.
+ */
+GLITCHEDHTTPS_API int glitchedhttps_init();
+
+/**
+ * Releases the library's resources.
+ * \warning Only call this when you are very sure that there are no more pending requests! <p>
+ * GlitchedHTTPS will <strong>NOT</strong> check this for you: make sure to only call this when you're truly done making calls to #glitchedhttps_submit() !
+ */
+GLITCHEDHTTPS_API void glitchedhttps_free();
 
 /**
  * Submits a given HTTP request and writes the server response into the provided output glitchedhttps_response instance. <p>
