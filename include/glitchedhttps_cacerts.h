@@ -30,6 +30,14 @@ GLITCHEDHTTPS_API const char* glitchedhttps_get_ca_certs();
  */
 GLITCHEDHTTPS_API size_t glitchedhttps_get_ca_certs_length();
 
+/**
+ * Makes GlitchedHTTPS use a custom set of trusted CA certificates. <p>
+ * Check out the source file <strong>\c glitchedhttps_cacerts.c</strong> to find out more about how the \p ca_certs parameter should look like (in terms of format). <p>
+ * \note If you decide to use this function (and thus provide your own chain of trusted CA certs), call this <strong>BEFORE</strong> the first call to #glitchedhttps_init() !
+ * @param ca_certs Concatenated string of all trusted CA certificates to use for HTTPS requests (NUL-terminated <code>char*</code> string). Pass \c NULL to revert back to using the default glitchedhttps chain of CA certificates. If this is not NUL-terminated, welcome to undefined behaviour land :D
+ */
+GLITCHEDHTTPS_API void glitchedhttps_set_custom_ca_certs(char* ca_certs);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

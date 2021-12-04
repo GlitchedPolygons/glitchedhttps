@@ -20,16 +20,42 @@ extern "C" {
 
 #include "glitchedhttps_cacerts.h"
 
+static char* CUSTOM_CA_CERTS = NULL;
+static size_t CUSTOM_CA_CERTS_LEN = 0;
+
 static char* CA_CERTS = NULL;
 static size_t CA_CERTS_LEN = 0;
 
+void glitchedhttps_set_custom_ca_certs(char* ca_certs)
+{
+    if (ca_certs == NULL)
+    {
+        CUSTOM_CA_CERTS = NULL;
+        CUSTOM_CA_CERTS_LEN = 0;
+        return;
+    }
+
+    CUSTOM_CA_CERTS = ca_certs;
+    CUSTOM_CA_CERTS_LEN = strlen(ca_certs) + 1;
+}
+
 size_t glitchedhttps_get_ca_certs_length()
 {
+    if (CUSTOM_CA_CERTS != NULL)
+    {
+        return CUSTOM_CA_CERTS_LEN;
+    }
+
     return CA_CERTS_LEN;
 }
 
 const char* glitchedhttps_get_ca_certs()
 {
+    if (CUSTOM_CA_CERTS != NULL)
+    {
+        return CUSTOM_CA_CERTS;
+    }
+
     if (CA_CERTS != NULL)
     {
         return CA_CERTS;

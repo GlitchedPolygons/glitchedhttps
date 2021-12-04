@@ -98,6 +98,8 @@ Functions</h2></td></tr>
 <tr class="separator:ac691efcb09128223afb7101f4cee9fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e8d4a2f50ca7e29a8b110d92ae4aded"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__cacerts_8h.html#a9e8d4a2f50ca7e29a8b110d92ae4aded">glitchedhttps_get_ca_certs_length</a> ()</td></tr>
 <tr class="separator:a9e8d4a2f50ca7e29a8b110d92ae4aded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6868a68a55467cef6a50f90fa735289"><td class="memItemLeft" align="right" valign="top">GLITCHEDHTTPS_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glitchedhttps__cacerts_8h.html#aa6868a68a55467cef6a50f90fa735289">glitchedhttps_set_custom_ca_certs</a> (char *ca_certs)</td></tr>
+<tr class="separator:aa6868a68a55467cef6a50f90fa735289"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Trusted CA certificates chain for SSL connections. </p>
@@ -135,6 +137,33 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Gets the length of the string returned by glitchedhttps_get_ca_certs. </p><dl class="section return"><dt>Returns</dt><dd>String length (without the NUL-terminator). </dd></dl>
+
+</div>
+</div>
+<a id="aa6868a68a55467cef6a50f90fa735289" name="aa6868a68a55467cef6a50f90fa735289"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6868a68a55467cef6a50f90fa735289">&#9670;&nbsp;</a></span>glitchedhttps_set_custom_ca_certs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLITCHEDHTTPS_API void glitchedhttps_set_custom_ca_certs </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>ca_certs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Makes GlitchedHTTPS use a custom set of trusted CA certificates. </p>
+<p >Check out the source file <b><code>glitchedhttps_cacerts.c</b></code> to find out more about how the <code>ca_certs</code> parameter should look like (in terms of format). </p>
+<dl class="section note"><dt>Note</dt><dd>If you decide to use this function (and thus provide your own chain of trusted CA certs), call this <b>BEFORE</b> the first call to <a class="el" href="glitchedhttps_8h.html#a9a203a73ec1ae9e5b6bb6c7f3baae0d1">glitchedhttps_init()</a> ! </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ca_certs</td><td>Concatenated string of all trusted CA certificates to use for HTTPS requests (NUL-terminated <code>char*</code> string). Pass <code>NULL</code> to revert back to using the default glitchedhttps chain of CA certificates. If this is not NUL-terminated, welcome to undefined behaviour land :D </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

@@ -13,8 +13,9 @@ var searchData=
   ['glitchedhttps_5fnew_5fguid_10',['glitchedhttps_new_guid',['../glitchedhttps__guid_8h.html#a0c1f64ce75a8585548796514c37183fd',1,'glitchedhttps_guid.h']]],
   ['glitchedhttps_5frequest_5finit_11',['glitchedhttps_request_init',['../glitchedhttps__request_8h.html#a9febf7452b98f8f85d45f79212df16fd',1,'glitchedhttps_request.h']]],
   ['glitchedhttps_5fresponse_5ffree_12',['glitchedhttps_response_free',['../glitchedhttps__response_8h.html#a19d091a6842147c4d9ddad8cba3e57b3',1,'glitchedhttps_response.h']]],
-  ['glitchedhttps_5fset_5ferror_5fcallback_13',['glitchedhttps_set_error_callback',['../glitchedhttps__debug_8h.html#aeb91641fe085cb945d3f074bc99b6085',1,'glitchedhttps_debug.h']]],
-  ['glitchedhttps_5fstrncmpic_14',['glitchedhttps_strncmpic',['../glitchedhttps__strutil_8h.html#a597396819d19dc4f4a18235db3b2fe5d',1,'glitchedhttps_strutil.h']]],
-  ['glitchedhttps_5fsubmit_15',['glitchedhttps_submit',['../glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e',1,'glitchedhttps.h']]],
-  ['glitchedhttps_5funset_5ferror_5fcallback_16',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#a2f40e384b4324d173e07213e6d3bdc95',1,'glitchedhttps_debug.h']]]
+  ['glitchedhttps_5fset_5fcustom_5fca_5fcerts_13',['glitchedhttps_set_custom_ca_certs',['../glitchedhttps__cacerts_8h.html#aa6868a68a55467cef6a50f90fa735289',1,'glitchedhttps_cacerts.h']]],
+  ['glitchedhttps_5fset_5ferror_5fcallback_14',['glitchedhttps_set_error_callback',['../glitchedhttps__debug_8h.html#aeb91641fe085cb945d3f074bc99b6085',1,'glitchedhttps_debug.h']]],
+  ['glitchedhttps_5fstrncmpic_15',['glitchedhttps_strncmpic',['../glitchedhttps__strutil_8h.html#a597396819d19dc4f4a18235db3b2fe5d',1,'glitchedhttps_strutil.h']]],
+  ['glitchedhttps_5fsubmit_16',['glitchedhttps_submit',['../glitchedhttps_8h.html#a16da7fa9f208242a62f8be559e90db0e',1,'glitchedhttps.h']]],
+  ['glitchedhttps_5funset_5ferror_5fcallback_17',['glitchedhttps_unset_error_callback',['../glitchedhttps__debug_8h.html#a2f40e384b4324d173e07213e6d3bdc95',1,'glitchedhttps_debug.h']]]
 ];
