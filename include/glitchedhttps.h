@@ -56,12 +56,12 @@ extern "C" {
 /**
  * Current version of the used GlitchedHTTPS library.
  */
-#define GLITCHEDHTTPS_VERSION 101
+#define GLITCHEDHTTPS_VERSION 102
 
 /**
  * Current version of the used GlitchedHTTPS library (nicely-formatted string).
  */
-#define GLITCHEDHTTPS_VERSION_STR "1.0.1"
+#define GLITCHEDHTTPS_VERSION_STR "1.0.2"
 
 #ifndef GLITCHEDHTTPS_STACK_BUFFERSIZE
 /**
