@@ -1,3 +1,11 @@
+> [!IMPORTANT]
+>
+> # **NOTICE:**
+>
+> ## Development of this project has been migrated to: https://codeberg.org/GlitchedPolygons/glitchedhttps
+>
+> ## All pull requests and issues on GitHub will be ignored from the 16th of August, 2025 onwards.
+
 [![Build status](https://ci.appveyor.com/api/projects/status/d9hk498m40qfuv1h/branch/master?svg=true)](https://ci.appveyor.com/project/GlitchedPolygons/glitchedhttps/branch/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1769711fb52041daa272e209aaddb0f4)](https://www.codacy.com/manual/GlitchedPolygons/glitchedhttps?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GlitchedPolygons/glitchedhttps&amp;utm_campaign=Badge_Grade)
 [![API Docs](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/glitchedhttps/)
